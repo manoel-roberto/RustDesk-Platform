@@ -153,3 +153,9 @@ Para detalhes práticos de como desenvolver e operar cada parte do sistema, cons
 | White-label | Cliente RustDesk com branding da empresa |
 | NAT Traversal | Técnica para conexão direta entre redes com NAT |
 | E2E | End-to-End (criptografia de ponta a ponta) |
+
+---
+
+## 📄 Licença
+
+Este projeto está sob a licença **MIT**. Sinta-se à vontade para usar, modificar e distribuir, desde que os créditos sejam atribuídos ao autor original. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.

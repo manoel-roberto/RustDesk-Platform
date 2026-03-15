@@ -8,6 +8,7 @@ const TechnicianPortal = () => {
   const auth = useAuth();
   const [devices, setDevices] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState('maquinas');
 
   useEffect(() => {
     if (auth.isAuthenticated) {
@@ -45,6 +46,61 @@ const TechnicianPortal = () => {
     window.location.href = `rustdesk://${id}`;
   };
 
+  const renderContent = () => {
+    if (activeTab === 'maquinas') {
+      return (
+        <>
+          <header>
+            <h1>Catálogo de Dispositivos (Address Book)</h1>
+            <p>Um clique para abrir o cliente customizado do RustDesk.</p>
+          </header>
+
+          {loading ? (
+             <div className="loading-area"><Loader2 className="spinner"/> Carregando máquinas...</div>
+          ) : (
+            <div className="devices-grid">
+              {devices.map(device => (
+                <div key={device.id} className="device-card">
+                  <div className="device-header">
+                    <h3>{device.alias}</h3>
+                    <span className={`status-badge ${device.status === 1 ? 'online' : 'offline'}`}>
+                      {device.status === 1 ? 'Online' : 'Offline'}
+                    </span>
+                  </div>
+                  <div className="device-body">
+                    <p><strong>ID:</strong> {device.id}</p>
+                    <p><strong>Host:</strong> {device.hostname}</p>
+                    <p><strong>OS:</strong> {device.platform}</p>
+                    <div className="tags">
+                      {device.tags.map((t: string) => <span key={t} className="badge">{t}</span>)}
+                    </div>
+                  </div>
+                  <div className="device-actions">
+                     <button 
+                       className="btn-connect" 
+                       disabled={device.status === 0}
+                       onClick={() => connectToDevice(device.id)}
+                     >
+                       Conectar (DeepLink)
+                     </button>
+                  </div>
+                </div>
+              ))}
+              {devices.length === 0 && <p className="no-data">Nenhum dispositivo encontrado na sua conta.</p>}
+            </div>
+          )}
+        </>
+      );
+    }
+
+    return (
+      <div className="placeholder-content">
+        <h1>Configurações</h1>
+        <p>Ajustes de perfil e preferências do técnico em desenvolvimento.</p>
+      </div>
+    );
+  };
+
   return (
     <div className="dashboard-layout">
       <aside className="sidebar">
@@ -54,8 +110,18 @@ const TechnicianPortal = () => {
         </div>
         <nav>
            <ul>
-             <li className="active"><MonitorPlay size={18}/> Minhas Máquinas</li>
-             <li><Settings size={18}/> Configurações</li>
+             <li 
+               className={activeTab === 'maquinas' ? 'active' : ''} 
+               onClick={() => setActiveTab('maquinas')}
+             >
+               <MonitorPlay size={18}/> Minhas Máquinas
+             </li>
+             <li 
+               className={activeTab === 'configuracoes' ? 'active' : ''} 
+               onClick={() => setActiveTab('configuracoes')}
+             >
+               <Settings size={18}/> Configurações
+             </li>
            </ul>
         </nav>
         <div className="sidebar-footer">
@@ -70,45 +136,7 @@ const TechnicianPortal = () => {
       </aside>
 
       <main className="main-content">
-        <header>
-          <h1>Catálogo de Dispositivos (Address Book)</h1>
-          <p>Um clique para abrir o cliente customizado do RustDesk.</p>
-        </header>
-
-        {loading ? (
-           <div className="loading-area"><Loader2 className="spinner"/> Carregando máquinas...</div>
-        ) : (
-          <div className="devices-grid">
-            {devices.map(device => (
-              <div key={device.id} className="device-card">
-                <div className="device-header">
-                  <h3>{device.alias}</h3>
-                  <span className={`status-badge ${device.status === 1 ? 'online' : 'offline'}`}>
-                    {device.status === 1 ? 'Online' : 'Offline'}
-                  </span>
-                </div>
-                <div className="device-body">
-                  <p><strong>ID:</strong> {device.id}</p>
-                  <p><strong>Host:</strong> {device.hostname}</p>
-                  <p><strong>OS:</strong> {device.platform}</p>
-                  <div className="tags">
-                    {device.tags.map((t: string) => <span key={t} className="badge">{t}</span>)}
-                  </div>
-                </div>
-                <div className="device-actions">
-                   <button 
-                     className="btn-connect" 
-                     disabled={device.status === 0}
-                     onClick={() => connectToDevice(device.id)}
-                   >
-                     Conectar (DeepLink)
-                   </button>
-                </div>
-              </div>
-            ))}
-            {devices.length === 0 && <p className="no-data">Nenhum dispositivo encontrado na sua conta.</p>}
-          </div>
-        )}
+        {renderContent()}
       </main>
     </div>
   );

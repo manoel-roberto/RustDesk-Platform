@@ -43,6 +43,7 @@ Se você está começando agora, pode se perguntar o que são todos esses nomes.
 - `/web`: Portais Web em React.
 - `/specs`: Toda a fundamentação teórica e requisitos.
 - `/docs`: Guias técnicos por especialidade (Backend, Frontend, DevOps, QA).
+- `/docs/keycloak-guide.md`: Guia de Integração e Segurança com Keycloak.
 - `docker-compose.yml`: Orquestração da stack completa.
 
 ## 🤝 Fluxo de Trabalho

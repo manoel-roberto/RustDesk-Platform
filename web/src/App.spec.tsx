@@ -74,6 +74,18 @@ describe('AppRoutes', () => {
     screen.getByText(/Logar com Keycloak/i).click();
     expect(signinRedirect).toHaveBeenCalled();
   });
+
+  it('renders loading in PrivateRoute', () => {
+    (useAuth as any).mockReturnValue({ isLoading: true });
+    renderWithRouter(<AppRoutes />, { route: '/technician' });
+    expect(screen.getByText(/Validando sessão.../i)).toBeInTheDocument();
+  });
+
+  it('renders auth error in PrivateRoute', () => {
+    (useAuth as any).mockReturnValue({ error: { message: 'Private Error' } });
+    renderWithRouter(<AppRoutes />, { route: '/technician' });
+    expect(screen.getByText(/Erro de Login OIDC: Private Error/i)).toBeInTheDocument();
+  });
 });
 
 import App from './App';

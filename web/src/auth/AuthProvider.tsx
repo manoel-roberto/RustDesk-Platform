@@ -8,6 +8,7 @@ export const oidcConfig = {
   redirect_uri: window.location.origin,
   response_type: 'code',
   userStore: new WebStorageStateStore({ store: window.localStorage }),
+  extraQueryParams: { ui_locales: 'pt-BR' },
   onSigninCallback: (_user: any | void) => {
     window.history.replaceState({}, document.title, window.location.pathname);
   },

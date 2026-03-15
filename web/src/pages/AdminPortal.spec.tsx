@@ -70,7 +70,9 @@ describe('AdminPortal', () => {
     render(<AdminPortal />);
     
     const logoutBtn = screen.getByText('Sair');
-    logoutBtn.click();
+    await waitFor(() => {
+      logoutBtn.click();
+    });
     
     expect(removeUser).toHaveBeenCalled();
   });

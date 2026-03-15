@@ -130,7 +130,9 @@ describe('TechnicianPortal', () => {
 
     render(<TechnicianPortal />);
     const logoutBtn = await screen.findByText('Sair');
-    logoutBtn.click();
+    await waitFor(() => {
+      logoutBtn.click();
+    });
     expect(removeUser).toHaveBeenCalled();
   });
 });

@@ -57,12 +57,38 @@ describe('DevicesService', () => {
       expect(result.data[0].tags).toContain('G1');
       expect(result.data[0].status).toBe(1);
     });
+
+    it('should handle device without group', async () => {
+      const devices = [
+        { rustdesk_id: '2', alias: 'A2', hostname: 'H2', os: 'Linux', online: false, group: null, tags: ['tag1'] },
+      ];
+      deviceRepository.find.mockResolvedValue(devices);
+
+      const result = await service.getRustdeskPeers({});
+      expect(result.data[0].tags).toEqual(['tag1']);
+      expect(result.data[0].status).toBe(0);
+    });
   });
 
   describe('findAll', () => {
     it('should call query builder with pagination', async () => {
       await service.findAll({ page: 2, limit: 10 });
       expect(deviceRepository.createQueryBuilder).toHaveBeenCalled();
+    });
+
+    it('should apply filters (groupId, online, search, tag)', async () => {
+      const mockQb = deviceRepository.createQueryBuilder();
+      await service.findAll({ 
+        groupId: 'g1', 
+        online: 'true', 
+        search: 'test', 
+        tag: 'tag1' 
+      });
+      
+      expect(mockQb.andWhere).toHaveBeenCalledWith('group.id = :groupId', { groupId: 'g1' });
+      expect(mockQb.andWhere).toHaveBeenCalledWith('device.online = :online', { online: true });
+      expect(mockQb.andWhere).toHaveBeenCalledWith('(device.alias ILIKE :search OR device.hostname ILIKE :search)', { search: '%test%' });
+      expect(mockQb.andWhere).toHaveBeenCalledWith(':tag = ANY(device.tags)', { tag: 'tag1' });
     });
   });
 
@@ -82,13 +108,15 @@ describe('DevicesService', () => {
 
   describe('update', () => {
     it('should update and save a device', async () => {
-      const device = { id: '1', alias: 'old' };
+      const device = { id: '1', alias: 'old', tags: ['t1'], group: null };
       deviceRepository.findOne.mockResolvedValue(device);
       deviceRepository.save.mockResolvedValue({ ...device, alias: 'new' });
 
-      const result = await service.update('1', { alias: 'new' });
+      const result = await service.update('1', { alias: 'new', tags: ['t2'], group_id: 'g2' });
       expect(deviceRepository.save).toHaveBeenCalled();
       expect(result.alias).toBe('new');
+      expect(device.tags).toEqual(['t2']);
+      expect(device.group).toEqual({ id: 'g2' });
     });
   });
 
@@ -142,6 +170,16 @@ describe('DevicesService', () => {
       await service.create(dto);
       expect(deviceRepository.create).toHaveBeenCalledWith(expect.objectContaining({
         group: { id: 'g1' }
+      }));
+    });
+
+    it('should create without group_id', async () => {
+      const dto = { rustdesk_id: '123' };
+      deviceRepository.create.mockReturnValue(dto);
+      deviceRepository.save.mockResolvedValue({ id: '1', ...dto });
+      await service.create(dto);
+      expect(deviceRepository.create).toHaveBeenCalledWith(expect.objectContaining({
+        group: null
       }));
     });
   });

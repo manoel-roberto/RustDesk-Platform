@@ -104,13 +104,33 @@
 
 ---
 
-## 4. Requisitos de Escalabilidade
+### 1.6 Interface e Experiência do Usuário (UX) [IMPLEMENTADO]
 
-| ID | Requisito | Meta |
-|----|-----------|------|
-| REQ-E-001 | A arquitetura deve suportar até 500 dispositivos sem mudança estrutural | P0 |
-| REQ-E-002 | A arquitetura deve suportar escalar para 1000+ dispositivos com adição de nós de relay | P1 |
-| REQ-E-003 | A adição de novos servidores hbbr não deve exigir mudança no cliente instalado | P1 |
-| REQ-E-004 | O banco de dados deve suportar sharding ou replicação se necessário | P2 |
-| REQ-E-005 | A API deve ser stateless — escalável horizontalmente com múltiplas instâncias | P1 |
-| REQ-E-006 | O sistema de monitoramento deve escalar independentemente da aplicação | P1 |
+| ID | Requisito | Prioridade | Status |
+|----|-----------|------------|--------|
+| REQ-F-050 | O sistema deve suportar localização completa para Português (Brasil) no Frontend e Keycloak | P1 | ✅ Concluído |
+| REQ-F-051 | A navegação entre seções dos portais deve ser reativa e indicar o estado ativo | P1 | ✅ Concluído |
+
+---
+
+## 2. Requisitos Não Funcionais (Sugestões Importantes)
+
+| ID | Requisito | Prioridade | Justificativa | Status |
+|----|-----------|------------|---------------|--------|
+| REQ-NF-040 | Suporte a Dark Mode nativo | P2 | Redução de fadiga ocular para suporte prolongado | ⏳ Sugerido |
+| REQ-NF-041 | PWA (Progressive Web App) | P2 | Permitir instalação como app desktop para acesso rápido | ⏳ Sugerido |
+
+---
+
+## 3. Requisitos de Segurança (Novas Recomendações)
+
+| ID | Requisito | Prioridade | Justificativa | Status |
+|----|-----------|------------|---------------|--------|
+| REQ-S-020 | Implementação de Content Security Policy (CSP) | P1 | Proteção contra XSS e injeção de scripts maliciosos | ⏳ Sugerido |
+| REQ-S-021 | Proteção contra Clickjacking (Headers X-Frame) | P1 | Impedir que o portal de login seja emoldurado em sites maliciosos | 🏗️ Configuração |
+| REQ-S-022 | Rotação automática de chaves de assinatura JWT | P2 | Aumentar a segurança de longo prazo dos tokens de acesso | ⏳ Sugerido |
+
+---
+
+## 4. Requisitos de Escalabilidade
+...

@@ -101,13 +101,15 @@ specs/
 
 ---
 
-## Como Usar Esta Especificação
+## Guias de Implementação
 
-1. **Novos engenheiros:** Comece por `vision.md` → `requirements.md` → `system/system-overview.md`
-2. **Backend:** Foco em `system/api-spec.md`, `system/data-model.md`, `security/auth-model.md`
-3. **Frontend:** Foco em `product/user-stories.md`, `product/use-cases.md`, `system/api-spec.md`
-4. **DevOps:** Foco em `infra/deployment-architecture.md`, `infra/devops-pipeline.md`
-5. **QA:** Foco em `quality/testing-strategy.md`, `quality/observability.md`
+Para detalhes práticos de como desenvolver e operar cada parte do sistema, consulte os guias no diretório `docs/`:
+
+1.  **[Novos engenheiros (Onboarding)](docs/onboarding.md):** Guia de boas-vindas e setup do ambiente.
+2.  **[Backend Guide](docs/backend.md):** Arquitetura NestJS, Database (TypeORM) e Keycloak.
+3.  **[Frontend Guide](docs/frontend.md):** UI React, Design System (Glassmorphism) e Consumo de API.
+4.  **[DevOps Guide](docs/devops.md):** Docker Compose, Scripts de Build e Segurança.
+5.  **[QA Guide](docs/qa.md):** Plano de testes e critérios de aceitação.
 
 ---
 

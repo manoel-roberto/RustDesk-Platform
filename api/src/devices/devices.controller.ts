@@ -62,4 +62,17 @@ export class DevicesController {
   async seed() {
     return this.devicesService.seedDemoDevices();
   }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('devices/export')
+  async exportDevices() {
+    return this.devicesService.exportToCsv();
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post('devices/import')
+  async importDevices(@Body() body: { csv: string }) {
+    await this.devicesService.importFromCsv(body.csv);
+    return { message: 'Devices imported successfully' };
+  }
 }

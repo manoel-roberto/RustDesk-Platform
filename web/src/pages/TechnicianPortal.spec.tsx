@@ -3,6 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import TechnicianPortal from './TechnicianPortal';
 import { useAuth } from 'react-oidc-context';
 import { api } from '../api/axios';
+import { useTheme } from '../context/ThemeContext';
 
 // Mocks
 vi.mock('react-oidc-context', () => ({
@@ -15,9 +16,14 @@ vi.mock('../api/axios', () => ({
   },
 }));
 
+vi.mock('../context/ThemeContext', () => ({
+  useTheme: vi.fn(),
+}));
+
 describe('TechnicianPortal', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    (useTheme as any).mockReturnValue({ theme: 'dark', toggleTheme: vi.fn() });
   });
 
   it('renders loading screen when auth is loading', () => {

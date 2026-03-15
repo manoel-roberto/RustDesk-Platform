@@ -106,4 +106,23 @@ describe('SessionsService', () => {
       expect(sessionRepository.createQueryBuilder).toHaveBeenCalled();
     });
   });
+
+  describe('updateSession', () => {
+    it('should update and save a session', async () => {
+      const sessionId = 'session-1';
+      const existingSession = { id: sessionId, notes: 'old' };
+      
+      sessionRepository.findOne.mockResolvedValue(existingSession);
+      sessionRepository.save.mockImplementation(s => Promise.resolve(s as any));
+
+      const result = await service.updateSession(sessionId, { notes: 'new', session_type: 'maintenance' });
+      expect(result.notes).toBe('new');
+      expect(result.session_type).toBe('maintenance');
+    });
+
+    it('should throw NotFoundException if session not found', async () => {
+      sessionRepository.findOne.mockResolvedValue(null);
+      await expect(service.updateSession('invalid', {})).rejects.toThrow(NotFoundException);
+    });
+  });
 });

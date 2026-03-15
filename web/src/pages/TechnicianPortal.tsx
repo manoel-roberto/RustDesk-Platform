@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from 'react-oidc-context';
 import { api } from '../api/axios';
-import { MonitorPlay, Settings, LogOut, Loader2, ShieldCheck, User as UserIcon } from 'lucide-react';
+import { MonitorPlay, Settings, LogOut, Loader2, ShieldCheck, User as UserIcon, Sun, Moon } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
 import '../index.css';
 
 const TechnicianPortal = () => {
   const auth = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const [devices, setDevices] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('maquinas');
@@ -126,12 +128,16 @@ const TechnicianPortal = () => {
         </nav>
         <div className="sidebar-footer">
            <div className="user-profile">
-             <UserIcon size={24}/>
              <span>{auth.user?.profile.preferred_username || 'Técnico'}</span>
            </div>
-           <button className="btn-logout" onClick={() => void auth.removeUser()}>
-             <LogOut size={16}/> Sair
-           </button>
+           <div style={{ display: 'flex', gap: '0.5rem' }}>
+             <button className="btn-toggle-theme" onClick={toggleTheme} title="Alternar Tema" style={{ background: 'transparent', border: '1px solid var(--border-color)', color: 'var(--text-secondary)', padding: '0.4rem', borderRadius: '6px', cursor: 'pointer' }}>
+               {theme === 'dark' ? <Sun size={16}/> : <Moon size={16}/>}
+             </button>
+             <button className="btn-logout" onClick={() => void auth.removeUser()}>
+               <LogOut size={16}/> Sair
+             </button>
+           </div>
         </div>
       </aside>
 

@@ -21,4 +21,9 @@ export class SessionsController {
   closeSession(@Param('id') id: string, @Request() req: any, @Body() updateDto: any) {
     return this.sessionsService.closeSession(id, req.user.userId, updateDto);
   }
+
+  @Patch(':id')
+  updateSession(@Param('id') id: string, @Body() updateDto: any) {
+    return this.sessionsService.updateSession(id, updateDto);
+  }
 }

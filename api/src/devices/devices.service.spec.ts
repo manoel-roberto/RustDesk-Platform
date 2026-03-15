@@ -183,4 +183,48 @@ describe('DevicesService', () => {
       }));
     });
   });
+
+  describe('exportToCsv', () => {
+    it('should return devices as CSV string', async () => {
+      const devices = [
+        { rustdesk_id: 'ID1', alias: 'A1', hostname: 'H1', os: 'Linux', online: true, tags: ['T1', 'T2'] },
+        { rustdesk_id: 'ID2', alias: 'A2', hostname: 'H2', os: 'Windows', online: false, tags: [] },
+      ];
+      deviceRepository.find.mockResolvedValue(devices);
+
+      const csv = await service.exportToCsv();
+      
+      expect(csv).toContain('rustdesk_id,alias,hostname,os,online,tags');
+      expect(csv).toContain('ID1,A1,H1,Linux,true,"T1,T2"');
+      expect(csv).toContain('ID2,A2,H2,Windows,false,""');
+    });
+  });
+
+  describe('importFromCsv', () => {
+    it('should parse CSV and create devices', async () => {
+      const csv = 'rustdesk_id,alias,hostname,os,online,tags\nID3,A3,H3,macOS,true,"T3,T4"';
+      deviceRepository.save.mockResolvedValue([]);
+      
+      await service.importFromCsv(csv);
+      
+      expect(deviceRepository.create).toHaveBeenCalledWith(expect.objectContaining({
+        rustdesk_id: 'ID3',
+        alias: 'A3',
+        hostname: 'H3',
+        os: 'macOS',
+        online: true,
+        tags: ['T3', 'T4']
+      }));
+      expect(deviceRepository.save).toHaveBeenCalled();
+    });
+
+    it('should ignore header and handle empty tags', async () => {
+      const csv = 'rustdesk_id,alias,hostname,os,online,tags\nID4,A4,H4,Linux,false,""';
+      await service.importFromCsv(csv);
+      expect(deviceRepository.create).toHaveBeenCalledWith(expect.objectContaining({
+        rustdesk_id: 'ID4',
+        tags: []
+      }));
+    });
+  });
 });

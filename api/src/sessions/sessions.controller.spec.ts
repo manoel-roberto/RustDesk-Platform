@@ -6,6 +6,7 @@ const mockSessionsService = () => ({
   findAll: jest.fn().mockResolvedValue({ data: [] }),
   startSession: jest.fn().mockResolvedValue({ id: '1' }),
   closeSession: jest.fn().mockResolvedValue({ id: '1', ended_at: new Date() }),
+  updateSession: jest.fn().mockResolvedValue({ id: '1' }),
 });
 
 describe('SessionsController', () => {
@@ -55,6 +56,13 @@ describe('SessionsController', () => {
       const dto = { notes: 'test' };
       await controller.closeSession(id, req, dto);
       expect(service.closeSession).toHaveBeenCalledWith(id, 'user-1', dto);
+    });
+
+    it('should call service.updateSession', async () => {
+      const id = 'session-1';
+      const dto = { notes: 'test' };
+      await controller.updateSession(id, dto);
+      expect(service.updateSession).toHaveBeenCalledWith(id, dto);
     });
   });
 });

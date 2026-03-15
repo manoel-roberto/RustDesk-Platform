@@ -1,22 +1,74 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from 'react-oidc-context';
-import { ShieldCheck, LogOut, Users, Server, Activity, Loader2, ShieldAlert } from 'lucide-react';
+import { ShieldCheck, LogOut, Users, Server, Activity, Loader2, ShieldAlert, Download, Upload, History, Moon, Sun } from 'lucide-react';
 import { api } from '../api/axios';
+import { useTheme } from '../context/ThemeContext';
 
 const AdminPortal = () => {
   const auth = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const [stats, setStats] = useState({ devices: 0, groups: 0, online: 0 });
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('dashboard');
   const [auditLogs, setAuditLogs] = useState<any[]>([]);
+  const [sessions, setSessions] = useState<any[]>([]);
 
   useEffect(() => {
     if (auth.isAuthenticated) {
       api.get('/devices').then(res => setStats(s => ({ ...s, devices: res.data.meta?.total || 0 }))).catch(console.error);
       api.get('/groups').then(res => setStats(s => ({ ...s, groups: res.data.data?.length || 0 }))).catch(console.error);
-      api.get('/audit').then(res => setAuditLogs(res.data.data || [])).catch(console.error).finally(() => setLoading(false));
+      api.get('/audit').then(res => setAuditLogs(res.data.data || [])).catch(console.error);
+      api.get('/sessions').then(res => setSessions(res.data.data || [])).catch(console.error).finally(() => setLoading(false));
     }
   }, [auth.isAuthenticated, activeTab]);
+  
+  const handleExport = async () => {
+    try {
+      const res = await api.get('/devices/export');
+      const blob = new Blob([res.data], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `dispositivos-${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+    } catch (error) {
+      console.error('Erro na exportação:', error);
+      alert('Falha ao exportar dispositivos');
+    }
+  };
+
+  const handleImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      try {
+        const csv = event.target?.result as string;
+        await api.post('/devices/import', { csv });
+        alert('Dispositivos importados com sucesso!');
+        // Refresh stats
+        const res = await api.get('/devices');
+        setStats(s => ({ ...s, devices: res.data.meta?.total || 0 }));
+      } catch (error) {
+        console.error('Erro na importação:', error);
+        alert('Falha ao importar dispositivos. Verifique o formato do CSV.');
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  const handleUpdateNote = async (sessionId: string, currentNote: string) => {
+    const newNote = prompt('Editar Notas da Sessão:', currentNote);
+    if (newNote === null) return;
+    try {
+      await api.patch(`/sessions/${sessionId}`, { notes: newNote });
+      setSessions(prev => prev.map(s => s.id === sessionId ? { ...s, notes: newNote } : s));
+    } catch (error) {
+      console.error('Erro ao atualizar nota:', error);
+      alert('Falha ao atualizar nota');
+    }
+  };
 
   if (!auth.isAuthenticated) return <div className="loading-screen"><Loader2 className="spinner"/></div>;
 
@@ -24,9 +76,20 @@ const AdminPortal = () => {
     if (activeTab === 'dashboard') {
       return (
         <>
-          <header>
-            <h1>Gerenciamento de Frota</h1>
-            <p>Visão global dos dispositivos, grupos e acessos da plataforma.</p>
+          <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div>
+              <h1>Gerenciamento de Frota</h1>
+              <p>Visão global dos dispositivos, grupos e acessos da plataforma.</p>
+            </div>
+            <div className="action-buttons" style={{ display: 'flex', gap: '0.5rem' }}>
+              <button className="btn-secondary" onClick={handleExport} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem', borderRadius: '6px', border: '1px solid #334155', background: '#1e293b', color: '#fff', cursor: 'pointer' }}>
+                <Download size={16}/> Exportar CSV
+              </button>
+              <label className="btn-secondary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem', borderRadius: '6px', border: '1px solid #10b981', background: '#064e3b', color: '#fff', cursor: 'pointer' }}>
+                <Upload size={16}/> Importar CSV
+                <input type="file" accept=".csv" onChange={handleImport} style={{ display: 'none' }} />
+              </label>
+            </div>
           </header>
 
           {loading ? (
@@ -91,12 +154,50 @@ const AdminPortal = () => {
       );
     }
 
-    return (
-      <div className="placeholder-content">
-        <h1>Seção: {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}</h1>
-        <p>Esta funcionalidade está em desenvolvimento para a próxima sprint.</p>
-      </div>
-    );
+    if (activeTab === 'sessões') {
+      return (
+        <div className="sessions-section">
+          <header>
+            <h1>Histórico de Sessões</h1>
+            <p>Registro de todos os acessos remotos realizados.</p>
+          </header>
+          
+          <div className="audit-table-container shadow-md bg-white rounded-lg overflow-hidden border border-slate-700">
+            <table className="audit-table w-full text-left">
+              <thead>
+                <tr className="bg-slate-800 text-slate-300">
+                  <th className="p-4">Dispositivo</th>
+                  <th className="p-4">Técnico ID</th>
+                  <th className="p-4">Início</th>
+                  <th className="p-4">Tipo</th>
+                  <th className="p-4">Notas</th>
+                </tr>
+              </thead>
+              <tbody className="text-slate-400">
+                {sessions.length > 0 ? sessions.map((sess) => (
+                  <tr key={sess.id} className="border-b border-slate-700 hover:bg-slate-800">
+                    <td className="p-4 font-medium text-slate-200">{sess.device?.alias || 'Desconhecido'}</td>
+                    <td className="p-4">{sess.technician_id}</td>
+                    <td className="p-4">{new Date(sess.started_at).toLocaleString('pt-BR')}</td>
+                    <td className="p-4"><span className="badge">{sess.session_type}</span></td>
+                    <td className="p-4">
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span>{sess.notes || '—'}</span>
+                        <button className="text-xs text-emerald-500 underline" onClick={() => handleUpdateNote(sess.id, sess.notes || '')}>Editar</button>
+                      </div>
+                    </td>
+                  </tr>
+                )) : (
+                  <tr>
+                    <td colSpan={5} className="p-8 text-center text-slate-500">Nenhuma sessão registrada.</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      );
+    }
   };
 
   return (
@@ -126,21 +227,33 @@ const AdminPortal = () => {
              >
                <Users size={18}/> Grupos
              </li>
-             <li 
-               className={activeTab === 'auditoria' ? 'active' : ''} 
-               onClick={() => setActiveTab('auditoria')}
-             >
-               <ShieldAlert size={18}/> Auditoria
-             </li>
-           </ul>
+              <li 
+                className={activeTab === 'auditoria' ? 'active' : ''} 
+                onClick={() => setActiveTab('auditoria')}
+              >
+                <ShieldAlert size={18}/> Auditoria
+              </li>
+              <li 
+                className={activeTab === 'sessões' ? 'active' : ''} 
+                onClick={() => setActiveTab('sessões')}
+              >
+                <History size={18}/> Sessões
+              </li>
+            </ul>
         </nav>
         <div className="sidebar-footer">
            <div className="user-profile">
              <span>Administrador</span>
            </div>
-           <button className="btn-logout" onClick={() => void auth.removeUser()}>
-             <LogOut size={16}/> Sair
-           </button>
+           
+           <div style={{ display: 'flex', gap: '0.5rem' }}>
+             <button className="btn-toggle-theme" onClick={toggleTheme} title="Alternar Tema" style={{ background: 'transparent', border: '1px solid var(--border-color)', color: 'var(--text-secondary)', padding: '0.4rem', borderRadius: '6px', cursor: 'pointer' }}>
+               {theme === 'dark' ? <Sun size={16}/> : <Moon size={16}/>}
+             </button>
+             <button className="btn-logout" onClick={() => void auth.removeUser()}>
+               <LogOut size={16}/> Sair
+             </button>
+           </div>
         </div>
       </aside>
 

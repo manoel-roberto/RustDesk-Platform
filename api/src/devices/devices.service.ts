@@ -119,4 +119,39 @@ export class DevicesService {
     await this.deviceRepository.save([dev1, dev2]);
     return { status: 'Seeded' };
   }
+  
+  async exportToCsv(): Promise<string> {
+    const devices = await this.deviceRepository.find();
+    const header = 'rustdesk_id,alias,hostname,os,online,tags';
+    const rows = devices.map(d => {
+      const tags = d.tags ? d.tags.join(',') : '';
+      return `${d.rustdesk_id},${d.alias},${d.hostname},${d.os},${d.online},"${tags}"`;
+    });
+    return [header, ...rows].join('\n');
+  }
+
+  async importFromCsv(csv: string): Promise<void> {
+    const lines = csv.trim().split('\n');
+    const dataLines = lines.slice(1); // Ignorar header
+
+    const devicesToCreate = dataLines.map(line => {
+      // Regex para split por vírgula mas ignorar vírgulas dentro de aspas
+      const matches = line.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
+      if (!matches) return null;
+      
+      const [rustdesk_id, alias, hostname, os, online, tagsStrRaw] = matches.map(s => s.replace(/^"|"$/g, ''));
+      const tags = tagsStrRaw ? tagsStrRaw.split(',').filter(t => t) : [];
+      
+      return this.deviceRepository.create({
+        rustdesk_id,
+        alias,
+        hostname,
+        os,
+        online: online === 'true',
+        tags
+      });
+    }).filter(d => d);
+
+    await this.deviceRepository.save(devicesToCreate);
+  }
 }

@@ -11,6 +11,8 @@ const mockDevicesService = () => ({
   generateConnectLink: jest.fn().mockResolvedValue({}),
   getRustdeskPeers: jest.fn().mockResolvedValue({ data: [] }),
   seedDemoDevices: jest.fn().mockResolvedValue({ status: 'OK' }),
+  exportToCsv: jest.fn().mockResolvedValue('csv_data'),
+  importFromCsv: jest.fn().mockResolvedValue(undefined),
 });
 
 describe('DevicesController', () => {
@@ -50,5 +52,16 @@ describe('DevicesController', () => {
   it('should call seed', async () => {
     await controller.seed();
     expect(service.seedDemoDevices).toHaveBeenCalled();
+  });
+
+  it('should call exportToCsv', async () => {
+    await controller.exportDevices();
+    expect(service.exportToCsv).toHaveBeenCalled();
+  });
+
+  it('should call importFromCsv', async () => {
+    const body = { csv: 'data' };
+    await controller.importDevices(body);
+    expect(service.importFromCsv).toHaveBeenCalledWith('data');
   });
 });

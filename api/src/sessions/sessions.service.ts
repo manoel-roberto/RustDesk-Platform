@@ -44,4 +44,14 @@ export class SessionsService {
 
     return this.sessionRepository.save(session);
   }
+
+  async updateSession(id: string, updateDto: any): Promise<Session> {
+    const session = await this.sessionRepository.findOne({ where: { id } });
+    if (!session) throw new NotFoundException('Session not found');
+
+    if (updateDto.notes !== undefined) session.notes = updateDto.notes;
+    if (updateDto.session_type !== undefined) session.session_type = updateDto.session_type;
+
+    return this.sessionRepository.save(session);
+  }
 }

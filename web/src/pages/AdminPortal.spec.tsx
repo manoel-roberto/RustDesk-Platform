@@ -40,7 +40,7 @@ describe('AdminPortal', () => {
 
     render(<AdminPortal />);
 
-    expect(screen.getByText('Admin Center')).toBeInTheDocument();
+    expect(screen.getByText('Centro Administrativo')).toBeInTheDocument();
     expect(screen.getByText('Gerenciamento de Frota')).toBeInTheDocument();
 
     await waitFor(() => {
@@ -75,5 +75,49 @@ describe('AdminPortal', () => {
     });
     
     expect(removeUser).toHaveBeenCalled();
+  });
+
+  it('switches between tabs correctly', async () => {
+    (useAuth as any).mockReturnValue({ isAuthenticated: true });
+    (api.get as any).mockResolvedValue({ data: { data: [] } });
+
+    render(<AdminPortal />);
+
+    const auditBtn = screen.getByText('Auditoria');
+    auditBtn.click();
+
+    await waitFor(() => {
+      expect(screen.getByText('Logs de Auditoria')).toBeInTheDocument();
+    });
+
+    const groupsBtn = screen.getByText('Grupos');
+    groupsBtn.click();
+
+    await waitFor(() => {
+      expect(screen.getByText('Seção: Grupos')).toBeInTheDocument();
+    });
+  });
+
+  it('displays audit logs when data is available', async () => {
+    (useAuth as any).mockReturnValue({ isAuthenticated: true });
+    (api.get as any).mockImplementation((url: string) => {
+      if (url === '/audit') return Promise.resolve({ data: { data: [{
+        id: '1',
+        createdAt: new Date().toISOString(),
+        username: 'admin',
+        action: 'UPDATE',
+        resource: 'DEVICES',
+        ipAddress: '127.0.0.1'
+      }] } });
+      return Promise.resolve({ data: {} });
+    });
+
+    render(<AdminPortal />);
+    screen.getByText('Auditoria').click();
+
+    await waitFor(() => {
+      expect(screen.getByText('UPDATE')).toBeInTheDocument();
+      expect(screen.getByText('admin')).toBeInTheDocument();
+    });
   });
 });

@@ -96,6 +96,20 @@ describe('AdminPortal', () => {
     await waitFor(() => {
       expect(screen.getByText('Seção: Grupos')).toBeInTheDocument();
     });
+
+    const machinesBtn = screen.getByText('Máquinas');
+    machinesBtn.click();
+
+    await waitFor(() => {
+      expect(screen.getByText('Seção: Maquinas')).toBeInTheDocument();
+    });
+
+    const overviewBtn = screen.getByText('Visão Geral');
+    overviewBtn.click();
+
+    await waitFor(() => {
+      expect(screen.getByText('Gerenciamento de Frota')).toBeInTheDocument();
+    });
   });
 
   it('displays audit logs when data is available', async () => {

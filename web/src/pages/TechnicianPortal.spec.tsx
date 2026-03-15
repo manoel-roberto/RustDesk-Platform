@@ -91,7 +91,7 @@ describe('TechnicianPortal', () => {
     });
 
     expect(window.location.href).toBe('rustdesk://123');
-    window.location = originalLocation;
+    window.location = originalLocation as any;
   });
 
   it('handles api error in catch block', async () => {
@@ -130,9 +130,28 @@ describe('TechnicianPortal', () => {
 
     render(<TechnicianPortal />);
     const logoutBtn = await screen.findByText('Sair');
-    await waitFor(() => {
-      logoutBtn.click();
-    });
+    fireEvent.click(logoutBtn);
     expect(removeUser).toHaveBeenCalled();
+  });
+
+  it('switches to settings tab and renders placeholder', async () => {
+    (useAuth as any).mockReturnValue({ isAuthenticated: true });
+    (api.get as any).mockResolvedValue({ data: { data: [] } });
+
+    render(<TechnicianPortal />);
+    
+    const settingsBtn = screen.getByText('Configurações');
+    fireEvent.click(settingsBtn);
+
+    await waitFor(() => {
+      expect(screen.getByText('Ajustes de perfil e preferências do técnico em desenvolvimento.')).toBeInTheDocument();
+    });
+
+    const machinesBtn = screen.getByText('Minhas Máquinas');
+    fireEvent.click(machinesBtn);
+
+    await waitFor(() => {
+      expect(screen.getByText('Catálogo de Dispositivos (Address Book)')).toBeInTheDocument();
+    });
   });
 });

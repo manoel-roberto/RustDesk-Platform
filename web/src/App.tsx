@@ -74,13 +74,16 @@ export const AppRoutes = () => {
 };
 
 import { ThemeProvider } from './context/ThemeContext';
+import { BrandingProvider } from './context/BrandingContext';
 
 function App() {
   return (
     <ThemeProvider>
-      <BrowserRouter>
-        <AppRoutes />
-      </BrowserRouter>
+      <BrandingProvider>
+        <BrowserRouter>
+          <AppRoutes />
+        </BrowserRouter>
+      </BrandingProvider>
     </ThemeProvider>
   );
 }

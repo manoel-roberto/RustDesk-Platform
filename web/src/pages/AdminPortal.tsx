@@ -13,6 +13,8 @@ const AdminPortal = () => {
   const [auditLogs, setAuditLogs] = useState<any[]>([]);
   const [sessions, setSessions] = useState<any[]>([]);
   const [devices, setDevices] = useState<any[]>([]);
+  const [sessionStats, setSessionStats] = useState<{ totalSessions: number; totalHours: number; avgMinutes: number } | null>(null);
+  const [offlineCount, setOfflineCount] = useState(0);
 
   const roles = (auth.user?.profile as any)?.realm_access?.roles || [];
   const isReadOnly = roles.includes('ADMIN_READONLY');
@@ -20,12 +22,15 @@ const AdminPortal = () => {
   useEffect(() => {
     if (auth.isAuthenticated) {
       api.get('/devices').then(res => {
-        setStats(s => ({ ...s, devices: res.data.meta?.total || 0 }));
-        setDevices(res.data.data || []);
+        const devData = res.data.data || [];
+        setStats(s => ({ ...s, devices: res.data.meta?.total || devData.length }));
+        setDevices(devData);
+        setOfflineCount(devData.filter((d: any) => d.status === 0).length);
       }).catch(console.error);
       api.get('/groups').then(res => setStats(s => ({ ...s, groups: res.data.data?.length || 0 }))).catch(console.error);
       api.get('/audit').then(res => setAuditLogs(res.data.data || [])).catch(console.error);
       api.get('/sessions').then(res => setSessions(res.data.data || [])).catch(console.error).finally(() => setLoading(false));
+      api.get('/sessions/stats').then(res => setSessionStats(res.data)).catch(console.error);
     }
   }, [auth.isAuthenticated, activeTab]);
   
@@ -117,6 +122,29 @@ const AdminPortal = () => {
                 <h3>Sessões Ativas</h3>
                 <p style={{ fontSize: '2rem', fontWeight: 'bold', marginTop: '1rem', color: '#f59e0b' }}>0</p>
               </div>
+              {sessionStats && (
+                <>
+                  <div className="device-card">
+                    <h3>Total de Horas Suporte</h3>
+                    <p style={{ fontSize: '2rem', fontWeight: 'bold', marginTop: '1rem', color: '#6366f1' }}>{sessionStats.totalHours}h</p>
+                  </div>
+                  <div className="device-card">
+                    <h3>Sessões Concluídas</h3>
+                    <p style={{ fontSize: '2rem', fontWeight: 'bold', marginTop: '1rem', color: '#ec4899' }}>{sessionStats.totalSessions}</p>
+                  </div>
+                  <div className="device-card">
+                    <h3>Duração Média</h3>
+                    <p style={{ fontSize: '2rem', fontWeight: 'bold', marginTop: '1rem', color: '#0ea5e9' }}>{sessionStats.avgMinutes}min</p>
+                  </div>
+                </>
+              )}
+              {offlineCount > 0 && (
+                <div className="device-card" style={{ borderLeft: '4px solid #ef4444' }}>
+                  <h3>⚠️ Dispositivos Offline</h3>
+                  <p style={{ fontSize: '2rem', fontWeight: 'bold', marginTop: '1rem', color: '#ef4444' }}>{offlineCount}</p>
+                  <p style={{ fontSize: '0.8rem', color: '#94a3b8', marginTop: '0.5rem' }}>Verifique os dispositivos inativos</p>
+                </div>
+              )}
             </div>
           )}
         </>

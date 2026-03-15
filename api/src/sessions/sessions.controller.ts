@@ -7,6 +7,11 @@ import { AuthGuard } from '@nestjs/passport';
 export class SessionsController {
   constructor(private readonly sessionsService: SessionsService) {}
 
+  @Get('stats')
+  getStats(@Query() query: any) {
+    return this.sessionsService.getSessionStats(query);
+  }
+
   @Get()
   findAll(@Query() query: any) {
     return this.sessionsService.findAll(query);

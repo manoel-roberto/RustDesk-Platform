@@ -129,4 +129,58 @@ describe('SessionsService', () => {
       await expect(service.updateSession('invalid', {})).rejects.toThrow(NotFoundException);
     });
   });
+
+  describe('getSessionStats', () => {
+    it('should return zeroed stats when no sessions', async () => {
+      // Mock the getSessionStats queryBuilder (different from findAll)
+      // We need a fresh mock for this 'where' chain
+      const mockQB = {
+        where: jest.fn().mockReturnThis(),
+        andWhere: jest.fn().mockReturnThis(),
+        getMany: jest.fn().mockResolvedValue([]),
+      };
+      sessionRepository.createQueryBuilder = jest.fn().mockReturnValue(mockQB);
+
+      const result = await service.getSessionStats({});
+      expect(result.totalSessions).toBe(0);
+      expect(result.totalHours).toBe(0);
+      expect(result.avgMinutes).toBe(0);
+    });
+
+    it('should calculate total hours and average correctly', async () => {
+      const start1 = new Date('2024-01-01T10:00:00Z');
+      const end1 = new Date('2024-01-01T10:30:00Z'); // 30 min
+      const start2 = new Date('2024-01-01T11:00:00Z');
+      const end2 = new Date('2024-01-01T11:30:00Z'); // 30 min
+
+      const mockQB = {
+        where: jest.fn().mockReturnThis(),
+        andWhere: jest.fn().mockReturnThis(),
+        getMany: jest.fn().mockResolvedValue([
+          { started_at: start1, ended_at: end1 },
+          { started_at: start2, ended_at: end2 },
+        ]),
+      };
+      sessionRepository.createQueryBuilder = jest.fn().mockReturnValue(mockQB);
+
+      const result = await service.getSessionStats({});
+      expect(result.totalSessions).toBe(2);
+      expect(result.totalSeconds).toBe(3600); // 30min + 30min = 3600s
+      expect(result.totalHours).toBe(1);
+      expect(result.avgMinutes).toBe(30);
+    });
+
+    it('should apply date filters when provided', async () => {
+      const mockQB = {
+        where: jest.fn().mockReturnThis(),
+        andWhere: jest.fn().mockReturnThis(),
+        getMany: jest.fn().mockResolvedValue([]),
+      };
+      sessionRepository.createQueryBuilder = jest.fn().mockReturnValue(mockQB);
+
+      await service.getSessionStats({ startDate: '2024-01-01', endDate: '2024-01-31' });
+
+      expect(mockQB.andWhere).toHaveBeenCalledTimes(2);
+    });
+  });
 });

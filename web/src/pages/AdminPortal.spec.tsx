@@ -22,10 +22,28 @@ vi.mock('../context/ThemeContext', () => ({
   useTheme: vi.fn(),
 }));
 
+vi.mock('../context/BrandingContext', () => ({
+  useBranding: vi.fn().mockReturnValue({
+    companyName: 'Test Corp',
+    logoUrl: null,
+    primaryColor: '#10b981',
+    supportEmail: 'test@test.com',
+  }),
+}));
+
 describe('AdminPortal', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     (useTheme as any).mockReturnValue({ theme: 'dark', toggleTheme: vi.fn() });
+    (api.get as any).mockImplementation((url: string) => {
+      if (url === '/devices') return Promise.resolve({ data: { data: [], meta: { total: 0 } } });
+      if (url === '/groups') return Promise.resolve({ data: { data: [] } });
+      if (url === '/audit') return Promise.resolve({ data: { data: [] } });
+      if (url === '/sessions') return Promise.resolve({ data: { data: [] } });
+      if (url === '/sessions/stats') return Promise.resolve({ data: { totalSessions: 10, totalHours: 5.5, avgMinutes: 33, totalSeconds: 19800 } });
+      if (url === '/devices/export') return Promise.resolve({ data: 'csv' });
+      return Promise.reject(new Error('URL not mocked: ' + url));
+    });
   });
 
   it('renders loading screen when not authenticated', () => {
@@ -65,6 +83,22 @@ describe('AdminPortal', () => {
     await waitFor(() => {
       expect(screen.getAllByText('0')).toHaveLength(3);
     });
+  });
+
+  it('displays session analytics cards on dashboard', async () => {
+    (useAuth as any).mockReturnValue({
+      isAuthenticated: true,
+      removeUser: vi.fn(),
+    });
+
+    render(<AdminPortal />);
+
+    expect(await screen.findByText('Total de Horas Suporte')).toBeInTheDocument();
+    expect(await screen.findByText('5.5h')).toBeInTheDocument();
+    expect(await screen.findByText('Sessões Concluídas')).toBeInTheDocument();
+    expect(await screen.findByText('10')).toBeInTheDocument();
+    expect(await screen.findByText('Duração Média')).toBeInTheDocument();
+    expect(await screen.findByText('33min')).toBeInTheDocument();
   });
 
   it('logs out when logout button is clicked', async () => {

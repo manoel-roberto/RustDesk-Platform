@@ -15,4 +15,15 @@ export class DownloadsController {
       name: 'RustDesk Enterprise Client'
     };
   }
+
+  @Get('branding')
+  @UseGuards(AuthGuard('jwt'))
+  getBranding() {
+    return {
+      companyName: process.env.BRAND_COMPANY_NAME || 'RustDesk Enterprise',
+      logoUrl: process.env.BRAND_LOGO_URL || null,
+      primaryColor: process.env.BRAND_PRIMARY_COLOR || '#10b981',
+      supportEmail: process.env.BRAND_SUPPORT_EMAIL || 'suporte@empresa.com'
+    };
+  }
 }

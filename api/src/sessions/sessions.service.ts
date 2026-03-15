@@ -64,4 +64,32 @@ export class SessionsService {
 
     return this.sessionRepository.save(session);
   }
+
+  async getSessionStats(query: { startDate?: string; endDate?: string } = {}): Promise<{
+    totalSessions: number;
+    totalSeconds: number;
+    totalHours: number;
+    avgMinutes: number;
+  }> {
+    const qb = this.sessionRepository.createQueryBuilder('session')
+      .where('session.ended_at IS NOT NULL');
+
+    if (query.startDate) qb.andWhere('session.started_at >= :startDate', { startDate: query.startDate });
+    if (query.endDate) qb.andWhere('session.ended_at <= :endDate', { endDate: query.endDate });
+
+    const sessions = await qb.getMany();
+
+    const totalSessions = sessions.length;
+    const totalSeconds = sessions.reduce((acc, s) => {
+      if (s.started_at && s.ended_at) {
+        return acc + Math.floor((s.ended_at.getTime() - s.started_at.getTime()) / 1000);
+      }
+      return acc;
+    }, 0);
+
+    const totalHours = parseFloat((totalSeconds / 3600).toFixed(2));
+    const avgMinutes = totalSessions > 0 ? parseFloat((totalSeconds / 60 / totalSessions).toFixed(2)) : 0;
+
+    return { totalSessions, totalSeconds, totalHours, avgMinutes };
+  }
 }

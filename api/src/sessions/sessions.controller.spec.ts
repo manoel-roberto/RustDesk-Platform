@@ -7,6 +7,7 @@ const mockSessionsService = () => ({
   startSession: jest.fn().mockResolvedValue({ id: '1' }),
   closeSession: jest.fn().mockResolvedValue({ id: '1', ended_at: new Date() }),
   updateSession: jest.fn().mockResolvedValue({ id: '1' }),
+  getSessionStats: jest.fn().mockResolvedValue({ totalSessions: 5, totalHours: 2.5, avgMinutes: 30, totalSeconds: 9000 }),
 });
 
 describe('SessionsController', () => {
@@ -30,6 +31,16 @@ describe('SessionsController', () => {
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
+  });
+
+  describe('getStats', () => {
+    it('should call service.getSessionStats and return stats', async () => {
+      const query = { startDate: '2024-01-01', endDate: '2024-01-31' };
+      const result = await controller.getStats(query);
+      expect(service.getSessionStats).toHaveBeenCalledWith(query);
+      expect(result.totalSessions).toBe(5);
+      expect(result.totalHours).toBe(2.5);
+    });
   });
 
   describe('findAll', () => {

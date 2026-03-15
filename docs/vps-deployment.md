@@ -75,15 +75,31 @@ sudo ufw enable
 
 ---
 
-## 🔑 4. Pós-Instalação: Obtendo sua Chave Pública
+## 🔑 4. Geração e Localização das Chaves de Segurança
 
-Para conectar seus clientes RustDesk ao servidor, você precisará da chave pública gerada automaticamente:
+O RustDesk utiliza um par de chaves ED25519 para garantir que apenas clientes autorizados se conectem ao seu servidor.
 
+### Geração Automática
+Ao rodar o `docker compose up -d` pela primeira vez, o serviço `hbbs` gera automaticamente o par de chaves caso elas não existam. Elas são salvas no volume persistente.
+
+### Localização dos Arquivos
+No seu servidor VPS, os arquivos estarão em:
+- **Chave Privada**: `./data/rustdesk-data/id_ed25519` (Mantenha em sigilo absoluto)
+- **Chave Pública**: `./data/rustdesk-data/id_ed25519.pub` (Usada na configuração dos clientes)
+
+### Como Visualizar a Chave Pública
+Execute o comando abaixo para obter o código que deve ser inserido no campo "Key" do seu cliente RustDesk:
 ```bash
 cat ./data/rustdesk-data/id_ed25519.pub
 ```
 
-Copie este código e insira-o na configuração de rede ("Key") do cliente RustDesk, junto com o IP do seu servidor ID.
+### Geração Manual (Caso necessário)
+Se precisar gerar novas chaves manualmente fora do Docker:
+```bash
+# Dentro da pasta do projeto
+hbbs -p
+```
+Isso criará os arquivos no diretório atual. Lembre-se de movê-los para `./data/rustdesk-data/` e reiniciar os containers.
 
 ---
 

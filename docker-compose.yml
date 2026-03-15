@@ -1,0 +1,125 @@
+version: '3.8'
+
+# ==============================================================================
+# Infraestrutura da Plataforma RustDesk
+# Conforme specs: sistema (hbbs/hbbr), API Server, DB, Cache, IDP
+# ==============================================================================
+
+services:
+  # ----------------------------------------------------------------------------
+  # Servidor de ID / ID Server (hbbs)
+  # Funcionalidade: NAT hole punching, conexão, registro
+  # ----------------------------------------------------------------------------
+  hbbs:
+    image: rustdesk/rustdesk-server:latest
+    container_name: hbbs
+    command: hbbs -r hbbr.empresa.com:21117 -k _
+    environment:
+      - RELAY=hbbr.empresa.com
+      - ENCRYPTED_ONLY=1  # Requisito REQ-S-010: E2E Criptografado obrigatório
+    volumes:
+      - ./data/rustdesk-data:/root
+    network_mode: host # Rustdesk Server recomenda network host por performance de UDP
+    restart: unless-stopped
+
+  # ----------------------------------------------------------------------------
+  # Servidor de Relay (hbbr)
+  # Funcionalidade: Relay fallback de tráfego
+  # ----------------------------------------------------------------------------
+  hbbr:
+    image: rustdesk/rustdesk-server:latest
+    container_name: hbbr
+    command: hbbr -k _
+    environment:
+      - ENCRYPTED_ONLY=1
+    volumes:
+      - ./data/rustdesk-data:/root
+    network_mode: host
+    restart: unless-stopped
+
+  # ----------------------------------------------------------------------------
+  # API Server (NestJS) / Address Book
+  # Responsável por: Portal, Controle de Dispositivos e Address Book
+  # ----------------------------------------------------------------------------
+  api-server:
+    image: node:20-alpine # Substituir pelo Dockerfile proprietário da API posteriormente
+    container_name: api_server
+    working_dir: /app
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DB_HOST=postgres-db
+      - DB_PORT=5432
+      - REDIS_HOST=redis-cache
+      - KEYCLOAK_URL=http://keycloak:8080
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+      redis-cache:
+        condition: service_started
+    volumes:
+      - ./api:/app
+    command: "npm run start:dev" # start dev for hot-reload in development
+    restart: unless-stopped
+
+  # ----------------------------------------------------------------------------
+  # Banco de Dados (PostgreSQL 16)
+  # ----------------------------------------------------------------------------
+  postgres-db:
+    image: postgres:16-alpine
+    container_name: pg_db
+    environment:
+      - POSTGRES_USER=empresa_admin
+      - POSTGRES_PASSWORD=super_secret_db_pass
+      - POSTGRES_DB=rustdesk_platform
+    volumes:
+      - ./data/pg-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U empresa_admin -d rustdesk_platform"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:5433:5432" # Bloqueio externo garantido (REQ-S-008) - Alterado para 5433 para evitar conflito com postgres local
+
+  # ----------------------------------------------------------------------------
+  # Cache (Redis 7) - Sessões da API e filas
+  # ----------------------------------------------------------------------------
+  redis-cache:
+    image: redis:7-alpine
+    container_name: redis_cache
+    volumes:
+      - ./data/redis-data:/data
+    command: redis-server --appendonly yes
+    restart: unless-stopped
+
+  # ----------------------------------------------------------------------------
+  # Identity Provider (Keycloak)
+  # SSO, MFA e RBAC
+  # ----------------------------------------------------------------------------
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0
+    container_name: keycloak_idp
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin_secret
+      - KC_DB=postgres
+      - KC_DB_URL=jdbc:postgresql://postgres-db:5432/keycloak
+      - KC_DB_USERNAME=empresa_admin
+      - KC_DB_PASSWORD=super_secret_db_pass
+    command: start-dev # Trocar para "start" + configs TLS em produção
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+    restart: unless-stopped
+
+# Para acesso à rede interna pelo Keycloak e API
+volumes:
+  api-data:
+  pg-data:
+  redis-data:
+  rustdesk-data:

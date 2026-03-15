@@ -1,0 +1,447 @@
+Atue como um Arquiteto Sênior de Infraestrutura de TI, DevOps Engineer, Especialista em Segurança e Especialista em Software Open Source, com forte experiência em:
+
+Self-hosted infrastructure
+
+RustDesk
+
+Docker / Docker Compose
+
+Linux Server Administration
+
+DevOps automation
+
+Rust compilation
+
+Flutter builds
+
+APIs REST
+
+Segurança de rede
+
+VPN / NAT traversal
+
+Sistemas de suporte remoto corporativo
+
+Você também possui experiência substituindo soluções comerciais como:
+
+TeamViewer
+
+AnyDesk
+
+RustDesk Server Pro
+
+por infraestrutura open source self-hosted em produção.
+
+OBJETIVO
+
+Projetar e documentar uma solução completa de suporte remoto baseada no RustDesk totalmente open source, incluindo infraestrutura, compilação de clientes personalizados, gerenciamento de dispositivos e segurança corporativa.
+
+A solução deve ser pronta para produção, utilizada por uma empresa de suporte técnico de ERP.
+
+CONTEXTO OPERACIONAL
+
+A empresa possui:
+
+5–20 técnicos de suporte
+
+100–500 computadores de clientes
+
+Acesso remoto frequente para:
+
+suporte técnico
+
+implantação de ERP
+
+treinamento
+
+manutenção
+
+Infraestrutura desejada:
+
+100% Open Source
+
+Self-hosted
+
+Zero custo de licenciamento
+
+Substituir ferramentas como AnyDesk ou TeamViewer
+
+Ambiente de servidor:
+
+VPS Linux
+
+Ubuntu 22.04 ou Debian 12
+
+2–4 vCPU
+
+4–8 GB RAM
+
+Docker / Docker Compose
+
+Clientes:
+
+Principalmente Windows
+
+RESTRIÇÕES
+
+A solução NÃO pode utilizar:
+
+RustDesk Server Pro
+
+Serviços pagos
+
+Dependências SaaS proprietárias
+
+A solução deve utilizar apenas:
+
+RustDesk open source
+
+ferramentas da comunidade
+
+APIs open source
+
+bancos de dados open source
+
+RESULTADO ESPERADO
+
+A resposta deve ser um guia técnico completo de implantação em produção, incluindo:
+
+arquitetura
+
+código
+
+scripts
+
+docker-compose
+
+fluxos de autenticação
+
+compilação do cliente
+
+segurança
+
+TAREFAS QUE VOCÊ DEVE EXECUTAR
+1 — Arquitetura Completa da Solução
+
+Explique e desenhe a arquitetura incluindo:
+
+Componentes:
+
+hbbs (ID server)
+
+hbbr (relay server)
+
+API server (rustdesk-api-server ou alternativa)
+
+banco de dados
+
+sistema de autenticação
+
+painel de técnicos
+
+web client
+
+clientes personalizados
+
+Inclua um diagrama de arquitetura textual claro.
+
+Exemplo:
+
+Clientes Windows
+       ↓
+Internet
+       ↓
+Firewall
+       ↓
+hbbs (Rendezvous / ID Server)
+       ↓
+hbbr (Relay Server)
+       ↓
+Infraestrutura interna
+       ↓
+API Server
+       ↓
+Database
+       ↓
+Dashboard técnico
+2 — Infraestrutura do Servidor
+
+Explique passo a passo completo:
+
+Preparação do servidor:
+
+update
+firewall
+docker install
+docker compose
+
+Criação da infraestrutura:
+
+diretórios
+
+docker-compose
+
+volumes
+
+persistência
+
+Gerar exemplo completo de docker-compose.yml funcional.
+
+3 — Configuração do RustDesk Server
+
+Explique detalhadamente:
+
+configuração do hbbs
+
+configuração do hbbr
+
+NAT traversal
+
+Rendezvous server
+
+Inclua:
+
+portas necessárias
+
+firewall rules
+
+persistência de dados
+
+configuração de domínio
+
+configuração de chaves públicas/privadas
+
+4 — Compilação do Cliente Personalizado (White-Label)
+
+Explique como gerar um cliente RustDesk customizado com branding da empresa.
+
+Inclua:
+
+alteração de logo
+
+alteração do nome da aplicação
+
+configuração do servidor padrão
+
+compilação para Windows
+
+Inclua:
+
+instalação do Rust
+
+instalação do Cargo
+
+instalação do Flutter
+
+build do cliente
+
+Forneça scripts reais de build.
+
+5 — Distribuição Automática do Cliente
+
+Explique como distribuir clientes personalizados usando:
+
+download automático
+
+script instalador
+
+GPO (opcional)
+
+link web
+
+Inclua:
+
+instalador silencioso
+
+execução automática
+
+6 — Sistema de Gerenciamento de Clientes (Address Book)
+
+Como o RustDesk open source não possui Address Book centralizado, projete uma solução usando:
+
+rustdesk-api-server
+ou
+
+PocketBase
+ou
+
+Supabase
+
+Explique:
+
+autenticação de técnicos
+
+armazenamento de dispositivos
+
+sincronização de contatos
+
+permissões de acesso
+
+Inclua modelo de banco de dados.
+
+7 — Dashboard para Técnicos
+
+Projete um painel que permita:
+
+listar dispositivos
+
+iniciar conexão
+
+visualizar status online/offline
+
+registrar clientes
+
+Sugira stack open source:
+
+PocketBase
+
+NodeJS
+
+Vue
+
+Grafana
+
+8 — Web Client
+
+Avalie e explique:
+
+RustDesk Web Client
+
+instalação
+
+configuração
+
+limitações
+
+9 — Segurança Corporativa
+
+Explique profundamente:
+
+criptografia
+
+E2E encryption
+
+chaves públicas/privadas
+
+segurança de acesso
+
+autenticação de técnicos
+
+controle de permissões
+
+segurança do servidor
+
+firewall
+
+fail2ban
+
+rate limit
+
+auditoria
+
+logs
+
+histórico de conexões
+
+10 — Monitoramento da Infraestrutura
+
+Explique como monitorar usando:
+
+Prometheus
+
+Grafana
+
+logs docker
+
+alertas
+
+11 — Escalabilidade
+
+Explique como escalar para:
+
+1000+ dispositivos
+
+múltiplos técnicos
+
+múltiplos servidores relay
+
+12 — Troubleshooting
+
+Liste problemas comuns:
+
+cliente não conecta
+
+NAT traversal falha
+
+relay não funciona
+
+firewall bloqueando
+
+Inclua solução.
+
+13 — Estrutura Final do Projeto
+
+Forneça uma estrutura organizada:
+
+rustdesk-support-infra/
+
+server/
+docker-compose.yml
+config/
+
+hbbs/
+hbbr/
+
+api/
+rustdesk-api-server/
+
+database/
+pocketbase/
+
+client-builder/
+assets/
+logo/
+scripts/
+
+dashboard/
+frontend/
+backend/
+14 — Entregáveis Esperados
+
+Sua resposta deve incluir:
+
+arquitetura completa
+
+comandos Linux
+
+scripts
+
+docker-compose
+
+exemplos de código
+
+diagramas
+
+boas práticas
+
+15 — Validação Técnica
+
+Antes de finalizar sua resposta:
+
+Verifique se a solução é 100% open source
+
+Confirme que não usa RustDesk Server Pro
+
+Garanta que pode ser implementada em produção
+
+MODO DE RESPOSTA
+
+Responda como se estivesse escrevendo um guia técnico profissional para DevOps e administradores de sistemas.
+
+Evite respostas superficiais.
+
+Forneça explicações profundas e práticas.
+
+RESULTADO ESPERADO
+
+Um manual completo de implementação de infraestrutura RustDesk self-hosted para empresa de suporte técnico.

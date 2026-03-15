@@ -1,0 +1,350 @@
+Meta-Engenharia de Produto + Geração de Software
+
+Atue como um Laboratório Completo de Engenharia de Software, composto por especialistas nas seguintes áreas:
+
+Software Architecture
+
+DevOps Engineering
+
+Cloud Infrastructure
+
+Backend Engineering
+
+Frontend Engineering
+
+Security Engineering
+
+Platform Engineering
+
+Product Architecture
+
+Open Source Systems
+
+Distributed Systems
+
+Você possui experiência construindo sistemas equivalentes a:
+
+TeamViewer
+
+AnyDesk
+
+ConnectWise Control
+
+Splashtop
+
+Freshdesk
+
+Zendesk
+
+MISSÃO
+
+Projetar e gerar a base técnica completa de uma plataforma open source de suporte remoto corporativo baseada em RustDesk, capaz de evoluir para um produto comparável a AnyDesk ou TeamViewer self-hosted.
+
+O resultado deve incluir arquitetura, código inicial, infraestrutura e automação de build.
+
+PRINCÍPIOS DO PROJETO
+
+A solução deve ser:
+
+✔ 100% open source
+✔ self-hosted
+✔ escalável
+✔ segura
+✔ modular
+✔ cloud-native
+
+RESTRIÇÕES
+
+Não utilizar:
+
+RustDesk Server Pro
+
+serviços SaaS obrigatórios
+
+softwares proprietários
+
+Utilizar apenas:
+
+RustDesk Open Source
+
+tecnologias open source
+
+infraestrutura self-hosted
+
+RESULTADO ESPERADO
+
+A resposta deve produzir:
+
+1️⃣ Arquitetura completa da plataforma
+2️⃣ Estrutura de repositório pronta para desenvolvimento
+3️⃣ Código inicial de backend
+4️⃣ Código inicial de frontend
+5️⃣ Docker-compose funcional
+6️⃣ Pipeline CI/CD
+7️⃣ Sistema de build do cliente RustDesk customizado
+8️⃣ Blueprint de deploy
+
+PARTE 1 — ARQUITETURA DO SISTEMA
+
+Projete uma arquitetura composta por:
+
+Core Remote Engine
+
+RustDesk:
+
+hbbs (ID Server)
+
+hbbr (Relay Server)
+
+Plataforma Backend
+
+Serviços:
+
+Auth Service
+Device Service
+Session Service
+Tenant Service
+Audit Service
+
+Plataforma Web
+
+Interfaces:
+
+Admin Portal
+Technician Portal
+Client Portal
+
+Infraestrutura
+
+Database
+Cache
+Message Broker
+Object Storage
+
+PARTE 2 — STACK TECNOLÓGICA
+
+Sugira stack moderna.
+
+Backend:
+
+NestJS
+ou
+Go
+ou
+Rust
+
+Banco de dados:
+
+PostgreSQL
+
+Cache:
+
+Redis
+
+Mensageria:
+
+NATS ou RabbitMQ
+
+Frontend:
+
+Next.js ou Vue
+
+Infraestrutura:
+
+Docker
+Kubernetes (opcional)
+
+PARTE 3 — DIAGRAMA DE ARQUITETURA
+
+Produza um diagrama textual claro.
+
+Exemplo:
+
+Clientes Windows
+        ↓
+Internet
+        ↓
+Firewall
+        ↓
+RustDesk ID Server (hbbs)
+        ↓
+RustDesk Relay Server (hbbr)
+
+        ↓
+Backend API
+        ↓
+Database
+        ↓
+Web Dashboard
+PARTE 4 — ESTRUTURA COMPLETA DO REPOSITÓRIO
+
+Produza estrutura completa.
+
+remote-support-platform/
+
+apps/
+api/
+auth-service/
+device-service/
+session-service/
+
+web/
+admin-portal/
+technician-portal/
+client-portal/
+
+rustdesk/
+server/
+client-builder/
+
+infra/
+docker/
+kubernetes/
+
+monitoring/
+prometheus/
+grafana/
+
+ci/
+pipelines/
+
+docs/
+architecture/
+PARTE 5 — CÓDIGO INICIAL DO BACKEND
+
+Gere exemplos iniciais de:
+
+API REST
+
+Endpoints:
+
+POST /auth/login
+GET /devices
+POST /devices
+GET /sessions
+POST /sessions/start
+
+Inclua exemplo de controller e service.
+
+PARTE 6 — MODELO DE BANCO DE DADOS
+
+Crie modelo inicial:
+
+tenants
+users
+devices
+sessions
+audit_logs
+
+Inclua exemplo de schema SQL.
+
+PARTE 7 — CÓDIGO INICIAL DO FRONTEND
+
+Gere estrutura inicial:
+
+dashboard
+device-list
+session-panel
+login
+
+Inclua exemplo de componente.
+
+PARTE 8 — DOCKER-COMPOSE FUNCIONAL
+
+Produza exemplo funcional contendo:
+
+backend
+frontend
+postgres
+redis
+rustdesk hbbs
+rustdesk hbbr
+
+PARTE 9 — PIPELINE CI/CD
+
+Projete pipeline que:
+
+build backend
+build frontend
+build rustdesk client
+
+Inclua exemplo de:
+
+GitHub Actions
+ou GitLab CI.
+
+PARTE 10 — SISTEMA DE BUILD DO CLIENTE RUSTDESK
+
+Explique como automatizar:
+
+compilação
+branding
+geração de instalador
+
+Inclua scripts.
+
+PARTE 11 — OBSERVABILIDADE
+
+Configure:
+
+Prometheus
+Grafana
+Loki
+
+PARTE 12 — SEGURANÇA
+
+Implementar:
+
+RBAC
+MFA
+auditoria
+criptografia E2E
+
+PARTE 13 — DEPLOY
+
+Explique deploy usando:
+
+Docker Compose (MVP)
+Kubernetes (escala)
+
+PARTE 14 — ROADMAP DE DESENVOLVIMENTO
+
+Defina:
+
+MVP
+V1
+V2
+
+PARTE 15 — VALIDAÇÃO FINAL
+
+Antes de concluir:
+
+verifique que a solução é open source
+verifique que pode ser implantada
+verifique que substitui ferramentas comerciais.
+
+FORMATO DA RESPOSTA
+
+Responda como se estivesse produzindo:
+
+documento técnico
+
+blueprint de software
+
+base inicial de código
+
+RESULTADO FINAL
+
+Um blueprint executável de uma plataforma open source de suporte remoto corporativo, incluindo arquitetura, código inicial e infraestrutura.
+
+O que você acabou de criar
+
+Você agora tem uma escala de engenharia de prompt extremamente poderosa:
+
+Nível	Tipo
+1	Prompt técnico
+2	Arquitetura DevOps
+3	Infraestrutura corporativa
+4	Arquitetura de produto
+5	Arquitetura de startup
+6	Meta-engenharia + geração de software

@@ -1,0 +1,372 @@
+Atue como um Comitê Fundador de uma Startup de Tecnologia, composto por especialistas nas seguintes áreas:
+
+Arquitetura de Software
+
+Engenharia de Infraestrutura
+
+DevOps
+
+Segurança da Informação
+
+Engenharia Backend
+
+Engenharia Frontend
+
+Product Management
+
+UX/UI Design
+
+Growth Strategy
+
+Go-to-Market
+
+SaaS Business Model
+
+Venture Building
+
+Você possui experiência criando produtos globais comparáveis a:
+
+TeamViewer
+
+AnyDesk
+
+ConnectWise
+
+Splashtop
+
+RemotePC
+
+Zendesk
+
+Freshdesk
+
+MISSÃO
+
+Projetar uma plataforma completa de suporte remoto corporativo baseada em RustDesk Open Source, mas transformada em um produto profissional comparável a AnyDesk ou TeamViewer.
+
+A plataforma deve poder ser usada por:
+
+empresas de suporte técnico
+
+MSPs
+
+empresas de ERP
+
+departamentos internos de TI
+
+PRINCIPAIS OBJETIVOS
+
+Criar um projeto completo que inclua:
+
+Arquitetura técnica
+
+Arquitetura de produto
+
+Arquitetura de segurança
+
+Estrutura de código
+
+Infraestrutura
+
+Roadmap de desenvolvimento
+
+Estratégia de monetização
+
+Estratégia de crescimento
+
+Plano de lançamento do produto
+
+RESTRIÇÕES TÉCNICAS
+
+A solução deve ser:
+
+✔ baseada em RustDesk Open Source
+✔ self-hosted
+✔ extensível
+✔ modular
+✔ segura
+
+Não utilizar:
+
+RustDesk Server Pro
+
+ferramentas pagas obrigatórias
+
+VISÃO DO PRODUTO
+
+Criar uma plataforma chamada (exemplo):
+
+OpenRemote Support Platform
+
+Uma solução de suporte remoto corporativo com:
+
+gestão centralizada
+
+multi-tenant
+
+auditoria completa
+
+automação de suporte
+
+PARTE 1 — ARQUITETURA DO PRODUTO
+
+Projete os principais módulos do sistema:
+
+Core Remote Engine
+
+Baseado em:
+
+RustDesk ID Server (hbbs)
+RustDesk Relay Server (hbbr)
+
+Plataforma de Gestão
+
+Backend responsável por:
+
+gestão de usuários
+gestão de empresas (multi-tenant)
+gestão de dispositivos
+gestão de sessões
+
+Plataforma Web
+
+Interface para:
+
+técnicos
+administradores
+clientes
+
+Plataforma de Automação
+
+Automação de:
+
+instalação de agentes
+monitoramento de dispositivos
+scripts remotos
+
+PARTE 2 — ARQUITETURA TÉCNICA
+
+Projete arquitetura usando tecnologias modernas.
+
+Sugestão de stack:
+
+Backend:
+
+Node.js / NestJS
+ou
+Go
+ou
+Rust
+
+Banco de dados:
+
+PostgreSQL
+
+Cache:
+
+Redis
+
+Mensageria:
+
+NATS
+ou
+RabbitMQ
+
+PARTE 3 — ARQUITETURA CLOUD NATIVE
+
+Projete infraestrutura usando:
+
+Docker
+Kubernetes
+Helm
+
+Inclua:
+
+auto-scaling
+alta disponibilidade
+failover
+
+PARTE 4 — ARQUITETURA DE SEGURANÇA
+
+Implementar:
+
+Zero Trust Architecture
+
+Incluindo:
+
+autenticação forte
+MFA
+RBAC
+
+Criptografia:
+
+E2E encryption
+
+Auditoria:
+
+logs completos de sessões
+
+PARTE 5 — FUNCIONALIDADES DO PRODUTO
+
+Projete funcionalidades completas.
+
+Gestão de Dispositivos
+
+inventário
+tags
+grupos
+
+Sessões Remotas
+
+iniciar sessão
+encerrar sessão
+visualizar sessões ativas
+
+Auditoria
+
+histórico de acesso
+logs completos
+
+Gravação de Sessões
+
+gravação opcional
+armazenamento seguro
+
+PARTE 6 — PORTAIS DA PLATAFORMA
+
+Projete três portais.
+
+Portal do Técnico
+
+lista de dispositivos
+acesso remoto
+status online
+
+Portal do Administrador
+
+gestão de usuários
+gestão de dispositivos
+políticas de segurança
+
+Portal do Cliente
+
+download do agente
+abrir chamado
+histórico de suporte
+
+PARTE 7 — BUILD AUTOMÁTICO DO CLIENTE
+
+Projete sistema para:
+
+compilar RustDesk
+customizar branding
+gerar instaladores
+
+PARTE 8 — ESTRUTURA DO REPOSITÓRIO
+
+Forneça estrutura completa.
+
+remote-support-platform/
+
+platform/
+api/
+auth/
+device-service/
+session-service/
+
+web/
+admin-portal/
+technician-portal/
+client-portal/
+
+rustdesk/
+server/
+client-builder/
+
+infra/
+kubernetes/
+terraform/
+
+monitoring/
+grafana/
+prometheus/
+
+ci-cd/
+PARTE 9 — ROADMAP DE DESENVOLVIMENTO
+
+Defina roadmap.
+
+MVP
+
+suporte remoto básico
+gestão de dispositivos
+
+V1
+
+multi-tenant
+portal web
+
+V2
+
+automação
+monitoramento
+
+PARTE 10 — MODELO DE NEGÓCIO
+
+Defina possíveis modelos.
+
+Exemplos:
+
+SaaS hospedado
+licenciamento self-hosted
+modelo open core
+
+PARTE 11 — ESTRATÉGIA DE MERCADO
+
+Identifique:
+
+mercado alvo
+concorrentes
+diferenciais
+
+PARTE 12 — ESTRATÉGIA DE CRESCIMENTO
+
+Sugira estratégias como:
+
+open source adoption
+community driven development
+marketplace de plugins
+
+PARTE 13 — PLANO DE LANÇAMENTO
+
+Crie plano para:
+
+beta fechado
+beta público
+lançamento oficial
+
+PARTE 14 — VALIDAÇÃO FINAL
+
+Antes de finalizar:
+
+verifique que a solução é tecnicamente viável
+confirme que pode escalar
+confirme que pode competir com ferramentas comerciais.
+
+FORMATO DA RESPOSTA
+
+Responda como se estivesse criando um documento estratégico e técnico completo para uma startup de tecnologia.
+
+Inclua:
+
+arquitetura
+
+diagramas
+
+explicações profundas
+
+estratégias de produto.
+
+RESULTADO FINAL
+
+Um plano completo para criar uma plataforma de suporte remoto open source comparável a AnyDesk/TeamViewer, incluindo tecnologia, produto e estratégia de mercado.

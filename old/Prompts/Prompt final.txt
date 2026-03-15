@@ -1,0 +1,282 @@
+Atue como um Comitê de Engenharia de Plataforma, composto pelos seguintes especialistas:
+Arquitetura de Software
+Arquitetura de Infraestrutura Cloud
+DevOps / Platform Engineering
+Site Reliability Engineering (SRE)
+Segurança da Informação (AppSec + SecOps)
+Engenharia Backend
+Engenharia Frontend
+Especialista em Self-Hosted Infrastructure
+Especialista em RustDesk
+Especialista em Observabilidade
+Especialista em Sistemas de Suporte Remoto Corporativo
+Especialista em Plataformas SaaS
+Especialista em Produtos B2B
+Especialista em Open Source Platforms
+Esse comitê possui experiência projetando sistemas comparáveis a:
+TeamViewer
+AnyDesk
+Splashtop
+ConnectWise Control
+RustDesk
+RemotePC
+e também experiência substituindo soluções proprietárias por infraestruturas open source self-hosted em produção.
+MISSÃO
+Projetar uma plataforma completa de suporte remoto corporativo baseada em RustDesk Open Source, capaz de substituir ferramentas comerciais como:
+TeamViewer
+AnyDesk
+Splashtop
+A solução deve ser:
+✔ 100% Open Source
+✔ Self-hosted
+✔ Escalável
+✔ Segura
+✔ Observável
+✔ Automatizada
+✔ Pronta para produção
+CONTEXTO OPERACIONAL
+A plataforma será utilizada por uma empresa de suporte técnico de ERP.
+Cenário:
+5–20 técnicos de suporte
+100–500 computadores de clientes
+acesso remoto diário para:
+suporte técnico
+implantação de ERP
+treinamento
+manutenção
+Infraestrutura:
+VPS ou Cloud Server
+Linux:
+Ubuntu 22.04
+ou
+Debian 12
+Recursos esperados:
+2–8 vCPU
+4–16GB RAM
+Stack base:
+Docker
+Docker Compose
+ou Kubernetes
+Clientes:
+principalmente Windows.
+RESTRIÇÕES
+A solução NÃO PODE UTILIZAR:
+RustDesk Server Pro
+SaaS proprietários
+softwares pagos obrigatórios
+A solução deve utilizar apenas:
+RustDesk Open Source
+Ferramentas Open Source
+APIs Open Source
+Bancos de dados Open Source
+OBJETIVO FINAL
+Criar um blueprint completo de engenharia de uma plataforma open source de suporte remoto corporativo.
+O resultado deve ser comparável a um documento técnico de arquitetura utilizado em empresas de tecnologia.
+ESTRUTURA OBRIGATÓRIA DA RESPOSTA
+Sua resposta deve seguir obrigatoriamente esta estrutura:
+1️⃣ Visão Geral da Plataforma
+2️⃣ Arquitetura de Alto Nível
+3️⃣ Arquitetura de Infraestrutura
+4️⃣ Arquitetura de Software
+5️⃣ Arquitetura de Segurança
+6️⃣ Arquitetura de Dados
+7️⃣ Automação e CI/CD
+8️⃣ Build Automatizado do Cliente RustDesk
+9️⃣ Distribuição do Cliente
+10️⃣ Plataforma Web de Gestão
+11️⃣ Observabilidade (monitoramento e logs)
+12️⃣ Escalabilidade
+13️⃣ Operação em Produção (SRE)
+14️⃣ Backup e Disaster Recovery
+15️⃣ Troubleshooting
+16️⃣ Estrutura do Repositório
+17️⃣ Checklist de Produção
+18️⃣ Comparação com soluções comerciais
+19️⃣ Trade-offs técnicos
+20️⃣ Roadmap evolutivo
+1 — ARQUITETURA DE ALTO NÍVEL
+Projete arquitetura contendo:
+RustDesk ID Server (hbbs)
+RustDesk Relay Server (hbbr)
+Infraestrutura de API
+Banco de dados
+Sistema de autenticação
+Dashboard técnico
+Sistema de build do cliente
+Distribuição do cliente
+Monitoramento
+Logs
+CI/CD
+Inclua um diagrama textual claro.
+2 — INFRAESTRUTURA
+Explique como implementar usando:
+Docker Compose
+ou
+Kubernetes (opcional)
+Inclua:
+estrutura de diretórios
+docker-compose.yml completo
+volumes persistentes
+rede docker
+3 — CONFIGURAÇÃO DO RUSTDESK SERVER
+Explique detalhadamente:
+hbbs
+hbbr
+rendezvous
+NAT traversal
+Inclua:
+configuração de portas
+configuração de domínio
+configuração de chaves públicas/privadas
+persistência de dados
+4 — CLIENTE PERSONALIZADO (WHITE LABEL)
+Explique como criar um cliente RustDesk customizado com:
+logo da empresa
+nome da aplicação
+servidor padrão configurado
+Inclua:
+instalação do Rust
+Cargo
+Flutter
+Inclua scripts reais de build.
+5 — BUILD AUTOMATIZADO (CI/CD)
+Projete pipeline que:
+compile RustDesk automaticamente
+injete branding
+gere instaladores
+publique downloads
+Sugira ferramentas open source:
+GitHub Actions
+GitLab CI
+Drone CI
+6 — SISTEMA DE GERENCIAMENTO DE DISPOSITIVOS
+Como RustDesk não possui Address Book oficial, projete solução usando:
+rustdesk-api-server
+ou
+PocketBase
+ou
+PostgreSQL + API custom
+Inclua:
+modelo de banco de dados
+tabelas principais
+fluxo de autenticação
+7 — DASHBOARD DE SUPORTE
+Projete portal para técnicos contendo:
+lista de dispositivos
+status online/offline
+botão de conexão
+gestão de dispositivos
+Sugira stack:
+Backend:
+Node.js / NestJS
+ou Go
+Frontend:
+React
+ou Vue
+8 — SEGURANÇA AVANÇADA
+Implementar arquitetura Zero Trust.
+Inclua:
+MFA
+RBAC
+Criptografia E2E
+Gestão de chaves
+Proteção contra abuso
+Segurança de rede:
+Firewall
+Fail2Ban
+Rate limiting
+9 — OBSERVABILIDADE
+Implementar monitoramento usando:
+Prometheus
+Grafana
+Loki
+OpenTelemetry
+Inclua exemplos de dashboards.
+10 — ESCALABILIDADE
+Explique como escalar para:
+1000+ dispositivos
+múltiplos técnicos
+múltiplos relay servers
+11 — SRE (OPERAÇÃO EM PRODUÇÃO)
+Inclua:
+runbooks operacionais
+monitoramento de saúde
+procedimentos de manutenção
+gestão de incidentes
+12 — BACKUP E DISASTER RECOVERY
+Explique:
+backup de banco
+backup de configurações
+restore
+alta disponibilidade
+13 — TROUBLESHOOTING
+Liste problemas comuns:
+cliente não conecta
+NAT traversal falha
+relay não funciona
+firewall bloqueando
+e explique soluções.
+14 — ESTRUTURA DO REPOSITÓRIO
+Forneça estrutura completa:
+remote-support-platform/
+infra/
+docker/
+kubernetes/
+services/
+api/
+auth/
+device-manager/
+web/
+admin-portal/
+technician-portal/
+rustdesk/
+server/
+client-builder/
+monitoring/
+ci-cd/
+15 — CHECKLIST DE PRODUÇÃO
+Crie checklist incluindo:
+segurança
+monitoramento
+backup
+deploy
+testes
+16 — COMPARAÇÃO COM SOLUÇÕES COMERCIAIS
+Compare com:
+TeamViewer
+AnyDesk
+Splashtop
+17 — TRADE-OFFS TÉCNICOS
+Explique vantagens e limitações da arquitetura proposta.
+18 — ROADMAP
+Defina roadmap:
+MVP
+V1
+V2
+VALIDAÇÃO FINAL
+Antes de finalizar sua resposta, verifique:
+✔ solução é 100% open source
+✔ não usa RustDesk Server Pro
+✔ pode rodar em produção
+✔ é escalável
+✔ é segura
+FORMATO DA RESPOSTA
+Responda como se estivesse escrevendo um documento profissional de arquitetura de plataforma, incluindo:
+explicações profundas
+diagramas
+comandos Linux
+arquivos de configuração
+scripts reais
+Evite respostas superficiais.
+RESULTADO ESPERADO
+Um blueprint completo de uma plataforma open source de suporte remoto corporativo comparável a AnyDesk ou TeamViewer.
+Por que esse prompt é MUITO mais poderoso
+Ele adiciona coisas que quase ninguém coloca:
+SRE
+Disaster Recovery
+Threat modeling
+Observabilidade real
+Trade-offs
+Checklist de produção
+Comparação com concorrentes
+Isso faz a IA responder como um arquiteto de plataforma real.

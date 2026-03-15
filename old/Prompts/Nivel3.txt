@@ -1,0 +1,366 @@
+Atue como um Time completo de Engenharia de Infraestrutura, composto por:
+
+Arquiteto de Infraestrutura Cloud
+
+DevOps Engineer
+
+Security Engineer
+
+Linux Systems Engineer
+
+Especialista em Self-Hosted Infrastructure
+
+Especialista em RustDesk
+
+Especialista em Automação e Infraestrutura como Código
+
+Especialista em Sistemas de Suporte Remoto Corporativo
+
+Você possui experiência real implementando infraestruturas open source substituindo ferramentas comerciais como TeamViewer, AnyDesk e RustDesk Server Pro.
+
+MISSÃO
+
+Projetar e documentar uma infraestrutura completa, segura, escalável e automatizada de suporte remoto baseada em RustDesk Open Source, pronta para produção.
+
+A solução deve permitir que uma empresa de suporte técnico de ERP gerencie centenas de computadores de clientes remotamente.
+
+PRINCIPAIS OBJETIVOS
+
+A solução precisa ser:
+
+✔ 100% Open Source
+✔ Self-Hosted
+✔ Zero custo de licenciamento
+✔ Escalável
+✔ Segura
+✔ Automatizada
+✔ Pronta para produção
+
+CENÁRIO DA EMPRESA
+
+Empresa de suporte técnico com:
+
+5 a 20 técnicos
+
+100 a 500 computadores de clientes
+
+suporte remoto diário
+
+clientes majoritariamente Windows
+
+Infraestrutura desejada:
+
+VPS ou Cloud Server
+
+Linux Ubuntu 22.04 / Debian 12
+
+Docker
+
+automação de infraestrutura
+
+gerenciamento centralizado
+
+RESTRIÇÕES
+
+A solução não pode utilizar:
+
+RustDesk Server Pro
+
+softwares pagos
+
+SaaS proprietários
+
+Somente:
+
+RustDesk Open Source
+
+ferramentas open source
+
+APIs da comunidade
+
+bancos de dados open source
+
+O QUE VOCÊ DEVE PRODUZIR
+
+Você deve produzir um projeto completo de infraestrutura, incluindo:
+
+arquitetura
+
+automação
+
+scripts
+
+docker
+
+build system
+
+CI/CD
+
+segurança
+
+monitoramento
+
+gestão de dispositivos
+
+ARQUITETURA DE ALTO NÍVEL
+
+Projete uma arquitetura com os seguintes componentes:
+
+Infraestrutura principal:
+
+RustDesk hbbs (ID server)
+
+RustDesk hbbr (relay server)
+
+Infraestrutura de gerenciamento:
+
+API server para sincronização de dispositivos
+
+banco de dados
+
+painel de técnicos
+
+Infraestrutura DevOps:
+
+CI/CD
+
+build automático de clientes
+
+Infraestrutura de segurança:
+
+autenticação
+
+controle de acesso
+
+firewall
+
+Infraestrutura de monitoramento:
+
+logs
+
+métricas
+
+alertas
+
+DIAGRAMA DE ARQUITETURA
+
+Gere um diagrama textual claro da arquitetura.
+
+Exemplo:
+
+Clientes Windows
+↓
+Internet
+↓
+Firewall / Reverse Proxy
+↓
+RustDesk ID Server (hbbs)
+↓
+RustDesk Relay Server (hbbr)
+↓
+Infraestrutura interna
+
+API Server
+↓
+Database
+
+Dashboard técnico
+
+CI/CD pipeline
+↓
+Build automático de clientes personalizados
+
+INFRAESTRUTURA COMO CÓDIGO
+
+Forneça exemplos reais usando:
+
+Docker Compose
+
+Terraform (opcional)
+
+scripts de provisionamento
+
+Inclua:
+
+estrutura de diretórios
+
+exemplo de docker-compose.yml
+
+scripts de deploy.
+
+CONFIGURAÇÃO DO RUSTDESK SERVER
+
+Explique detalhadamente:
+
+configuração do hbbs
+configuração do hbbr
+configuração de portas
+NAT traversal
+rendezvous
+
+Inclua:
+
+configuração de chaves
+persistência de dados
+firewall.
+
+CLIENTE PERSONALIZADO (WHITE LABEL)
+
+Explique como criar um cliente RustDesk personalizado com:
+
+logo da empresa
+nome da aplicação
+servidor padrão configurado
+
+Inclua:
+
+processo de compilação
+Rust
+Cargo
+Flutter
+
+Gere scripts automatizados de build.
+
+AUTOMATIZAÇÃO DE BUILD (CI/CD)
+
+Projete um pipeline que:
+
+compile automaticamente o cliente RustDesk
+gere instaladores personalizados
+publique downloads para clientes.
+
+Use ferramentas open source como:
+
+GitHub Actions
+GitLab CI
+ou alternativas open source.
+
+SISTEMA DE GERENCIAMENTO DE DISPOSITIVOS
+
+Como o RustDesk open source não possui Address Book oficial, projete uma solução usando:
+
+rustdesk-api-server
+ou
+PocketBase
+
+Inclua:
+
+modelo de banco de dados
+estrutura de API
+fluxo de autenticação.
+
+DASHBOARD DE SUPORTE
+
+Projete um painel para técnicos com:
+
+lista de clientes
+status online/offline
+botão de conexão
+gestão de dispositivos
+
+Sugira stack open source.
+
+SEGURANÇA AVANÇADA
+
+Implemente boas práticas:
+
+Zero Trust model
+
+Criptografia:
+
+E2E encryption
+
+Controle de acesso:
+
+autenticação de técnicos
+controle de permissões
+
+Segurança de rede:
+
+firewall
+fail2ban
+rate limiting
+
+Auditoria:
+
+logs
+histórico de conexões.
+
+MONITORAMENTO
+
+Explique como monitorar a infraestrutura usando:
+
+Prometheus
+Grafana
+logs docker
+
+Crie exemplos de dashboards.
+
+ESCALABILIDADE
+
+Explique como escalar para:
+
+1000+ clientes
+múltiplos relay servers
+alta disponibilidade.
+
+TROUBLESHOOTING
+
+Liste problemas comuns e soluções.
+
+ESTRUTURA FINAL DO PROJETO
+
+Forneça estrutura recomendada:
+
+rustdesk-enterprise/
+
+infra/
+docker/
+terraform/
+
+server/
+hbbs/
+hbbr/
+
+api/
+rustdesk-api-server/
+
+database/
+pocketbase/
+
+client-build/
+scripts/
+assets/
+logo/
+
+ci-cd/
+pipeline/
+
+dashboard/
+frontend/
+backend/
+
+monitoring/
+grafana/
+prometheus/
+VALIDAÇÃO FINAL
+
+Antes de finalizar:
+
+verifique se a solução é 100% open source
+confirme que não usa RustDesk Server Pro
+confirme que pode rodar em produção.
+
+FORMATO DA RESPOSTA
+
+Responda como se estivesse criando um manual profissional de engenharia de infraestrutura, incluindo:
+
+explicações profundas
+comandos Linux
+exemplos de código
+scripts reais
+boas práticas de produção.
+
+RESULTADO FINAL
+
+Produza um guia completo para construir uma plataforma de suporte remoto open source equivalente ao AnyDesk/TeamViewer baseada em RustDesk.

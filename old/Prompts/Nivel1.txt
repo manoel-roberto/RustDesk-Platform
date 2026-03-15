@@ -1,0 +1,341 @@
+Atue como Arquiteto de Infraestrutura de TI, DevOps e Especialista em Softwares Open Source, com experiência em self-hosting, segurança, redes, containers Docker e compilação de aplicações Rust.
+
+Seu objetivo é projetar e documentar uma solução completa de suporte remoto baseada no RustDesk totalmente open source, que substitua ferramentas como AnyDesk, TeamViewer ou RustDesk Server Pro, sem custo de licenciamento.
+
+A solução será utilizada por uma empresa de suporte técnico especializada em ERP, que precisa acessar remotamente computadores de clientes para manutenção, treinamento e suporte técnico.
+
+Objetivo do Projeto
+
+Criar um guia técnico completo, detalhado e executável, explicando como implementar uma infraestrutura de suporte remoto utilizando RustDesk self-hosted, com as seguintes características:
+
+100% Open Source
+
+Sem uso do RustDesk Server Pro
+
+Infraestrutura auto-hospedada
+
+Capacidade de personalização (white-label)
+
+Gerenciamento de dispositivos e técnicos
+
+Segurança robusta
+
+Escalável para múltiplos técnicos
+
+Cenário de Uso
+
+Considere o seguinte ambiente:
+
+Empresa com 5 a 20 técnicos de suporte
+
+Até 500 clientes conectados
+
+Servidor hospedado em VPS Linux (Ubuntu 22.04 ou Debian 12)
+
+Infraestrutura baseada em Docker / Docker Compose
+
+Clientes utilizando Windows principalmente
+
+Requisitos da Solução
+1 — Personalização (White-Label)
+
+Explique detalhadamente como criar um cliente RustDesk personalizado, incluindo:
+
+Alteração de logo
+
+Alteração de nome da aplicação
+
+Alteração do servidor padrão (ID Server e Relay)
+
+Geração de executáveis .exe personalizados
+
+Compilação do cliente RustDesk a partir do código fonte
+
+Inclua:
+
+Uso de ferramentas como:
+
+RustDesk custom client
+
+rustdesk-ui
+
+scripts de build da comunidade
+
+Processo de compilação usando:
+
+Rust
+
+Cargo
+
+Flutter (caso necessário)
+
+Estrutura de build para Windows
+
+Explique também alternativas mais simples, como:
+
+Uso de clients pré-configurados
+
+Scripts automáticos de build
+
+2 — Infraestrutura do Servidor RustDesk
+
+Explique como configurar completamente:
+
+hbbs (ID Server)
+
+hbbr (Relay Server)
+
+Utilizando:
+
+Docker
+
+Docker Compose
+
+Inclua:
+
+Estrutura de diretórios
+
+Arquivo docker-compose.yml
+
+Configuração de portas
+
+Configuração de firewall
+
+Configuração de domínio
+
+Configuração de TLS (opcional)
+
+Explique também:
+
+NAT traversal
+
+Rendezvous server
+
+Como garantir persistência de dados
+
+3 — Gerenciamento de Clientes (Address Book)
+
+Como a versão open source não possui Address Book oficial, explique como implementar alternativas utilizando:
+
+rustdesk-api-server
+
+PocketBase
+
+Supabase
+
+SQLite/PostgreSQL
+
+Mostre como criar:
+
+Cadastro de clientes
+
+Sincronização de dispositivos
+
+Login de técnicos
+
+Lista compartilhada de dispositivos
+
+Inclua:
+
+Fluxo de autenticação
+
+Estrutura da API
+
+Possível arquitetura da aplicação
+
+4 — Console do Técnico
+
+Explique como construir um painel para técnicos, permitindo:
+
+Listar clientes
+
+Iniciar conexões
+
+Gerenciar dispositivos
+
+Visualizar status online/offline
+
+Explique possíveis abordagens:
+
+Interface Web
+
+CLI
+
+Dashboard customizado
+
+Sugira ferramentas open source como:
+
+PocketBase Admin
+
+Grafana
+
+Node.js backend
+
+RustDesk Web Client
+
+5 — Acesso via Web Client
+
+Avalie a viabilidade e explique como implementar:
+
+RustDesk Web Client
+
+Inclua:
+
+Instalação
+
+Dependências
+
+Configuração
+
+Limitações
+
+Explique quando o acesso via browser é recomendado ou não.
+
+6 — Segurança da Infraestrutura
+
+Explique as melhores práticas de segurança, incluindo:
+
+Criptografia
+
+Configuração de chave pública/privada
+
+Verificação de identidade dos servidores
+
+Controle de acesso
+
+Autenticação de técnicos
+
+Permissões de acesso
+
+Segurança de rede
+
+Firewall (UFW)
+
+Fail2Ban
+
+TLS/HTTPS
+
+Proteção contra uso indevido
+
+Restrição de servidores autorizados
+
+Whitelist de técnicos
+
+Logs de acesso
+
+7 — Arquitetura Recomendada
+
+Apresente um diagrama textual da arquitetura, mostrando:
+
+Cliente
+↓
+Internet
+↓
+ID Server (hbbs)
+↓
+Relay Server (hbbr)
+↓
+Técnicos
+
+Inclua também componentes opcionais:
+
+API server
+
+Banco de dados
+
+Web dashboard
+
+8 — Estrutura Final do Projeto
+
+Mostre uma estrutura recomendada de diretórios, por exemplo:
+
+rustdesk-infra/
+
+docker/
+docker-compose.yml
+
+server/
+hbbs
+hbbr
+
+api/
+rustdesk-api-server
+
+database/
+pocketbase
+
+client-build/
+scripts
+assets
+logo
+9 — Passo a Passo de Implementação
+
+Crie um tutorial passo a passo, incluindo:
+
+Preparar VPS
+
+Instalar Docker
+
+Subir hbbs e hbbr
+
+Configurar chaves
+
+Configurar domínio
+
+Testar conexão
+
+Implementar API
+
+Criar client personalizado
+
+10 — Monitoramento e Manutenção
+
+Explique como monitorar a infraestrutura usando:
+
+Grafana
+
+Prometheus
+
+Logs Docker
+
+Health checks
+
+11 — Troubleshooting
+
+Liste problemas comuns e soluções, como:
+
+Cliente não conecta
+
+NAT traversal falhando
+
+Relay não funcionando
+
+Problemas de firewall
+
+Falhas de compilação do client
+
+Formato da Resposta Esperada
+
+A resposta deve conter:
+
+Explicações claras
+
+Exemplos de comandos Linux
+
+Exemplos de arquivos de configuração
+
+Trechos de código
+
+Boas práticas de infraestrutura
+
+Sugestões de ferramentas open source adicionais
+
+Prioridades da Solução
+
+A solução deve priorizar:
+
+1️⃣ Zero custo de licenciamento
+2️⃣ Controle total da infraestrutura
+3️⃣ Segurança
+4️⃣ Facilidade de manutenção
+5️⃣ Escalabilidade

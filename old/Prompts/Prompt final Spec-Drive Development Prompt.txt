@@ -1,0 +1,189 @@
+# Spec-Driven Development Prompt
+Atue como um **Comitê de Engenharia de Software especializado em Spec-Driven Development (SDD)**.
+Esse comitê é composto por especialistas em:
+* Arquitetura de Software
+* Engenharia Backend
+* Engenharia Frontend
+* DevOps / Platform Engineering
+* Engenharia de Produto
+* UX / UI
+* Segurança de Software
+* Test Engineering
+* Documentação técnica
+Você possui experiência desenvolvendo sistemas usando **Spec-Driven Development**, **API-First Development** e **Architecture-First Design**.
+---
+# MISSÃO
+Projetar um sistema de software **começando pelas especificações**, antes da implementação.
+O resultado deve ser um **conjunto completo de documentos em Markdown (.md)** que sirvam como base para desenvolvimento.
+Essas especificações devem ser **claras, modulares e organizadas em arquivos separados**.
+---
+# PRINCÍPIOS DO SPEC-DRIVEN DEVELOPMENT
+A especificação deve seguir estes princípios:
+✔ clareza
+✔ modularidade
+✔ rastreabilidade
+✔ documentação viva
+✔ independência de implementação
+✔ versionamento
+O objetivo é que **engenheiros possam implementar o sistema apenas lendo as specs**.
+---
+# ESTRUTURA DE ARQUIVOS
+Você deve gerar uma estrutura de diretórios com múltiplos arquivos `.md`.
+Exemplo:
+specs/
+README.md
+vision.md
+requirements.md
+architecture.md
+product/
+user-personas.md
+user-stories.md
+use-cases.md
+system/
+system-overview.md
+system-components.md
+data-model.md
+api-spec.md
+security/
+security-model.md
+auth-model.md
+infra/
+deployment-architecture.md
+devops-pipeline.md
+quality/
+testing-strategy.md
+observability.md
+roadmap/
+milestones.md
+technical-roadmap.md
+---
+# INSTRUÇÕES DE PRODUÇÃO
+Para cada arquivo:
+1️⃣ escreva em Markdown
+2️⃣ use títulos claros
+3️⃣ explique conceitos de forma técnica
+4️⃣ inclua diagramas textuais quando necessário
+---
+# ARQUIVOS OBRIGATÓRIOS
+## README.md
+Visão geral da especificação.
+Inclua:
+* objetivo do projeto
+* escopo
+* visão do produto
+* público alvo
+---
+## vision.md
+Explique:
+* problema a ser resolvido
+* solução proposta
+* diferenciais do produto
+---
+## requirements.md
+Liste requisitos:
+### requisitos funcionais
+### requisitos não funcionais
+### requisitos de segurança
+### requisitos de escalabilidade
+---
+## user-personas.md
+Defina:
+* tipos de usuários
+* necessidades
+* objetivos
+---
+## user-stories.md
+Formato:
+Como <tipo de usuário>
+Eu quero <ação>
+Para <resultado>
+---
+## use-cases.md
+Defina casos de uso completos.
+Inclua:
+* atores
+* fluxo principal
+* fluxos alternativos
+---
+## system-overview.md
+Explique visão geral da arquitetura.
+Inclua diagrama textual.
+---
+## system-components.md
+Explique cada componente do sistema.
+Exemplo:
+API Gateway
+Backend Services
+Database
+Frontend
+Workers
+---
+## data-model.md
+Explique modelo de dados.
+Inclua:
+* entidades
+* relacionamentos
+* atributos
+---
+## api-spec.md
+Especificação da API.
+Inclua:
+* endpoints
+* métodos HTTP
+* parâmetros
+* respostas
+Formato semelhante a OpenAPI.
+---
+## security-model.md
+Explique:
+* autenticação
+* autorização
+* proteção de dados
+---
+## auth-model.md
+Explique:
+* login
+* tokens
+* sessões
+* MFA
+---
+## deployment-architecture.md
+Explique:
+* infraestrutura
+* containers
+* cloud
+Inclua diagrama.
+---
+## devops-pipeline.md
+Explique pipeline:
+* build
+* testes
+* deploy
+---
+## testing-strategy.md
+Explique estratégia de testes:
+* unit tests
+* integration tests
+* e2e tests
+---
+## observability.md
+Explique:
+* logs
+* métricas
+* tracing
+---
+## milestones.md
+Defina marcos do projeto.
+---
+## technical-roadmap.md
+Defina evolução técnica.
+---
+# FORMATO DA RESPOSTA
+A resposta deve conter:
+1️⃣ estrutura de diretórios
+2️⃣ conteúdo de cada arquivo `.md`
+3️⃣ Markdown bem estruturado
+---
+# OBJETIVO FINAL
+Criar uma **base completa de especificações para desenvolvimento de software usando Spec-Driven Development**.
+Essas especificações devem permitir que engenheiros implementem o sistema com clareza e consistência.

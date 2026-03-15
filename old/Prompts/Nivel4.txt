@@ -1,0 +1,457 @@
+Atue como um Comitê de Arquitetura de Produto e Infraestrutura, composto por especialistas em:
+
+Arquitetura de Software
+
+DevOps
+
+Cloud Infrastructure
+
+Segurança da Informação
+
+Engenharia de Backend
+
+Engenharia de Frontend
+
+Observabilidade
+
+Sistemas de Suporte Remoto
+
+Plataformas SaaS
+
+Você possui experiência real projetando produtos globais semelhantes a:
+
+TeamViewer
+
+AnyDesk
+
+RustDesk
+
+ConnectWise Control
+
+Splashtop
+
+Seu objetivo é projetar uma plataforma completa de suporte remoto corporativo baseada em RustDesk Open Source, mas com recursos avançados de gestão, controle e produto, semelhante a um SaaS profissional.
+
+MISSÃO
+
+Projetar uma plataforma open source de suporte remoto corporativo, que permita que empresas ofereçam suporte técnico remoto para seus clientes com:
+
+gestão centralizada
+
+multi-tenant
+
+controle de acesso
+
+auditoria completa
+
+segurança corporativa
+
+Essa plataforma deve funcionar como um AnyDesk/TeamViewer self-hosted empresarial.
+
+PRINCÍPIOS DO PROJETO
+
+A arquitetura deve seguir estes princípios:
+
+✔ Open Source
+✔ Self-hosted
+✔ Segurança Zero Trust
+✔ Escalabilidade horizontal
+✔ Infraestrutura automatizada
+✔ Observabilidade completa
+✔ Multi-tenant
+✔ Alta disponibilidade
+
+CONTEXTO DO PRODUTO
+
+A plataforma será usada por:
+
+empresas de suporte técnico
+
+MSPs (Managed Service Providers)
+
+equipes internas de TI
+
+empresas de ERP
+
+Escala esperada:
+
+10–100 técnicos
+
+500–5000 dispositivos remotos
+
+milhares de sessões mensais
+
+RESTRIÇÕES
+
+Não utilizar:
+
+RustDesk Server Pro
+
+SaaS proprietários
+
+ferramentas pagas
+
+Utilizar apenas:
+
+RustDesk Open Source
+
+tecnologias open source
+
+infraestrutura self-hosted
+
+OBJETIVO DO RESULTADO
+
+Você deve projetar um produto completo, incluindo:
+
+arquitetura de software
+
+arquitetura de infraestrutura
+
+arquitetura de segurança
+
+arquitetura de dados
+
+arquitetura de produto
+
+O QUE VOCÊ DEVE GERAR
+
+A resposta deve conter um blueprint completo da plataforma.
+
+1 — ARQUITETURA DO PRODUTO
+
+Projete os principais módulos da plataforma:
+
+Core Remote Access
+
+RustDesk ID Server (hbbs)
+
+RustDesk Relay Server (hbbr)
+
+Plataforma de Gestão
+
+API Backend
+
+Sistema de autenticação
+
+Gestão de dispositivos
+
+Gestão de técnicos
+
+Gestão de clientes
+
+Interface Web
+
+portal de técnicos
+
+portal de administradores
+
+portal de clientes
+
+Infraestrutura
+
+containers
+
+Kubernetes
+
+CI/CD
+
+2 — MODELO MULTI-TENANT
+
+Projete suporte a múltiplas empresas.
+
+Cada empresa deve ter:
+
+técnicos próprios
+
+dispositivos próprios
+
+permissões próprias
+
+logs próprios
+
+Explique o modelo:
+
+tenant
+users
+devices
+sessions
+
+3 — MÓDULOS FUNCIONAIS DA PLATAFORMA
+
+Projete módulos completos:
+
+Gestão de Dispositivos
+
+inventário de computadores
+
+tags
+
+grupos
+
+Gestão de Técnicos
+
+perfis
+
+permissões
+
+equipes
+
+Controle de Sessões
+
+iniciar sessão remota
+
+visualizar sessões ativas
+
+encerrar sessão
+
+Histórico de Sessões
+
+auditoria completa
+
+logs de acesso
+
+Gravação de Sessões
+
+gravação opcional
+
+armazenamento seguro
+
+4 — PORTAL WEB COMPLETO
+
+Projete um portal com:
+
+Painel do Técnico
+
+lista de clientes
+
+lista de dispositivos
+
+status online/offline
+
+iniciar conexão
+
+Painel do Administrador
+
+gestão de usuários
+
+gestão de dispositivos
+
+auditoria
+
+políticas de segurança
+
+Portal do Cliente
+
+download do cliente remoto
+
+ver histórico de suporte
+
+solicitar suporte
+
+5 — ARQUITETURA DE BACKEND
+
+Sugira stack open source moderna.
+
+Exemplo:
+
+Backend:
+
+Node.js / NestJS
+ou
+
+Go
+ou
+
+Rust
+
+Banco de dados:
+
+PostgreSQL
+
+Cache:
+
+Redis
+
+API:
+
+REST
+ou
+
+GraphQL
+
+6 — ARQUITETURA DE FRONTEND
+
+Sugira stack moderna:
+
+React
+
+Vue
+
+Next.js
+
+Interface estilo:
+
+painel de suporte remoto
+
+dashboards
+
+7 — SEGURANÇA AVANÇADA
+
+Implemente arquitetura Zero Trust:
+
+autenticação forte
+
+MFA
+
+controle de permissões RBAC
+
+auditoria completa
+
+Inclua:
+
+criptografia E2E
+
+gestão de chaves
+
+proteção contra abuso.
+
+8 — OBSERVABILIDADE
+
+Implemente monitoramento com:
+
+Prometheus
+
+Grafana
+
+Loki
+
+OpenTelemetry
+
+Inclua:
+
+métricas
+
+logs
+
+tracing
+
+9 — INFRAESTRUTURA CLOUD NATIVE
+
+Projete infraestrutura usando:
+
+Docker
+
+Kubernetes
+
+Helm
+
+Inclua:
+
+auto scaling
+
+failover
+
+alta disponibilidade.
+
+10 — CI/CD
+
+Projete pipeline para:
+
+build do backend
+
+build do frontend
+
+build do cliente RustDesk customizado
+
+Inclua:
+
+GitHub Actions
+ou
+
+GitLab CI
+
+11 — BUILD AUTOMÁTICO DO CLIENTE
+
+Projete sistema que:
+
+compila RustDesk
+
+injeta branding
+
+gera instaladores
+
+publica downloads
+
+12 — DISTRIBUIÇÃO DO CLIENTE
+
+Inclua:
+
+instalador Windows
+
+script silencioso
+
+download via portal.
+
+13 — ESTRUTURA COMPLETA DO REPOSITÓRIO
+
+Forneça estrutura:
+
+remote-support-platform/
+
+infra/
+terraform/
+kubernetes/
+
+services/
+api/
+auth/
+device-manager/
+session-manager/
+
+web/
+admin-portal/
+technician-portal/
+client-portal/
+
+rustdesk/
+server/
+client-builder/
+
+ci-cd/
+
+monitoring/
+grafana/
+prometheus/
+14 — ROADMAP DO PRODUTO
+
+Sugira roadmap:
+
+MVP
+V1
+V2
+
+15 — VALIDAÇÃO FINAL
+
+Antes de finalizar:
+
+confirme que a arquitetura é open source
+confirme que pode rodar self-hosted
+confirme que substitui ferramentas comerciais.
+
+FORMATO DA RESPOSTA
+
+Responda como se estivesse escrevendo um documento de arquitetura de produto completo para uma plataforma de suporte remoto empresarial.
+
+Inclua:
+
+diagramas
+
+explicações profundas
+
+exemplos técnicos
+
+boas práticas de engenharia.
+
+RESULTADO FINAL
+
+Um blueprint completo de uma plataforma open source de suporte remoto comparável a AnyDesk ou TeamViewer, mas self-hosted e totalmente customizável.

@@ -31,8 +31,8 @@
 | REQ-F-004 | Adicionar tags livres a dispositivos | P1 | ✅ Concluído |
 | REQ-F-005 | Registrar timestamp do último acesso | P1 | ✅ Concluído |
 | REQ-F-006 | Busca e filtro de dispositivos | P1 | ✅ Concluído |
-| REQ-F-007 | Exportar lista de dispositivos em CSV | P2 | ⏳ Pendente |
-| REQ-F-008 | Importar dispositivos em lote via CSV | P2 | ⏳ Pendente |
+| REQ-F-007 | Exportar lista de dispositivos em CSV | P2 | ✅ Concluído |
+| REQ-F-008 | Importar dispositivos em lote via CSV | P2 | ✅ Concluído |
 
 ### 1.2 Gestão de Usuários (Técnicos e Admins)
 
@@ -52,8 +52,8 @@
 | REQ-F-020 | Registrar início e fim de cada sessão remota | P0 | ✅ Concluído |
 | REQ-F-021 | Registrar técnico e dispositivo acessado | P0 | ✅ Concluído |
 | REQ-F-022 | Registrar se utilizou relay ou direta | P1 | ✅ Concluído |
-| REQ-F-023 | Permitir adicionar notas a uma sessão | P1 | ⏳ Pendente |
-| REQ-F-024 | Classificar sessões por tipo | P1 | ⏳ Pendente |
+| REQ-F-023 | Permitir adicionar notas a uma sessão | P1 | ✅ Concluído |
+| REQ-F-024 | Classificar sessões por tipo | P1 | ✅ Concluído |
 | REQ-F-025 | Histórico de sessões (dispositivo/técnico) | P1 | ✅ Concluído |
 | REQ-F-026 | Calcular tempo total de sessão por período | P2 | ⏳ Pendente |
 
@@ -75,7 +75,7 @@
 | REQ-F-040 | Dashboards com métricas de uso | P1 | ✅ Concluído |
 | REQ-F-041 | Notificação de dispositivos offline | P2 | ⏳ Pendente |
 | REQ-F-042 | Alertas de saúde hbbs/hbbr | P1 | ⏳ Pendente |
-| REQ-F-043 | Log de auditoria de ações administrativas | P1 | 🏗️ Em progresso |
+| REQ-F-043 | Log de auditoria de ações administrativas | P1 | ✅ Concluído |
 
 ---
 
@@ -117,7 +117,7 @@
 
 | ID | Requisito | Prioridade | Justificativa | Status |
 |----|-----------|------------|---------------|--------|
-| REQ-NF-040 | Suporte a Dark Mode nativo | P2 | Redução de fadiga ocular para suporte prolongado | ⏳ Sugerido |
+| REQ-NF-040 | Suporte a Dark Mode nativo | P2 | Redução de fadiga ocular para suporte prolongado | ✅ Concluído |
 | REQ-NF-041 | PWA (Progressive Web App) | P2 | Permitir instalação como app desktop para acesso rápido | ⏳ Sugerido |
 
 ---
@@ -126,8 +126,8 @@
 
 | ID | Requisito | Prioridade | Justificativa | Status |
 |----|-----------|------------|---------------|--------|
-| REQ-S-020 | Implementação de Content Security Policy (CSP) | P1 | Proteção contra XSS e injeção de scripts maliciosos | ⏳ Sugerido |
-| REQ-S-021 | Proteção contra Clickjacking (Headers X-Frame) | P1 | Impedir que o portal de login seja emoldurado em sites maliciosos | 🏗️ Configuração |
+| REQ-S-020 | Implementação de Content Security Policy (CSP) | P1 | Proteção contra XSS e injeção de scripts maliciosos | ✅ Concluído |
+| REQ-S-021 | Proteção contra Clickjacking (Headers X-Frame) | P1 | Impedir que o portal de login seja emoldurado em sites maliciosos | ✅ Concluído |
 | REQ-S-022 | Rotação automática de chaves de assinatura JWT | P2 | Aumentar a segurança de longo prazo dos tokens de acesso | ⏳ Sugerido |
 
 ---
@@ -147,7 +147,7 @@
 |----|-----------|------------|------|--------|
 | REQ-Q-001 | Todo novo Requisito Funcional deve ter testes automatizados correspondentes (Unitários e/ou Integração) | Crítico | 100% de cobertura nos novos arquivos | ✅ Concluído |
 | REQ-Q-002 | O desenvolvimento deve seguir os princípios de TDD (Test-Driven Development) | Obrigatório | Testes escritos antes ou durante a implementação | ✅ Concluído |
-| REQ-Q-003 | Verificação de integridade pós-deploy via Smoke Tests automatizados | P1 | Validar fluxos críticos (Login, Device Connect) | 🏗️ Em progresso |
+| REQ-Q-003 | Verificação de integridade pós-deploy via Smoke Tests automatizados | P1 | Validar fluxos críticos (Login, Device Connect) | ✅ Concluído |
 | REQ-Q-004 | Documentação de Walkthrough deve incluir evidências de testes (logs ou mídia) | Obrigatório | Transparência no processo de validação | ✅ Concluído |
 
 > [!IMPORTANT]

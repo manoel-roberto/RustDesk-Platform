@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from 'react-oidc-context';
 import { api } from '../api/axios';
-import { MonitorPlay, Settings, LogOut, Loader2, ShieldCheck, User as UserIcon, Sun, Moon } from 'lucide-react';
+import { MonitorPlay, Settings, LogOut, Loader2, ShieldCheck, Sun, Moon } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import '../index.css';
 

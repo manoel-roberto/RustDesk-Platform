@@ -141,3 +141,14 @@
 | REQ-E-004 | DB Sharding ou Replicação | P2 | ✅ Concluído (Replica) |
 | REQ-E-005 | API Stateless — escalável horizontalmente | P1 | ✅ Concluído |
 | REQ-E-006 | Monitoramento escalável independente | P1 | 🏗️ Em progresso |
+## 5. Política de Qualidade e Verificação (TDD)
+
+| ID | Requisito | Prioridade | Meta | Status |
+|----|-----------|------------|------|--------|
+| REQ-Q-001 | Todo novo Requisito Funcional deve ter testes automatizados correspondentes (Unitários e/ou Integração) | Crítico | 100% de cobertura nos novos arquivos | ✅ Concluído |
+| REQ-Q-002 | O desenvolvimento deve seguir os princípios de TDD (Test-Driven Development) | Obrigatório | Testes escritos antes ou durante a implementação | ✅ Concluído |
+| REQ-Q-003 | Verificação de integridade pós-deploy via Smoke Tests automatizados | P1 | Validar fluxos críticos (Login, Device Connect) | 🏗️ Em progresso |
+| REQ-Q-004 | Documentação de Walkthrough deve incluir evidências de testes (logs ou mídia) | Obrigatório | Transparência no processo de validação | ✅ Concluído |
+
+> [!IMPORTANT]
+> **Nenhuma implementação será considerada "Concluída" sem a respectiva suíte de testes validando os critérios de aceite definidos no plano de implementação.**

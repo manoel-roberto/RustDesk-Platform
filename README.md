@@ -1,17 +1,33 @@
-# Remote Support Platform — Especificações do Sistema
+# 🤖 Remote Support Platform (Self-Hosted RustDesk)
 
-> **Versão:** 1.0.0  
-> **Status:** Em definição  
-> **Última atualização:** 2025  
-> **Metodologia:** Spec-Driven Development (SDD)
+Bem-vindo ao repositório oficial da nossa plataforma privada de suporte remoto! Este projeto permite que empresas gerenciem sua própria frota de dispositivos com segurança, privacidade e controle total.
 
 ---
 
-## Visão Geral
+## 🚀 Para Começar (Em 5 Minutos)
 
-Este repositório contém a especificação completa da **Plataforma de Suporte Remoto Corporativo Open Source**, construída sobre RustDesk OSS. O objetivo desta especificação é permitir que qualquer engenheiro do time implemente o sistema com clareza, consistência e rastreabilidade total.
+Se você é novo aqui e quer ver o projeto funcionando, siga estes passos:
 
-Toda implementação deve derivar diretamente das especificações contidas neste repositório. Mudanças na implementação que não estejam refletidas aqui são consideradas **não especificadas** e sujeitas a revisão.
+1.  **Clone o projeto**: `git clone https://github.com/manoel-roberto/RustDesk-Platform.git`
+2.  **Suba a infraestrutura**: Certifique-se de ter o Docker instalado e rode `docker-compose up -d` na raiz.
+3.  **Acesse o Portal**: O frontend estará disponível em `http://localhost:5173`.
+4.  **Consulte o Onboarding**: Para um guia detalhado, leia o nosso **[Guia de Onboarding (Iniciantes)](docs/onboarding.md)**.
+
+---
+
+## 🤝 Como Contribuir
+
+Quer ajudar a melhorar a plataforma? Adoramos contribuições de todos os níveis! 
+Leia nosso guia completo em **[CONTRIBUTING.md](CONTRIBUTING.md)** para saber como abrir Issues, sugerir melhorias ou enviar código.
+
+---
+
+## 📖 Visão do Projeto
+
+Este repositório utiliza a metodologia **Spec-Driven Development (SDD)**. Isso significa que toda a inteligência e as regras de negócio estão documentadas nas [Especificações](specs/README.md) antes de serem codificadas.
+
+---
+
 
 ---
 

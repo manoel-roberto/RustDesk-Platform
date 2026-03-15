@@ -47,26 +47,32 @@ const RoleRedirect = () => {
    return isAdmin ? <Navigate to="/admin" /> : <Navigate to="/technician" />;
 };
 
+export const AppRoutes = () => {
+  return (
+    <Routes>
+      <Route path="/" element={<RoleRedirect />} />
+      
+      <Route path="/technician" element={
+        <PrivateRoute>
+          <TechnicianPortal />
+        </PrivateRoute>
+      } />
+
+      <Route path="/admin" element={
+        <PrivateRoute>
+          <AdminPortal />
+        </PrivateRoute>
+      } />
+      
+      <Route path="*" element={<Navigate to="/" />} />
+    </Routes>
+  );
+};
+
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<RoleRedirect />} />
-        
-        <Route path="/technician" element={
-          <PrivateRoute>
-            <TechnicianPortal />
-          </PrivateRoute>
-        } />
-
-        <Route path="/admin" element={
-          <PrivateRoute>
-            <AdminPortal />
-          </PrivateRoute>
-        } />
-        
-        <Route path="*" element={<Navigate to="/" />} />
-      </Routes>
+      <AppRoutes />
     </BrowserRouter>
   );
 }

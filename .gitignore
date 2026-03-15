@@ -42,3 +42,7 @@ Thumbs.db
 # Docker
 data/
 *.db
+
+# Coverage
+/api/coverage
+/web/coverage

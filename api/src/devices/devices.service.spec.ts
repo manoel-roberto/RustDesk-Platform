@@ -1,0 +1,148 @@
+import { Test, TestingModule } from '@nestjs/testing';
+import { DevicesService } from './devices.service';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { Device } from '../database/entities/device.entity';
+import { Repository } from 'typeorm';
+
+const mockDeviceRepository = () => ({
+  find: jest.fn(),
+  findOne: jest.fn(),
+  createQueryBuilder: jest.fn().mockReturnValue({
+    leftJoinAndSelect: jest.fn().mockReturnThis(),
+    andWhere: jest.fn().mockReturnThis(),
+    skip: jest.fn().mockReturnThis(),
+    take: jest.fn().mockReturnThis(),
+    getManyAndCount: jest.fn().mockResolvedValue([[], 0]),
+  }),
+  create: jest.fn(),
+  save: jest.fn(),
+  delete: jest.fn(),
+  count: jest.fn(),
+});
+
+type MockRepository<T = any> = Partial<Record<keyof Repository<T>, jest.Mock>>;
+
+describe('DevicesService', () => {
+  let service: DevicesService;
+  let deviceRepository: MockRepository<Device>;
+
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        DevicesService,
+        {
+          provide: getRepositoryToken(Device),
+          useFactory: mockDeviceRepository,
+        },
+      ],
+    }).compile();
+
+    service = module.get<DevicesService>(DevicesService);
+    deviceRepository = module.get<MockRepository<Device>>(getRepositoryToken(Device));
+  });
+
+  it('should be defined', () => {
+    expect(service).toBeDefined();
+  });
+
+  describe('getRustdeskPeers', () => {
+    it('should return mapped peers', async () => {
+      const devices = [
+        { rustdesk_id: '1', alias: 'A1', hostname: 'H1', os: 'Linux', online: true, group: { name: 'G1' } },
+      ];
+      deviceRepository.find.mockResolvedValue(devices);
+
+      const result = await service.getRustdeskPeers({});
+      expect(result.data[0].id).toBe('1');
+      expect(result.data[0].tags).toContain('G1');
+      expect(result.data[0].status).toBe(1);
+    });
+  });
+
+  describe('findAll', () => {
+    it('should call query builder with pagination', async () => {
+      await service.findAll({ page: 2, limit: 10 });
+      expect(deviceRepository.createQueryBuilder).toHaveBeenCalled();
+    });
+  });
+
+  describe('findOne', () => {
+    it('should return a device if found', async () => {
+      const device = { id: '1' };
+      deviceRepository.findOne.mockResolvedValue(device);
+      const result = await service.findOne('1');
+      expect(result).toEqual(device);
+    });
+
+    it('should throw if not found', async () => {
+      deviceRepository.findOne.mockResolvedValue(null);
+      await expect(service.findOne('1')).rejects.toThrow('Device not found');
+    });
+  });
+
+  describe('update', () => {
+    it('should update and save a device', async () => {
+      const device = { id: '1', alias: 'old' };
+      deviceRepository.findOne.mockResolvedValue(device);
+      deviceRepository.save.mockResolvedValue({ ...device, alias: 'new' });
+
+      const result = await service.update('1', { alias: 'new' });
+      expect(deviceRepository.save).toHaveBeenCalled();
+      expect(result.alias).toBe('new');
+    });
+  });
+
+  describe('remove', () => {
+    it('should delete a device', async () => {
+      await service.remove('1');
+      expect(deviceRepository.delete).toHaveBeenCalledWith('1');
+    });
+  });
+
+  describe('generateConnectLink', () => {
+    it('should return a rustdesk link', async () => {
+      deviceRepository.findOne.mockResolvedValue({ rustdesk_id: '123' });
+      const result = await service.generateConnectLink('1');
+      expect(result.deep_link).toBe('rustdesk://123');
+    });
+  });
+
+  describe('seedDemoDevices', () => {
+    it('should seed if empty', async () => {
+      deviceRepository.count.mockResolvedValue(0);
+      deviceRepository.create.mockReturnValue({});
+      deviceRepository.save.mockResolvedValue([]);
+      const result = await service.seedDemoDevices();
+      expect(result.status).toBe('Seeded');
+    });
+
+    it('should not seed if not empty', async () => {
+      deviceRepository.count.mockResolvedValue(5);
+      const result = await service.seedDemoDevices();
+      expect(result.status).toBe('Already seeded');
+    });
+  });
+
+  describe('create', () => {
+    it('should create and save a device', async () => {
+      const dto = { rustdesk_id: '123' };
+      deviceRepository.create.mockReturnValue(dto);
+      deviceRepository.save.mockResolvedValue({ id: '1', ...dto });
+
+      const result = await service.create(dto);
+      expect(deviceRepository.create).toHaveBeenCalled();
+      expect(deviceRepository.save).toHaveBeenCalled();
+      expect(result.id).toBe('1');
+    });
+
+    it('should create with group_id', async () => {
+      const dto = { rustdesk_id: '123', group_id: 'g1' };
+      deviceRepository.create.mockReturnValue(dto);
+      deviceRepository.save.mockResolvedValue({ id: '1', ...dto });
+      await service.create(dto);
+      expect(deviceRepository.create).toHaveBeenCalledWith(expect.objectContaining({
+        group: { id: 'g1' }
+      }));
+    });
+  });
+});

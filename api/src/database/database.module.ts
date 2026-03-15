@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Device } from './entities/device.entity';
 import { Group } from './entities/group.entity';
 import { Session } from './entities/session.entity';
+import { AuditLog } from './entities/audit-log.entity';
 
 @Module({
   imports: [
@@ -13,7 +14,7 @@ import { Session } from './entities/session.entity';
       username: process.env.POSTGRES_USER || 'empresa_admin',
       password: process.env.POSTGRES_PASSWORD || 'super_secret_db_pass',
       database: process.env.POSTGRES_DB || 'rustdesk_platform',
-      entities: [Device, Group, Session],
+      entities: [Device, Group, Session, AuditLog],
       synchronize: true, // Em producao seria false + migrations
     }),
   ],

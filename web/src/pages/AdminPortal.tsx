@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from 'react-oidc-context';
-import { ShieldCheck, LogOut, Users, Server, Activity, Loader2 } from 'lucide-react';
+import { ShieldCheck, LogOut, Users, Server, Activity, Loader2, ShieldAlert } from 'lucide-react';
 import { api } from '../api/axios';
 
 const AdminPortal = () => {
@@ -8,19 +8,15 @@ const AdminPortal = () => {
   const [stats, setStats] = useState({ devices: 0, groups: 0, online: 0 });
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [auditLogs, setAuditLogs] = useState<any[]>([]);
 
   useEffect(() => {
     if (auth.isAuthenticated) {
-      api.get('/devices')
-        .then(res => setStats(s => ({ ...s, devices: res.data.meta?.total || 0 })))
-        .catch(console.error);
-
-      api.get('/groups')
-        .then(res => setStats(s => ({ ...s, groups: res.data.data?.length || 0 })))
-        .catch(console.error)
-        .finally(() => setLoading(false));
+      api.get('/devices').then(res => setStats(s => ({ ...s, devices: res.data.meta?.total || 0 }))).catch(console.error);
+      api.get('/groups').then(res => setStats(s => ({ ...s, groups: res.data.data?.length || 0 }))).catch(console.error);
+      api.get('/audit').then(res => setAuditLogs(res.data.data || [])).catch(console.error).finally(() => setLoading(false));
     }
-  }, [auth.isAuthenticated]);
+  }, [auth.isAuthenticated, activeTab]);
 
   if (!auth.isAuthenticated) return <div className="loading-screen"><Loader2 className="spinner"/></div>;
 
@@ -52,6 +48,46 @@ const AdminPortal = () => {
             </div>
           )}
         </>
+      );
+    }
+
+    if (activeTab === 'auditoria') {
+      return (
+        <div className="audit-section">
+          <header>
+            <h1>Logs de Auditoria</h1>
+            <p>Rastro de ações administrativas realizadas na plataforma.</p>
+          </header>
+          
+          <div className="audit-table-container shadow-md bg-white rounded-lg overflow-hidden border border-slate-700">
+            <table className="audit-table w-full text-left">
+              <thead>
+                <tr className="bg-slate-800 text-slate-300">
+                  <th className="p-4">Data/Hora</th>
+                  <th className="p-4">Usuário</th>
+                  <th className="p-4">Ação</th>
+                  <th className="p-4">Recurso</th>
+                  <th className="p-4">IP</th>
+                </tr>
+              </thead>
+              <tbody className="text-slate-400">
+                {auditLogs.length > 0 ? auditLogs.map((log) => (
+                  <tr key={log.id} className="border-b border-slate-700 hover:bg-slate-800">
+                    <td className="p-4">{new Date(log.createdAt).toLocaleString('pt-BR')}</td>
+                    <td className="p-4">{log.username}</td>
+                    <td className="p-4"><span className={`badge ${log.action.toLowerCase()}`}>{log.action}</span></td>
+                    <td className="p-4">{log.resource}</td>
+                    <td className="p-4">{log.ipAddress}</td>
+                  </tr>
+                )) : (
+                  <tr>
+                    <td colSpan={5} className="p-8 text-center text-slate-500">Nenhum log registrado ainda.</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
       );
     }
 
@@ -89,6 +125,12 @@ const AdminPortal = () => {
                onClick={() => setActiveTab('grupos')}
              >
                <Users size={18}/> Grupos
+             </li>
+             <li 
+               className={activeTab === 'auditoria' ? 'active' : ''} 
+               onClick={() => setActiveTab('auditoria')}
+             >
+               <ShieldAlert size={18}/> Auditoria
              </li>
            </ul>
         </nav>

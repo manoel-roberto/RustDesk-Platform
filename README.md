@@ -126,6 +126,7 @@ Para detalhes práticos de como desenvolver e operar cada parte do sistema, cons
 3.  **[Frontend Guide](docs/frontend.md):** UI React, Design System (Glassmorphism) e Consumo de API.
 4.  **[DevOps Guide](docs/devops.md):** Docker Compose, Scripts de Build e Segurança.
 5.  **[QA Guide](docs/qa.md):** Plano de testes e critérios de aceitação.
+6.  **[VPS Deployment Guide](docs/vps-deployment.md):** Manual Passo a Passo para Hospedagem Privada.
 
 ---
 

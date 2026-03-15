@@ -20,5 +20,7 @@ Ele é responsável por:
 - **GitHub Actions**: Automatizar o build dos clientes para cada release.
 - **Docker Hub/Registry**: Armazenamento de imagens da API e Frontend.
 
+Para instruções de instalação em servidores, veja o [Manual de Deploy VPS](vps-deployment.md).
+
 ## 🛡️ Segurança de Infra
 Conforme requisitos, o banco de dados e o redis não possuem exposição de porta externa (apenas via rede interna do Docker). O acesso é garantido apenas via túnel ou aplicação.

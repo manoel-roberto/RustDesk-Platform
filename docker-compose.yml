@@ -38,15 +38,27 @@ services:
     restart: unless-stopped
 
   # ----------------------------------------------------------------------------
+  # Load Balancer (Nginx) - REQ-E-002: Escala e Balanceamento
+  # ----------------------------------------------------------------------------
+  load-balancer:
+    image: nginx:alpine
+    container_name: load_balancer
+    ports:
+      - "3000:80"
+    volumes:
+      - ./infrastructure/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - api-server
+    restart: unless-stopped
+
+  # ----------------------------------------------------------------------------
   # API Server (NestJS) / Address Book
   # Responsável por: Portal, Controle de Dispositivos e Address Book
   # ----------------------------------------------------------------------------
   api-server:
-    image: node:20-alpine # Substituir pelo Dockerfile proprietário da API posteriormente
-    container_name: api_server
+    image: node:20-alpine
     working_dir: /app
-    ports:
-      - "3000:3000"
+    # port: 3000 removed to be accessed only via Load Balancer
     environment:
       - NODE_ENV=production
       - DB_HOST=postgres-db
@@ -60,7 +72,7 @@ services:
         condition: service_started
     volumes:
       - ./api:/app
-    command: "npm run start:dev" # start dev for hot-reload in development
+    command: "npm run start:dev"
     restart: unless-stopped
 
   # ----------------------------------------------------------------------------
@@ -117,9 +129,45 @@ services:
         condition: service_healthy
     restart: unless-stopped
 
+  # ----------------------------------------------------------------------------
+  # Servidor de Relay 2 (hbbr-2)
+  # ----------------------------------------------------------------------------
+  hbbr-2:
+    image: rustdesk/rustdesk-server:latest
+    container_name: hbbr_2
+    command: hbbr -k _
+    environment:
+      - ENCRYPTED_ONLY=1
+    volumes:
+      - ./data/rustdesk-data-2:/root
+    network_mode: host
+    restart: unless-stopped
+
+  # ----------------------------------------------------------------------------
+  # Banco de Dados Réplica (PostgreSQL 16)
+  # ----------------------------------------------------------------------------
+  postgres-replica:
+    image: postgres:16-alpine
+    container_name: pg_replica
+    environment:
+      - POSTGRES_USER=empresa_admin
+      - POSTGRES_PASSWORD=super_secret_db_pass
+      - POSTGRES_DB=rustdesk_platform
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:5434:5432"
+
+networks:
+  default:
+    name: rustdesk_network
+
 # Para acesso à rede interna pelo Keycloak e API
 volumes:
   api-data:
   pg-data:
   redis-data:
   rustdesk-data:
+  rustdesk-data-2:

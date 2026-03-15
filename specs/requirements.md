@@ -133,4 +133,11 @@
 ---
 
 ## 4. Requisitos de Escalabilidade
-...
+| ID | Requisito | Meta | Status |
+|----|-----------|------|--------|
+| REQ-E-001 | Suporte até 500 dispositivos sem mudança estrutural | P0 | ✅ Concluído |
+| REQ-E-002 | Escalar para 1000+ com adição de nós de relay | P1 | ✅ Concluído |
+| REQ-E-003 | Adição de novos relays sem mudança no cliente | P1 | ✅ Concluído |
+| REQ-E-004 | DB Sharding ou Replicação | P2 | ✅ Concluído (Replica) |
+| REQ-E-005 | API Stateless — escalável horizontalmente | P1 | ✅ Concluído |
+| REQ-E-006 | Monitoramento escalável independente | P1 | 🏗️ Em progresso |

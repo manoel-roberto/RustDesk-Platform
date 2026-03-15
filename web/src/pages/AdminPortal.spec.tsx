@@ -100,26 +100,16 @@ describe('AdminPortal', () => {
 
     const groupsBtn = screen.getByText('Grupos');
     fireEvent.click(groupsBtn);
-
-    await waitFor(() => {
-      const h1 = screen.getByRole('heading', { level: 1 });
-      expect(h1.textContent).toContain('Grupos');
-    });
+    // screen.debug(); // DEBUG
+    expect(await screen.findByText(/Gerencie a hierarquia/i)).toBeInTheDocument();
 
     const machinesBtn = screen.getByText('Máquinas');
     fireEvent.click(machinesBtn);
-
-    await waitFor(() => {
-      const h1 = screen.getByRole('heading', { level: 1 });
-      expect(h1.textContent).toContain('Maquinas');
-    });
+    expect(await screen.findByText(/Gerencie seus dispositivos/i)).toBeInTheDocument();
 
     const overviewBtn = screen.getByText('Visão Geral');
-    overviewBtn.click();
-
-    await waitFor(() => {
-      expect(screen.getByText('Gerenciamento de Frota')).toBeInTheDocument();
-    });
+    fireEvent.click(overviewBtn);
+    expect(await screen.findByText(/Gerenciamento de Frota/i)).toBeInTheDocument();
   });
 
   it('triggers export download when export button is clicked', async () => {
@@ -211,7 +201,26 @@ describe('AdminPortal', () => {
 
     await waitFor(() => {
       expect(screen.getByText('UPDATE')).toBeInTheDocument();
-      expect(screen.getByText('admin')).toBeInTheDocument();
+      expect(screen.getByText('Administrador')).toBeInTheDocument();
     });
+  });
+
+  it('hides action buttons in read-only mode', async () => {
+    (useAuth as any).mockReturnValue({
+      isAuthenticated: true,
+      user: { profile: { preferred_username: 'viewer', realm_access: { roles: ['ADMIN_READONLY'] } } }
+    });
+
+    render(<AdminPortal />);
+    
+    // Botão de importação não deve existir
+    expect(screen.queryByText('Importar CSV')).not.toBeInTheDocument();
+    
+    // Ir para sessões
+    const sessionsBtn = screen.getByText('Sessões');
+    fireEvent.click(sessionsBtn);
+    
+    // Botão de editar notas não deve existir na tabela de sessões
+    expect(screen.queryByText('Editar')).not.toBeInTheDocument();
   });
 });

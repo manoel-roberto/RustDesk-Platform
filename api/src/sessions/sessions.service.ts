@@ -19,7 +19,17 @@ export class SessionsService {
     if (query.active === 'true') qb.andWhere('session.ended_at IS NULL');
 
     const data = await qb.getMany();
-    return { data };
+    
+    // Calcular duração para sessões finalizadas
+    const dataWithDuration = data.map(session => {
+      let duration = 0;
+      if (session.started_at && session.ended_at) {
+        duration = Math.floor((session.ended_at.getTime() - session.started_at.getTime()) / 1000);
+      }
+      return { ...session, duration };
+    });
+
+    return { data: dataWithDuration as any };
   }
 
   async startSession(userId: string, createSessionDto: any): Promise<Session> {

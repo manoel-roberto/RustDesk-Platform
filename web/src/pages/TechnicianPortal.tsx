@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from 'react-oidc-context';
 import { api } from '../api/axios';
-import { MonitorPlay, Settings, LogOut, Loader2, ShieldCheck, Sun, Moon } from 'lucide-react';
+import { MonitorPlay, Settings, LogOut, Loader2, ShieldCheck, Sun, Moon, Download } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import '../index.css';
 
@@ -11,11 +11,15 @@ const TechnicianPortal = () => {
   const [devices, setDevices] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('maquinas');
+  const [clientInfo, setClientInfo] = useState<any>(null);
 
   useEffect(() => {
     if (auth.isAuthenticated) {
-      api.get('/users/peers')
-        .then(res => setDevices(res.data.data))
+      setLoading(true);
+      Promise.all([
+        api.get('/users/peers').then(res => setDevices(res.data.data)),
+        api.get('/downloads/client/info').then(res => setClientInfo(res.data))
+      ])
         .catch(err => console.error(err))
         .finally(() => setLoading(false));
     }
@@ -95,6 +99,49 @@ const TechnicianPortal = () => {
       );
     }
 
+    if (activeTab === 'downloads') {
+      return (
+        <div className="downloads-section">
+          <header>
+            <h1>Central de Downloads</h1>
+            <p>Baixe o cliente RustDesk customizado e pré-configurado para o seu ambiente.</p>
+          </header>
+
+          {loading ? (
+             <div className="loading-area"><Loader2 className="spinner"/> Carregando metadados...</div>
+          ) : clientInfo && (
+            <div className="download-card accent">
+              <div className="card-icon">
+                <MonitorPlay size={48} className="icon-blue" />
+              </div>
+              <div className="card-content">
+                <h3>{clientInfo.name}</h3>
+                <p className="version">Versão: {clientInfo.version} | {clientInfo.platform}</p>
+                <div className="details">
+                  <span><strong>Tamanho:</strong> {clientInfo.size}</span>
+                  <span><strong>Atualizado em:</strong> {new Date(clientInfo.lastUpdated).toLocaleDateString()}</span>
+                </div>
+                <div className="actions">
+                  <a href={clientInfo.downloadUrl} className="btn-primary flex items-center gap-2">
+                    <Download size={18}/> Baixar Agora (.exe)
+                  </a>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className="info-box mt-8">
+            <h4>Instruções de Instalação</h4>
+            <ol>
+              <li>Baixe o executável acima.</li>
+              <li>A chave pública e o endereço do servidor já estão embutidos.</li>
+              <li>Execute como administrador para garantir funcionalidades completas de controle remoto.</li>
+            </ol>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="placeholder-content">
         <h1>Configurações</h1>
@@ -117,6 +164,12 @@ const TechnicianPortal = () => {
                onClick={() => setActiveTab('maquinas')}
              >
                <MonitorPlay size={18}/> Minhas Máquinas
+             </li>
+             <li 
+               className={activeTab === 'downloads' ? 'active' : ''} 
+               onClick={() => setActiveTab('downloads')}
+             >
+               <Download size={18}/> Downloads
              </li>
              <li 
                className={activeTab === 'configuracoes' ? 'active' : ''} 

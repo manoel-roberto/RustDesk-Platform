@@ -12,10 +12,17 @@ const AdminPortal = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [auditLogs, setAuditLogs] = useState<any[]>([]);
   const [sessions, setSessions] = useState<any[]>([]);
+  const [devices, setDevices] = useState<any[]>([]);
+
+  const roles = (auth.user?.profile as any)?.realm_access?.roles || [];
+  const isReadOnly = roles.includes('ADMIN_READONLY');
 
   useEffect(() => {
     if (auth.isAuthenticated) {
-      api.get('/devices').then(res => setStats(s => ({ ...s, devices: res.data.meta?.total || 0 }))).catch(console.error);
+      api.get('/devices').then(res => {
+        setStats(s => ({ ...s, devices: res.data.meta?.total || 0 }));
+        setDevices(res.data.data || []);
+      }).catch(console.error);
       api.get('/groups').then(res => setStats(s => ({ ...s, groups: res.data.data?.length || 0 }))).catch(console.error);
       api.get('/audit').then(res => setAuditLogs(res.data.data || [])).catch(console.error);
       api.get('/sessions').then(res => setSessions(res.data.data || [])).catch(console.error).finally(() => setLoading(false));
@@ -85,10 +92,12 @@ const AdminPortal = () => {
               <button className="btn-secondary" onClick={handleExport} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem', borderRadius: '6px', border: '1px solid #334155', background: '#1e293b', color: '#fff', cursor: 'pointer' }}>
                 <Download size={16}/> Exportar CSV
               </button>
-              <label className="btn-secondary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem', borderRadius: '6px', border: '1px solid #10b981', background: '#064e3b', color: '#fff', cursor: 'pointer' }}>
-                <Upload size={16}/> Importar CSV
-                <input type="file" accept=".csv" onChange={handleImport} style={{ display: 'none' }} />
-              </label>
+              {!isReadOnly && (
+                <label className="btn-secondary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem', borderRadius: '6px', border: '1px solid #10b981', background: '#064e3b', color: '#fff', cursor: 'pointer' }}>
+                  <Upload size={16}/> Importar CSV
+                  <input type="file" accept=".csv" onChange={handleImport} style={{ display: 'none' }} />
+                </label>
+              )}
             </div>
           </header>
 
@@ -111,6 +120,42 @@ const AdminPortal = () => {
             </div>
           )}
         </>
+      );
+    }
+
+    if (activeTab === 'maquinas') {
+      return (
+        <div className="machines-section">
+          <header>
+            <h1>Máquinas</h1>
+            <p>Gerencie seus dispositivos e conexões.</p>
+          </header>
+          <div className="devices-grid">
+             {devices.length > 0 ? devices.map(device => (
+               <div key={device.id} className="device-card">
+                 <h3>{device.alias}</h3>
+                 <p>ID: {device.id}</p>
+                 <span className={`status-badge ${device.status === 1 ? 'online' : 'offline'}`}>
+                   {device.status === 1 ? 'Online' : 'Offline'}
+                 </span>
+               </div>
+             )) : <p className="no-data">Nenhum dispositivo encontrado.</p>}
+          </div>
+        </div>
+      );
+    }
+
+    if (activeTab === 'grupos') {
+      return (
+        <div className="groups-section">
+          <header>
+            <h1>Grupos de Dispositivos</h1>
+            <p>Gerencie a hierarquia e organização das suas máquinas.</p>
+          </header>
+          <div className="info-box">
+             <p>Funcionalidade de gestão de grupos em desenvolvimento.</p>
+          </div>
+        </div>
       );
     }
 
@@ -179,17 +224,20 @@ const AdminPortal = () => {
                     <td className="p-4 font-medium text-slate-200">{sess.device?.alias || 'Desconhecido'}</td>
                     <td className="p-4">{sess.technician_id}</td>
                     <td className="p-4">{new Date(sess.started_at).toLocaleString('pt-BR')}</td>
+                    <td className="p-4">{sess.duration ? `${Math.floor(sess.duration / 60)}m ${sess.duration % 60}s` : '-'}</td>
                     <td className="p-4"><span className="badge">{sess.session_type}</span></td>
                     <td className="p-4">
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <span>{sess.notes || '—'}</span>
-                        <button className="text-xs text-emerald-500 underline" onClick={() => handleUpdateNote(sess.id, sess.notes || '')}>Editar</button>
+                        {!isReadOnly && (
+                          <button className="text-xs text-emerald-500 underline" onClick={() => handleUpdateNote(sess.id, sess.notes || '')}>Editar</button>
+                        )}
                       </div>
                     </td>
                   </tr>
                 )) : (
                   <tr>
-                    <td colSpan={5} className="p-8 text-center text-slate-500">Nenhuma sessão registrada.</td>
+                    <td colSpan={6} className="p-8 text-center text-slate-500">Nenhuma sessão registrada.</td>
                   </tr>
                 )}
               </tbody>

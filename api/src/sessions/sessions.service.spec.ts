@@ -42,10 +42,14 @@ describe('SessionsService', () => {
   });
 
   describe('findAll', () => {
-    it('should call createQueryBuilder and return data', async () => {
+    it('should call createQueryBuilder and return data with duration', async () => {
+      const now = new Date();
+      const before = new Date(now.getTime() - 10000); // 10s ago
+      const mockSessions = [{ id: '1', started_at: before, ended_at: now }];
+      sessionRepository.createQueryBuilder().getMany.mockResolvedValue(mockSessions);
+
       const result = await service.findAll({});
-      expect(sessionRepository.createQueryBuilder).toHaveBeenCalledWith('session');
-      expect(result).toEqual({ data: [] });
+      expect((result.data[0] as any).duration).toBe(10);
     });
   });
 

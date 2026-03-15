@@ -24,6 +24,26 @@ describe('TechnicianPortal', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     (useTheme as any).mockReturnValue({ theme: 'dark', toggleTheme: vi.fn() });
+    (api.get as any).mockImplementation((url: string) => {
+      if (url === '/users/peers') return Promise.resolve({ data: { data: [] } });
+      if (url === '/downloads/client/info') return Promise.resolve({ data: { name: 'RustDesk Test', version: '1.0', platform: 'Win', downloadUrl: '#' } });
+      return Promise.reject(new Error('URL not mocked'));
+    });
+  });
+
+  it('renders downloads tab', async () => {
+    (useAuth as any).mockReturnValue({
+      isAuthenticated: true,
+      user: { profile: { preferred_username: 'tech1' } }
+    });
+
+    render(<TechnicianPortal />);
+    
+    const downloadsBtn = await screen.findByText('Downloads');
+    fireEvent.click(downloadsBtn);
+
+    expect(await screen.findByText('Central de Downloads')).toBeInTheDocument();
+    expect(screen.getByText('RustDesk Test')).toBeInTheDocument();
   });
 
   it('renders loading screen when auth is loading', () => {

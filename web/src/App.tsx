@@ -40,9 +40,13 @@ const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
 
 const RoleRedirect = () => {
    const auth = useAuth();
+   
+   if (auth.isLoading) {
+      return <div className="loading-screen"><Loader2 className="spinner" size={48}/> Validando sessão...</div>;
+   }
+
    if (!auth.isAuthenticated) return <Navigate to="/technician" />;
    
-   // Simulação de check de role para MVPs:
    const isAdmin = auth.user?.profile?.preferred_username === 'admin';
    return isAdmin ? <Navigate to="/admin" /> : <Navigate to="/technician" />;
 };

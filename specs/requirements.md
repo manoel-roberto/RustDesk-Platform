@@ -43,7 +43,7 @@
 | REQ-F-012 | Atribuir técnicos a grupos de dispositivos | P0 | ✅ Concluído |
 | REQ-F-013 | Controle de nível de acesso (full, view_only) | P1 | ✅ Concluído |
 | REQ-F-014 | Suportar login com SSO via Keycloak (OIDC) | P0 | ✅ Concluído |
-| REQ-F-015 | Exigir MFA para técnicos e admins | P0 | 🏗️ Configuração (Keycloak) |
+| REQ-F-015 | Exigir MFA para técnicos e admins | P0 | ✅ Concluído (ACR validation + guia Keycloak) |
 
 ### 1.3 Sessões de Suporte
 
@@ -88,7 +88,7 @@
 | REQ-NF-030 | Cobertura de testes da API ≥ 80% | Obrigatório | ✅ Concluído (100%) |
 | REQ-NF-031 | Migrations versionadas | Obrigatório | ✅ Concluído |
 | REQ-NF-032 | Documentação Swagger atualizada | Obrigatório | ✅ Concluído |
-| REQ-NF-033 | Deploy sem downtime | P1 | ⏳ Pendente |
+| REQ-NF-033 | Deploy sem downtime | P1 | ✅ Concluído (healthchecks + rolling update) |
 
 ---
 
@@ -96,8 +96,8 @@
 
 | ID | Requisito | Prioridade | Status |
 |----|-----------|------------|--------|
-| REQ-S-001 | TLS 1.2+ (Certificado válido) | P0 | 🏗️ Em progresso |
-| REQ-S-004 | MFA Obrigatório (Keycloak) | P0 | 🏗️ Configuração (Keycloak) |
+| REQ-S-001 | TLS 1.2+ (Certificado válido) | P0 | ✅ Concluído (nginx.conf + Certbot) |
+| REQ-S-004 | MFA Obrigatório (Keycloak) | P0 | ✅ Concluído (ACR validation + guia Keycloak) |
 | REQ-S-008 | DB Isolation (Apenas rede interna) | P0 | ✅ Concluído |
 | REQ-S-010 | Sessões E2E Encriptadas | P0 | ✅ Concluído |
 | REQ-S-013 | Segredos fora do repositório | P0 | ✅ Concluído |
@@ -128,7 +128,7 @@
 |----|-----------|------------|---------------|--------|
 | REQ-S-020 | Implementação de Content Security Policy (CSP) | P1 | Proteção contra XSS e injeção de scripts maliciosos | ✅ Concluído |
 | REQ-S-021 | Proteção contra Clickjacking (Headers X-Frame) | P1 | Impedir que o portal de login seja emoldurado em sites maliciosos | ✅ Concluído |
-| REQ-S-022 | Rotação automática de chaves de assinatura JWT | P2 | Aumentar a segurança de longo prazo dos tokens de acesso | ⏳ Sugerido |
+| REQ-S-022 | Rotação automática de chaves de assinatura JWT | P2 | Aumentar a segurança de longo prazo dos tokens de acesso | ✅ Concluído (JWKS dinâmico Keycloak) |
 
 ---
 

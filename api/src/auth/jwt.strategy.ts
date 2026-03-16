@@ -9,28 +9,40 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      // URL para validar as chaves públicas (JWKS) do formato correto do Keycloak
+      // URL para validar as chaves públicas (JWKS) do Keycloak
       secretOrKeyProvider: passportJwtSecret({
         cache: true,
         rateLimit: true,
         jwksRequestsPerMinute: 5,
-        jwksUri: process.env.KEYCLOAK_URL 
-          ? `${process.env.KEYCLOAK_URL}/realms/master/protocol/openid-connect/certs`
-          : 'http://localhost:8080/realms/master/protocol/openid-connect/certs',
+        jwksUri: process.env.KEYCLOAK_URL
+          ? `${process.env.KEYCLOAK_URL}/realms/rustdesk/protocol/openid-connect/certs`
+          : 'http://localhost:8080/realms/rustdesk/protocol/openid-connect/certs',
       }),
-      // Para validações simples, usaremos master (embora numa prod fosse um realm específico)
     });
   }
 
   async validate(payload: any) {
     if (!payload) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Token inválido');
     }
-    // Retorna as informacoes cruciais no request.user
+
+    // REQ-F-015 / REQ-S-004: Exigir MFA quando REQUIRE_MFA=true
+    // O Keycloak emite `acr: "mfa"` quando autenticação de múltiplos fatores foi utilizada
+    const requireMfa = process.env.REQUIRE_MFA === 'true';
+    if (requireMfa) {
+      const acr = payload.acr;
+      if (!acr || !['mfa', 'aal2', '2'].includes(String(acr))) {
+        throw new UnauthorizedException(
+          'Autenticação de múltiplos fatores (MFA) é obrigatória. Por favor, autentique-se novamente com MFA habilitado.',
+        );
+      }
+    }
+
     return {
       userId: payload.sub,
       username: payload.preferred_username,
       roles: payload.realm_access?.roles || [],
+      mfaVerified: !!payload.acr,
     };
   }
 }

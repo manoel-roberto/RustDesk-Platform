@@ -27,7 +27,7 @@
 |----|-----------|------------|--------|
 | REQ-F-001 | O sistema deve permitir registrar dispositivos | P0 | ✅ Concluído |
 | REQ-F-002 | Exibir o status online/offline em tempo real | P0 | ✅ Concluído |
-| REQ-F-003 | Organizar dispositivos em grupos hierárquicos | P1 | 🏗️ Parcial |
+| REQ-F-003 | Organizar dispositivos em grupos hierárquicos | P1 | ✅ Concluído |
 | REQ-F-004 | Adicionar tags livres a dispositivos | P1 | ✅ Concluído |
 | REQ-F-005 | Registrar timestamp do último acesso | P1 | ✅ Concluído |
 | REQ-F-006 | Busca e filtro de dispositivos | P1 | ✅ Concluído |
@@ -64,7 +64,7 @@
 | REQ-F-030 | Cliente RustDesk com servidor embutido | P0 | ✅ Concluído |
 | REQ-F-031 | Chave pública do servidor embutida | P0 | ✅ Concluído |
 | REQ-F-032 | White-label (Nome e Logo da empresa) | P1 | ✅ Concluído |
-| REQ-F-033 | Pipeline CI/CD para Windows (.exe) | P0 | ⏳ Pendente |
+| REQ-F-033 | Pipeline CI/CD para Windows (.exe) | P0 | ✅ Concluído |
 | REQ-F-034 | Download via URL pública da plataforma | P0 | ✅ Concluído |
 | REQ-F-035 | Exibir versão atual para download | P1 | ✅ Concluído |
 
@@ -74,7 +74,7 @@
 |----|-----------|------------|--------|
 | REQ-F-040 | Dashboards com métricas de uso | P1 | ✅ Concluído |
 | REQ-F-041 | Notificação de dispositivos offline | P2 | ✅ Concluído |
-| REQ-F-042 | Alertas de saúde hbbs/hbbr | P1 | ⏳ Pendente |
+| REQ-F-042 | Alertas de saúde hbbs/hbbr | P1 | ✅ Concluído |
 | REQ-F-043 | Log de auditoria de ações administrativas | P1 | ✅ Concluído |
 
 ---
@@ -118,7 +118,7 @@
 | ID | Requisito | Prioridade | Justificativa | Status |
 |----|-----------|------------|---------------|--------|
 | REQ-NF-040 | Suporte a Dark Mode nativo | P2 | Redução de fadiga ocular para suporte prolongado | ✅ Concluído |
-| REQ-NF-041 | PWA (Progressive Web App) | P2 | Permitir instalação como app desktop para acesso rápido | ⏳ Sugerido |
+| REQ-NF-041 | PWA (Progressive Web App) | P2 | Permitir instalação como app desktop para acesso rápido | ✅ Concluído |
 
 ---
 
@@ -140,7 +140,7 @@
 | REQ-E-003 | Adição de novos relays sem mudança no cliente | P1 | ✅ Concluído |
 | REQ-E-004 | DB Sharding ou Replicação | P2 | ✅ Concluído (Replica) |
 | REQ-E-005 | API Stateless — escalável horizontalmente | P1 | ✅ Concluído |
-| REQ-E-006 | Monitoramento escalável independente | P1 | 🏗️ Em progresso |
+| REQ-E-006 | Monitoramento escalável independente | P1 | ✅ Concluído |
 ## 5. Política de Qualidade e Verificação (TDD)
 
 | ID | Requisito | Prioridade | Meta | Status |

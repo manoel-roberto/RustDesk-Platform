@@ -15,6 +15,8 @@ const AdminPortal = () => {
   const [devices, setDevices] = useState<any[]>([]);
   const [sessionStats, setSessionStats] = useState<{ totalSessions: number; totalHours: number; avgMinutes: number } | null>(null);
   const [offlineCount, setOfflineCount] = useState(0);
+  const [healthStatus, setHealthStatus] = useState<{ status: string; services: Record<string, string> } | null>(null);
+  const [groupTree, setGroupTree] = useState<any[]>([]);
 
   const roles = (auth.user?.profile as any)?.realm_access?.roles || [];
   const isReadOnly = roles.includes('ADMIN_READONLY');
@@ -31,6 +33,8 @@ const AdminPortal = () => {
       api.get('/audit').then(res => setAuditLogs(res.data.data || [])).catch(console.error);
       api.get('/sessions').then(res => setSessions(res.data.data || [])).catch(console.error).finally(() => setLoading(false));
       api.get('/sessions/stats').then(res => setSessionStats(res.data)).catch(console.error);
+      api.get('/health').then(res => setHealthStatus(res.data)).catch(console.error);
+      api.get('/groups/tree').then(res => setGroupTree(res.data.data || [])).catch(console.error);
     }
   }, [auth.isAuthenticated, activeTab]);
   
@@ -138,6 +142,19 @@ const AdminPortal = () => {
                   </div>
                 </>
               )}
+              {healthStatus?.services && (
+                <div className="device-card" style={{ borderLeft: `4px solid ${healthStatus.status === 'ok' ? '#10b981' : '#ef4444'}` }}>
+                  <h3>{healthStatus.status === 'ok' ? '✅' : '⚠️'} Saúde do Sistema</h3>
+                  <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                    {Object.entries(healthStatus.services).map(([svc, st]) => (
+                      <div key={svc} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}>
+                        <span style={{ textTransform: 'capitalize' }}>{svc}</span>
+                        <span style={{ color: st === 'ok' ? '#10b981' : '#ef4444', fontWeight: 'bold' }}>{st === 'ok' ? '● OK' : '● Error'}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
               {offlineCount > 0 && (
                 <div className="device-card" style={{ borderLeft: '4px solid #ef4444' }}>
                   <h3>⚠️ Dispositivos Offline</h3>
@@ -174,14 +191,30 @@ const AdminPortal = () => {
     }
 
     if (activeTab === 'grupos') {
+      const renderGroupNode = (group: any, depth = 0): React.ReactNode => (
+        <div key={group.id} style={{ marginLeft: `${depth * 1.5}rem`, marginBottom: '0.5rem' }}>
+          <div className="device-card" style={{ borderLeft: depth > 0 ? '3px solid #6366f1' : undefined }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <h3 style={{ margin: 0 }}>{depth > 0 ? '↳ ' : ''}{group.name}</h3>
+              <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>{group.device_count || 0} dispositivos</span>
+            </div>
+            {group.description && <p style={{ margin: '0.3rem 0 0', fontSize: '0.85rem', color: '#94a3b8' }}>{group.description}</p>}
+          </div>
+          {group.children?.map((child: any) => renderGroupNode(child, depth + 1))}
+        </div>
+      );
+
       return (
         <div className="groups-section">
           <header>
             <h1>Grupos de Dispositivos</h1>
-            <p>Gerencie a hierarquia e organização das suas máquinas.</p>
+            <p>Hierarquia e organização das suas máquinas.</p>
           </header>
-          <div className="info-box">
-             <p>Funcionalidade de gestão de grupos em desenvolvimento.</p>
+          <div style={{ marginTop: '1rem' }}>
+            {groupTree.length > 0
+              ? groupTree.map(g => renderGroupNode(g))
+              : <p className="no-data">Nenhum grupo encontrado.</p>
+            }
           </div>
         </div>
       );

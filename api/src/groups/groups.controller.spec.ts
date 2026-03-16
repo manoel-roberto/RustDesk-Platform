@@ -4,6 +4,8 @@ import { GroupsService } from './groups.service';
 
 const mockGroupsService = () => ({
   findAll: jest.fn().mockResolvedValue({ data: [] }),
+  findTree: jest.fn().mockResolvedValue({ data: [] }),
+  findOne: jest.fn().mockResolvedValue({ id: '1', name: 'Group', children: [] }),
   create: jest.fn().mockResolvedValue({ id: '1', name: 'Group' }),
 });
 
@@ -35,7 +37,25 @@ describe('GroupsController', () => {
     expect(service.findAll).toHaveBeenCalled();
   });
 
-  it('should call create', async () => {
+  it('should call findTree', async () => {
+    const result = await controller.findTree();
+    expect(service.findTree).toHaveBeenCalled();
+    expect(result.data).toBeDefined();
+  });
+
+  it('should call findOne', async () => {
+    const result = await controller.findOne('1');
+    expect(service.findOne).toHaveBeenCalledWith('1');
+    expect(result.id).toBe('1');
+  });
+
+  it('should call create with parent_id', async () => {
+    const dto = { name: 'Sub', parent_id: 'parent-1' };
+    await controller.create(dto);
+    expect(service.create).toHaveBeenCalledWith(dto);
+  });
+
+  it('should call create without parent', async () => {
     const dto = { name: 'G1' };
     await controller.create(dto);
     expect(service.create).toHaveBeenCalledWith(dto);

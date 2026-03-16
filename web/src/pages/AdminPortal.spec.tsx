@@ -38,9 +38,11 @@ describe('AdminPortal', () => {
     (api.get as any).mockImplementation((url: string) => {
       if (url === '/devices') return Promise.resolve({ data: { data: [], meta: { total: 0 } } });
       if (url === '/groups') return Promise.resolve({ data: { data: [] } });
+      if (url === '/groups/tree') return Promise.resolve({ data: { data: [] } });
       if (url === '/audit') return Promise.resolve({ data: { data: [] } });
       if (url === '/sessions') return Promise.resolve({ data: { data: [] } });
       if (url === '/sessions/stats') return Promise.resolve({ data: { totalSessions: 10, totalHours: 5.5, avgMinutes: 33, totalSeconds: 19800 } });
+      if (url === '/health') return Promise.resolve({ data: { status: 'ok', services: { database: 'ok', keycloak: 'ok', relay: 'ok' } } });
       if (url === '/devices/export') return Promise.resolve({ data: 'csv' });
       return Promise.reject(new Error('URL not mocked: ' + url));
     });
@@ -134,8 +136,7 @@ describe('AdminPortal', () => {
 
     const groupsBtn = screen.getByText('Grupos');
     fireEvent.click(groupsBtn);
-    // screen.debug(); // DEBUG
-    expect(await screen.findByText(/Gerencie a hierarquia/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Grupos de Dispositivos/i)).toBeInTheDocument();
 
     const machinesBtn = screen.getByText('Máquinas');
     fireEvent.click(machinesBtn);

@@ -1,7 +1,9 @@
 import { Controller, Get, Post, Patch, Body, Param, Query, UseGuards, Request } from '@nestjs/common';
 import { SessionsService } from './sessions.service';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Sessões')
 @UseGuards(AuthGuard('jwt'))
 @Controller('sessions')
 export class SessionsController {

@@ -1,7 +1,9 @@
 import { Controller, Get, Post, Patch, Delete, Body, Param, Query, UseGuards, Request } from '@nestjs/common';
+import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { DevicesService } from './devices.service';
 
+@ApiTags('Dispositivos')
 @Controller()
 export class DevicesController {
   constructor(private readonly devicesService: DevicesService) {}

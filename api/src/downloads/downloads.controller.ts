@@ -1,6 +1,8 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 
+@ApiTags('Downloads')
 @Controller('downloads')
 export class DownloadsController {
   @Get('client/info')

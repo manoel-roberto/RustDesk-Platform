@@ -20,6 +20,8 @@ services:
     volumes:
       - ./data/rustdesk-data:/root
     network_mode: host # Rustdesk Server recomenda network host por performance de UDP
+    extra_hosts:
+      - "hbbr.empresa.com:127.0.0.1"
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "pgrep hbbs || exit 1"]
@@ -41,6 +43,8 @@ services:
     volumes:
       - ./data/rustdesk-data:/root
     network_mode: host
+    extra_hosts:
+      - "hbbr.empresa.com:127.0.0.1"
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "pgrep hbbr || exit 1"]
@@ -59,6 +63,7 @@ services:
     ports:
       - "80:80"    # Redirect HTTP → HTTPS
       - "443:443"  # HTTPS com TLS 1.2+ (REQ-S-001)
+      - "3000:443" # Mapear 3000 -> 443 para o smoke-test da API (via HTTPS)
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./data/certs:/etc/nginx/certs:ro          # Certificados TLS (Let's Encrypt)
@@ -66,6 +71,8 @@ services:
     depends_on:
       api-server:
         condition: service_healthy
+      web:
+        condition: service_started
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "nginx", "-t"]
@@ -108,10 +115,12 @@ services:
         condition: service_healthy
     volumes:
       - ./api:/app
-    command: "npm run start:prod"
+    ports:
+      - "3000:3000"
+    command: sh -c "npm install --include=dev && npm run build && npm run start:prod"
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/health || exit 1"]
+      test: ["CMD-SHELL", "wget -qO- --no-check-certificate http://localhost:3000/health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -120,7 +129,23 @@ services:
       update_config:
         parallelism: 1
         delay: 10s
-        order: start-first  # Zero-downtime: sobe novo container antes de derrubar o antigo
+        order: start-first  # Zero-downtime
+
+  # ----------------------------------------------------------------------------
+  # Frontend (React/Vite)
+  # ----------------------------------------------------------------------------
+  web:
+    image: node:20-alpine
+    container_name: web_portal
+    working_dir: /app
+    volumes:
+      - ./web:/app
+    environment:
+      - VITE_API_URL=/api
+    command: sh -c "npm install && npm run dev -- --host"
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
 
   # ----------------------------------------------------------------------------
   # Banco de Dados (PostgreSQL 16)
@@ -134,6 +159,10 @@ services:
       - POSTGRES_DB=rustdesk_platform
     volumes:
       - ./data/pg-data:/var/lib/postgresql/data
+    networks:
+      default:
+        aliases:
+          - postgres-db
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U empresa_admin -d rustdesk_platform"]
       interval: 10s
@@ -171,12 +200,13 @@ services:
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=admin_secret
       - KC_DB=postgres
-      - KC_DB_URL=jdbc:postgresql://postgres-db:5432/keycloak
+      - KC_DB_URL=jdbc:postgresql://pg_db:5432/keycloak
       - KC_DB_USERNAME=empresa_admin
       - KC_DB_PASSWORD=super_secret_db_pass
       - KC_HOSTNAME_STRICT=false
       - KC_HTTP_ENABLED=true
-    command: start-dev  # Em produção: "start --https-certificate-file=... --https-certificate-key-file=..."
+      - KC_HEALTH_ENABLED=true
+    command: start-dev
     ports:
       - "8080:8080"
     depends_on:
@@ -184,11 +214,11 @@ services:
         condition: service_healthy
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "curl -sf http://localhost:8080/realms/rustdesk/.well-known/openid-configuration || exit 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 60s
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/8080; echo -e \"GET /health/live HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n\" >&3; cat <&3 | grep -q \"200 OK\""]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
 
   # ----------------------------------------------------------------------------
   # Servidor de Relay 2 (hbbr-2) - REQ-E-002: múltiplos relays

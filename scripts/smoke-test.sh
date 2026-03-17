@@ -5,7 +5,7 @@ echo "🚀 Iniciando Smoke Tests da Infraestrutura..."
 
 # 1. Verificar se os serviços estão rodando
 # Usando grep -E para permitir pequenas variações de hífen/underline se necessário
-SERVICES=("hbbs" "hbbr" "load-balancer" "api-server" "postgres-db" "redis-cache" "keycloak" "hbbr-2" "postgres-replica")
+SERVICES=("hbbs" "hbbr" "load_balancer" "rustdesk-api-server-1" "pg_db" "redis_cache" "keycloak" "hbbr-2" "postgres-replica")
 
 for svc in "${SERVICES[@]}"; do
     if docker ps --format '{{.Label "com.docker.compose.service"}}' | grep -q "^$svc$"; then

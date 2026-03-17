@@ -1,8 +1,10 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AuditLog } from '../database/entities/audit-log.entity';
 
+@ApiTags('Auditoria')
 @Controller('audit')
 export class AuditController {
   constructor(

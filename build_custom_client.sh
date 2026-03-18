@@ -7,11 +7,11 @@
 set -e
 
 # ================= Configurações de Compilação ==============================
-APP_NAME="EmpresaSupport"
-ID_SERVER="hbbs.empresa.com"
+APP_NAME="RustDeskSuporte"
+ID_SERVER="hbbr.empresa.com"
 RELAY_SERVER="hbbr.empresa.com"
-API_SERVER="https://api.empresa.com"
-PUB_KEY="SuaChavePublicaBase64====================="
+API_SERVER="http://localhost:3000"
+PUB_KEY="AnITNtuLgMFs0NhSMRL0BCexnuxXQU5LLrgq7FkVwo8="
 
 # Diretórios
 RUSTDESK_SRC="./rustdesk"

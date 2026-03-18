@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  builder:
+    image: rustdesk/rustdesk-builder:latest
+    container_name: rustdesk_builder
+    volumes:
+      - .:/home/user/rustdesk-platform
+      # O script build_with_docker.sh vai montar o diretório do rustdesk aqui
+    working_dir: /home/user/rustdesk-platform
+    privileged: true
+    environment:
+      - APP_NAME=RustDeskSuporte
+      - ID_SERVER=hbbr.empresa.com
+      - PUB_KEY=AnITNtuLgMFs0NhSMRL0BCexnuxXQU5LLrgq7FkVwo8=

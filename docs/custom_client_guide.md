@@ -62,9 +62,21 @@ O script `build_custom_client.sh` copiará esses arquivos para dentro do código
    ./build_custom_client.sh
    ```
 
-O script irá clonar o repositório oficial, aplicar suas configurações e preparar o ambiente. 
+## 5. Build Facilitado via Docker (Recomendado)
 
-## 5. Próximos Passos (CI/CD)
+Se você não quer instalar Rust, Flutter e vcpkg na sua máquina, utilize o script de Docker que criamos:
+
+1. **Pré-requisito**: Apenas o **Docker** instalado.
+2. **Executar o Build**:
+   ```bash
+   chmod +x build_with_docker.sh
+   ./build_with_docker.sh
+   ```
+   
+> [!NOTE]
+> O Docker irá baixar a imagem `rustdesk/rustdesk-builder`, que possui todas as dependências isoladas. Esta imagem tem cerca de 4GB, mas garante que o build funcione em qualquer sistema Linux de forma idêntica.
+
+## 6. Próximos Passos (CI/CD)
 
 Para empresas, recomendamos usar **GitHub Actions** para gerar os executáveis (`.exe`, `.deb`, `.dmg`) automaticamente sempre que houver uma mudança nos assets. 
 

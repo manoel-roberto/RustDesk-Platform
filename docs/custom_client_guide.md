@@ -16,10 +16,19 @@ libpulse-dev clang cmake ninja-build python3-pip
 # Instalar Rust
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 source $HOME/.cargo/env
-
-# Instalar Flutter
-# Recomendamos seguir o guia oficial: https://docs.flutter.dev/get-started/install/linux
 ```
+
+### Windows
+1. **Visual Studio 2022**: Instalar com a carga de trabalho "Desenvolvimento para Desktop com C++".
+2. **Rust**: Instalar via [rustup.rs](https://rustup.rs/).
+3. **vcpkg**: 
+   ```powershell
+   git clone https://github.com/microsoft/vcpkg
+   .\vcpkg\bootstrap-vcpkg.bat
+   $env:VCPKG_ROOT = "C:\caminho\para\vcpkg"
+   ```
+4. **LLVM/Clang**: Necessário para bindgen no Rust.
+5. **Flutter SDK**: Configurado e adicionado ao PATH.
 
 ## 2. Configuração do Script
 
@@ -60,3 +69,20 @@ O script irá clonar o repositório oficial, aplicar suas configurações e prep
 Para empresas, recomendamos usar **GitHub Actions** para gerar os executáveis (`.exe`, `.deb`, `.dmg`) automaticamente sempre que houver uma mudança nos assets. 
 
 O arquivo `.github/workflows/build-client.yml` (se disponível) pode ser configurado para usar o script acima.
+
+## 6. Registro de Protocolo (Acesso via Browser)
+
+Se o botão **"Acessar"** não abrir o RustDesk no Windows, você pode registrar o protocolo manualmente usando o PowerShell (como administrador):
+
+```powershell
+# Definir o caminho do executável (ajuste se necessário)
+$RustDeskPath = "C:\Program Files\RustDesk\rustdesk.exe"
+
+# Criar chaves no registro
+New-Item -Path "HKCR:\rustdesk" -Force
+Set-ItemProperty -Path "HKCR:\rustdesk" -Name "(Default)" -Value "URL:RustDesk Protocol"
+Set-ItemProperty -Path "HKCR:\rustdesk" -Name "URL Protocol" -Value ""
+
+New-Item -Path "HKCR:\rustdesk\shell\open\command" -Force
+Set-ItemProperty -Path "HKCR:\rustdesk\shell\open\command" -Name "(Default)" -Value "`"$RustDeskPath`" `"%1`""
+```

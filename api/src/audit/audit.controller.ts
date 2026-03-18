@@ -1,5 +1,5 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AuditLog } from '../database/entities/audit-log.entity';
@@ -13,6 +13,7 @@ export class AuditController {
   ) {}
 
   @Get()
+  @ApiOperation({ summary: 'Listar registros de auditoria', description: 'Retorna o log de atividades do sistema com suporte a paginação.' })
   async findAll(@Query() query: any) {
     const { page = 1, limit = 50 } = query;
     const skip = (page - 1) * limit;

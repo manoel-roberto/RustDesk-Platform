@@ -65,6 +65,7 @@ export class DevicesService {
       rustdesk_id: createDto.rustdesk_id,
       alias: createDto.alias,
       hostname: createDto.hostname,
+      os: createDto.os || 'Windows',
       tags: createDto.tags,
       // Se houvesse o group_id ele precisaria buscar o Group. Aqui mockamos para MVP:
       group: createDto.group_id ? { id: createDto.group_id } as any : null

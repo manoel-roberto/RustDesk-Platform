@@ -61,4 +61,10 @@ export class GroupsService {
     if (!group) throw new NotFoundException(`Group ${id} not found`);
     return group;
   }
+
+  async remove(id: string): Promise<void> {
+    const group = await this.findOne(id);
+    // Nota: Se houver dispositivos ou filhos, o TypeORM tratará conforme a configuração de cascade/on delete.
+    await this.groupRepository.delete(id);
+  }
 }

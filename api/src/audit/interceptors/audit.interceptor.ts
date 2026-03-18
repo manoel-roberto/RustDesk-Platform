@@ -30,8 +30,8 @@ export class AuditInterceptor implements NestInterceptor {
         tap(async (data) => {
           try {
             const auditLog = this.auditLogRepository.create({
-              userId: user?.sub || 'anonymous',
-              username: user?.preferred_username || 'anonymous',
+              userId: user?.userId || 'anonymous',
+              username: user?.username || 'anonymous',
               action: this.getMappedAction(method),
               resource: this.getResourceFromUrl(url),
               payload: body,

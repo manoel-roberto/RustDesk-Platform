@@ -17,7 +17,10 @@ api.interceptors.request.use(
         if (oidcDataStr) {
           const user = User.fromStorageString(oidcDataStr);
           if (user?.access_token) {
+            console.log('AXIOS_DEBUG: Enviando token:', user.access_token.substring(0, 20) + '...');
             config.headers.Authorization = `Bearer ${user.access_token}`;
+          } else {
+            console.warn('AXIOS_DEBUG: Nenhum access_token encontrado no storage');
           }
         }
       } catch (err) {

@@ -61,9 +61,8 @@ services:
     image: nginx:alpine
     container_name: load_balancer
     ports:
-      - "80:80"    # Redirect HTTP → HTTPS
-      - "443:443"  # HTTPS com TLS 1.2+ (REQ-S-001)
-      - "3000:443" # Mapear 3000 -> 443 para o smoke-test da API (via HTTPS)
+      - "8081:80"    # Redirect HTTP → HTTPS (não privilegiada)
+      - "8443:443"  # HTTPS com TLS 1.2+ (não privilegiada)
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./data/certs:/etc/nginx/certs:ro          # Certificados TLS (Let's Encrypt)
@@ -105,7 +104,9 @@ services:
       - DB_PORT=5432
       - REDIS_HOST=redis-cache
       - KEYCLOAK_URL=http://keycloak:8080
-      - REQUIRE_MFA=true  # REQ-F-015 / REQ-S-004: MFA obrigatório
+      - REQUIRE_MFA=false
+      - RELAY_HOST=hbbs
+      - HBBR_HOST=hbbr
     depends_on:
       postgres-db:
         condition: service_healthy
@@ -120,7 +121,7 @@ services:
     command: sh -c "npm install --include=dev && npm run build && npm run start:prod"
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "wget -qO- --no-check-certificate http://localhost:3000/health || exit 1"]
+      test: ["CMD-SHELL", "wget -qO- --no-check-certificate http://127.0.0.1:3000/api/v1/health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3

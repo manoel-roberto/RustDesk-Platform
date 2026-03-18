@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { DataSource } from 'typeorm';
 
 @ApiTags('Saúde')
@@ -12,6 +12,7 @@ export class HealthController {
   ) {}
 
   @Get()
+  @ApiOperation({ summary: 'Verificar saúde do sistema', description: 'Retorna o status atual do banco de dados, Keycloak e servidores Relay.' })
   async getHealth() {
     const services: Record<string, 'ok' | 'error'> = {};
     let overallStatus: 'ok' | 'degraded' = 'ok';

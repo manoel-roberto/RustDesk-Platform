@@ -12,13 +12,15 @@ const TechnicianPortal = () => {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('maquinas');
   const [clientInfo, setClientInfo] = useState<any>(null);
+  const [branding, setBranding] = useState<{ companyName: string; primaryColor: string } | null>(null);
 
   useEffect(() => {
     if (auth.isAuthenticated) {
       setLoading(true);
       Promise.all([
         api.get('/users/peers').then(res => setDevices(res.data.data)),
-        api.get('/downloads/client/info').then(res => setClientInfo(res.data))
+        api.get('/downloads/client/info').then(res => setClientInfo(res.data)),
+        api.get('/downloads/branding').then(res => setBranding(res.data))
       ])
         .catch(err => console.error(err))
         .finally(() => setLoading(false));
@@ -48,8 +50,18 @@ const TechnicianPortal = () => {
     );
   }
 
-  const connectToDevice = (id: string) => {
-    window.location.href = `rustdesk://${id}`;
+  const connectToDevice = async (id: string) => {
+    try {
+      const res = await api.post(`/devices/${id}/connect`);
+      if (res.data.url) {
+        window.location.href = res.data.url;
+      } else {
+        window.location.href = `rustdesk://${id}`;
+      }
+    } catch (error) {
+       console.error('Erro ao gerar link de conexão:', error);
+       window.location.href = `rustdesk://${id}`; // Fallback
+    }
   };
 
   const renderContent = () => {
@@ -154,8 +166,8 @@ const TechnicianPortal = () => {
     <div className="dashboard-layout">
       <aside className="sidebar">
         <div className="sidebar-header">
-           <MonitorPlay size={32} color="#fff"/>
-           <h2>Suporte</h2>
+           <MonitorPlay size={32} color={branding?.primaryColor || "#fff"}/>
+           <h2>{branding?.companyName || "Suporte"}</h2>
         </div>
         <nav>
            <ul>

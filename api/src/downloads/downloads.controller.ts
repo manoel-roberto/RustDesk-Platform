@@ -1,12 +1,14 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('Downloads')
+@ApiBearerAuth()
 @Controller('downloads')
 export class DownloadsController {
   @Get('client/info')
   @UseGuards(AuthGuard('jwt'))
+  @ApiOperation({ summary: 'Informações do cliente customizado', description: 'Retorna a versão e URL para download do executável RustDesk configurado.' })
   getClientInfo() {
     return {
       version: '1.2.0-custom',
@@ -20,6 +22,7 @@ export class DownloadsController {
 
   @Get('branding')
   @UseGuards(AuthGuard('jwt'))
+  @ApiOperation({ summary: 'Configurações de marca', description: 'Retorna cores, logo e nome da empresa para personalização visual do cliente.' })
   getBranding() {
     return {
       companyName: process.env.BRAND_COMPANY_NAME || 'RustDesk Enterprise',

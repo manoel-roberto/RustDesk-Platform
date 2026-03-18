@@ -17,6 +17,13 @@ const AdminPortal = () => {
   const [offlineCount, setOfflineCount] = useState(0);
   const [healthStatus, setHealthStatus] = useState<{ status: string; services: Record<string, string> } | null>(null);
   const [groupTree, setGroupTree] = useState<any[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isGroupModalOpen, setIsGroupModalOpen] = useState(false);
+  const [branding, setBranding] = useState<{ companyName: string; primaryColor: string } | null>(null);
+  const [newDevice, setNewDevice] = useState({ rustdesk_id: '', alias: '', hostname: '', os: '', tags: '', group_id: '' });
+  const [newGroup, setNewGroup] = useState({ name: '', description: '', parent_id: '' });
+  const [selectedDeviceForGroup, setSelectedDeviceForGroup] = useState<any | null>(null);
+  const [auditSearch, setAuditSearch] = useState('');
 
   const roles = (auth.user?.profile as any)?.realm_access?.roles || [];
   const isReadOnly = roles.includes('ADMIN_READONLY');
@@ -35,6 +42,7 @@ const AdminPortal = () => {
       api.get('/sessions/stats').then(res => setSessionStats(res.data)).catch(console.error);
       api.get('/health').then(res => setHealthStatus(res.data)).catch(console.error);
       api.get('/groups/tree').then(res => setGroupTree(res.data.data || [])).catch(console.error);
+      api.get('/downloads/branding').then(res => setBranding(res.data)).catch(console.error);
     }
   }, [auth.isAuthenticated, activeTab]);
   
@@ -74,6 +82,18 @@ const AdminPortal = () => {
     reader.readAsText(file);
   };
 
+  const handleDownloadTemplate = () => {
+    const header = 'rustdesk_id,alias,hostname,os,online,tags';
+    const example = '123456789,Meu Cliente,CLIENTE-PC,Windows,true,"suporte,financeiro"';
+    const csvContent = [header, example].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'modelo_importacao_rustdesk.csv';
+    a.click();
+  };
+
   const handleUpdateNote = async (sessionId: string, currentNote: string) => {
     const newNote = prompt('Editar Notas da Sessão:', currentNote);
     if (newNote === null) return;
@@ -83,6 +103,104 @@ const AdminPortal = () => {
     } catch (error) {
       console.error('Erro ao atualizar nota:', error);
       alert('Falha ao atualizar nota');
+    }
+  };
+
+  const handleCreateDevice = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const payload = {
+        ...newDevice,
+        tags: newDevice.tags.split(',').map(t => t.trim()).filter(t => t !== ''),
+        group_id: newDevice.group_id === '' ? undefined : newDevice.group_id
+      };
+      await api.post('/devices', payload);
+      alert('Dispositivo cadastrado com sucesso!');
+      setIsModalOpen(false);
+      setNewDevice({ rustdesk_id: '', alias: '', hostname: '', os: '', tags: '', group_id: '' });
+      // Refresh list
+      const res = await api.get('/devices');
+      setDevices(res.data.data || []);
+      setStats(s => ({ ...s, devices: res.data.meta?.total || 0 }));
+    } catch (error: any) {
+       console.error('Erro ao criar dispositivo:', error);
+       const errMsg = error.response?.data?.message || error.message;
+       alert(`Erro ao criar dispositivo: ${errMsg}`);
+    }
+  };
+
+  const handleDeleteDevice = async (id: string) => {
+    if (!confirm('Tem certeza que deseja excluir este dispositivo?')) return;
+    try {
+      await api.delete(`/devices/${id}`);
+      setDevices(prev => prev.filter(d => d.id !== id));
+      setStats(s => ({ ...s, devices: s.devices - 1 }));
+    } catch (error) {
+      console.error('Erro ao deletar:', error);
+      alert('Falha ao excluir dispositivo');
+    }
+  };
+
+  const handleDeleteGroup = async (id: string) => {
+    if (!confirm('Tem certeza que deseja excluir este grupo? Dispositivos vinculados ficarão sem grupo.')) return;
+    try {
+      await api.delete(`/groups/${id}`);
+      const resTree = await api.get('/groups/tree');
+      setGroupTree(resTree.data.data || []);
+      const resList = await api.get('/groups');
+      setStats(s => ({ ...s, groups: resList.data.data?.length || 0 }));
+    } catch (error) {
+      console.error('Erro ao deletar grupo:', error);
+      alert('Falha ao excluir grupo');
+    }
+  };
+
+  const handleLinkToGroup = async (deviceId: string, groupId: string) => {
+    try {
+      await api.patch(`/devices/${deviceId}`, { group_id: groupId === '' ? null : groupId });
+      const res = await api.get('/devices');
+      setDevices(res.data.data || []);
+      setSelectedDeviceForGroup(null);
+    } catch (error) {
+      console.error('Erro ao vincular grupo:', error);
+      alert('Falha ao vincular dispositivo ao grupo');
+    }
+  };
+
+  const handleCreateGroup = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const groupPayload = {
+        name: newGroup.name,
+        description: newGroup.description,
+        parent_id: newGroup.parent_id === '' ? undefined : newGroup.parent_id
+      };
+      await api.post('/groups', groupPayload);
+      alert('Grupo criado com sucesso!');
+      setIsGroupModalOpen(false);
+      setNewGroup({ name: '', description: '', parent_id: '' });
+      // Refresh tree and flat list
+      const resTree = await api.get('/groups/tree');
+      setGroupTree(resTree.data.data || []);
+      const resList = await api.get('/groups');
+      setStats(s => ({ ...s, groups: resList.data.data?.length || 0 }));
+    } catch (error: any) {
+       console.error('Erro ao criar grupo:', error);
+       const errMsg = error.response?.data?.message || error.message;
+       alert(`Erro ao criar grupo: ${errMsg}`);
+    }
+  };
+
+  const handleCloseSession = async (id: string) => {
+    if (!confirm('Deseja encerrar esta sessão remotamente?')) return;
+    try {
+      await api.patch(`/sessions/${id}/close`);
+      alert('Comando de encerramento enviado!');
+      const res = await api.get('/sessions');
+      setSessions(res.data.data || []);
+    } catch (error) {
+      console.error('Erro ao fechar sessão:', error);
+      alert('Falha ao encerrar sessão');
     }
   };
 
@@ -98,6 +216,11 @@ const AdminPortal = () => {
               <p>Visão global dos dispositivos, grupos e acessos da plataforma.</p>
             </div>
             <div className="action-buttons" style={{ display: 'flex', gap: '0.5rem' }}>
+              {!isReadOnly && (
+                <button className="btn-primary" onClick={() => setIsModalOpen(true)} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem', borderRadius: '6px', background: 'var(--accent-color)', color: '#fff', border: 'none', cursor: 'pointer' }}>
+                  <Server size={16}/> Novo Dispositivo
+                </button>
+              )}
               <button className="btn-secondary" onClick={handleExport} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem', borderRadius: '6px', border: '1px solid #334155', background: '#1e293b', color: '#fff', cursor: 'pointer' }}>
                 <Download size={16}/> Exportar CSV
               </button>
@@ -107,6 +230,9 @@ const AdminPortal = () => {
                   <input type="file" accept=".csv" onChange={handleImport} style={{ display: 'none' }} />
                 </label>
               )}
+              <button className="btn-secondary" onClick={handleDownloadTemplate} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem', borderRadius: '6px', border: '1px solid #94a3b8', background: 'transparent', color: '#94a3b8', cursor: 'pointer' }}>
+                <Download size={16}/> Baixar Modelo CSV
+              </button>
             </div>
           </header>
 
@@ -178,12 +304,25 @@ const AdminPortal = () => {
           <div className="devices-grid">
              {devices.length > 0 ? devices.map(device => (
                <div key={device.id} className="device-card">
-                 <h3>{device.alias}</h3>
-                 <p>ID: {device.id}</p>
-                 <span className={`status-badge ${device.status === 1 ? 'online' : 'offline'}`}>
-                   {device.status === 1 ? 'Online' : 'Offline'}
-                 </span>
-               </div>
+                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                   <div>
+                     <h3 style={{ margin: 0 }}>{device.alias || 'Sem Apelido'}</h3>
+                     <p style={{ fontSize: '0.8rem', color: '#94a3b8' }}>ID: {device.id}</p>
+                   </div>
+                   <span className={`status-badge ${device.status === 1 ? 'online' : 'offline'}`}>
+                     {device.status === 1 ? 'Online' : 'Offline'}
+                   </span>
+                 </div>
+                 <p style={{ fontSize: '0.85rem', marginTop: '0.5rem' }}><strong>Host:</strong> {device.hostname || '—'}</p>
+                  <p style={{ fontSize: '0.85rem' }}><strong>OS:</strong> {device.platform || '—'}</p>
+                  <p style={{ fontSize: '0.85rem', color: '#94a3b8' }}><strong>Grupo:</strong> {device.group?.name || 'Sem Grupo'}</p>
+                  {!isReadOnly && (
+                    <div style={{ marginTop: '1rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                      <button onClick={() => setSelectedDeviceForGroup(device)} style={{ background: '#6366f1', border: 'none', color: '#fff', padding: '0.3rem 0.6rem', borderRadius: '4px', cursor: 'pointer', fontSize: '0.75rem' }}>Mudar Grupo</button>
+                      <button onClick={() => handleDeleteDevice(device.id)} style={{ background: 'transparent', border: '1px solid #ef4444', color: '#ef4444', padding: '0.3rem 0.6rem', borderRadius: '4px', cursor: 'pointer', fontSize: '0.75rem' }}>Excluir</button>
+                    </div>
+                  )}
+                </div>
              )) : <p className="no-data">Nenhum dispositivo encontrado.</p>}
           </div>
         </div>
@@ -196,7 +335,12 @@ const AdminPortal = () => {
           <div className="device-card" style={{ borderLeft: depth > 0 ? '3px solid #6366f1' : undefined }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <h3 style={{ margin: 0 }}>{depth > 0 ? '↳ ' : ''}{group.name}</h3>
-              <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>{group.device_count || 0} dispositivos</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>{group.device_count || 0} dispositivos</span>
+                {!isReadOnly && (
+                  <button onClick={() => handleDeleteGroup(group.id)} style={{ background: 'transparent', border: 'none', color: '#ef4444', cursor: 'pointer', padding: '0.2rem' }} title="Excluir Grupo">Excluir</button>
+                )}
+              </div>
             </div>
             {group.description && <p style={{ margin: '0.3rem 0 0', fontSize: '0.85rem', color: '#94a3b8' }}>{group.description}</p>}
           </div>
@@ -206,9 +350,16 @@ const AdminPortal = () => {
 
       return (
         <div className="groups-section">
-          <header>
-            <h1>Grupos de Dispositivos</h1>
-            <p>Hierarquia e organização das suas máquinas.</p>
+          <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div>
+              <h1>Grupos de Dispositivos</h1>
+              <p>Hierarquia e organização das suas máquinas.</p>
+            </div>
+            {!isReadOnly && (
+              <button className="btn-primary" onClick={() => setIsGroupModalOpen(true)} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem', borderRadius: '6px', background: '#6366f1', color: '#fff', border: 'none', cursor: 'pointer' }}>
+                <Users size={16}/> Novo Grupo
+              </button>
+            )}
           </header>
           <div style={{ marginTop: '1rem' }}>
             {groupTree.length > 0
@@ -223,9 +374,18 @@ const AdminPortal = () => {
     if (activeTab === 'auditoria') {
       return (
         <div className="audit-section">
-          <header>
-            <h1>Logs de Auditoria</h1>
-            <p>Rastro de ações administrativas realizadas na plataforma.</p>
+          <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div>
+              <h1>Logs de Auditoria</h1>
+              <p>Rastro de ações administrativas realizadas na plataforma.</p>
+            </div>
+            <input 
+              type="text" 
+              placeholder="Buscar por usuário ou recurso..." 
+              value={auditSearch}
+              onChange={(e) => setAuditSearch(e.target.value)}
+              style={{ padding: '0.6rem', borderRadius: '6px', background: '#0f172a', border: '1px solid #334155', color: '#fff', width: '300px' }}
+            />
           </header>
           
           <div className="audit-table-container shadow-md bg-white rounded-lg overflow-hidden border border-slate-700">
@@ -240,7 +400,13 @@ const AdminPortal = () => {
                 </tr>
               </thead>
               <tbody className="text-slate-400">
-                {auditLogs.length > 0 ? auditLogs.map((log) => (
+                {auditLogs.filter(log => 
+                  log.username.toLowerCase().includes(auditSearch.toLowerCase()) || 
+                  log.resource.toLowerCase().includes(auditSearch.toLowerCase())
+                ).length > 0 ? auditLogs.filter(log => 
+                  log.username.toLowerCase().includes(auditSearch.toLowerCase()) || 
+                  log.resource.toLowerCase().includes(auditSearch.toLowerCase())
+                ).map((log) => (
                   <tr key={log.id} className="border-b border-slate-700 hover:bg-slate-800">
                     <td className="p-4">{new Date(log.createdAt).toLocaleString('pt-BR')}</td>
                     <td className="p-4">{log.username}</td>
@@ -273,10 +439,12 @@ const AdminPortal = () => {
               <thead>
                 <tr className="bg-slate-800 text-slate-300">
                   <th className="p-4">Dispositivo</th>
-                  <th className="p-4">Técnico ID</th>
+                  <th className="p-4">Técnico</th>
                   <th className="p-4">Início</th>
+                  <th className="p-4">Duração</th>
                   <th className="p-4">Tipo</th>
                   <th className="p-4">Notas</th>
+                  <th className="p-4">Ações</th>
                 </tr>
               </thead>
               <tbody className="text-slate-400">
@@ -285,20 +453,25 @@ const AdminPortal = () => {
                     <td className="p-4 font-medium text-slate-200">{sess.device?.alias || 'Desconhecido'}</td>
                     <td className="p-4">{sess.technician_id}</td>
                     <td className="p-4">{new Date(sess.started_at).toLocaleString('pt-BR')}</td>
-                    <td className="p-4">{sess.duration ? `${Math.floor(sess.duration / 60)}m ${sess.duration % 60}s` : '-'}</td>
+                    <td className="p-4">{sess.duration ? `${Math.floor(sess.duration / 60)}m ${sess.duration % 60}s` : <span style={{ color: '#10b981', fontWeight: 'bold' }}>Em curso</span>}</td>
                     <td className="p-4"><span className="badge">{sess.session_type}</span></td>
                     <td className="p-4">
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <span>{sess.notes || '—'}</span>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem' }}>
+                        <span style={{ maxWidth: '150px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{sess.notes || '—'}</span>
                         {!isReadOnly && (
                           <button className="text-xs text-emerald-500 underline" onClick={() => handleUpdateNote(sess.id, sess.notes || '')}>Editar</button>
                         )}
                       </div>
                     </td>
+                    <td className="p-4">
+                      {!sess.duration && !isReadOnly && (
+                         <button onClick={() => handleCloseSession(sess.id)} style={{ background: '#ef4444', color: '#fff', border: 'none', padding: '0.3rem 0.6rem', borderRadius: '4px', cursor: 'pointer', fontSize: '0.7rem' }}>Fechar</button>
+                      )}
+                    </td>
                   </tr>
                 )) : (
                   <tr>
-                    <td colSpan={6} className="p-8 text-center text-slate-500">Nenhuma sessão registrada.</td>
+                    <td colSpan={7} className="p-8 text-center text-slate-500">Nenhuma sessão registrada.</td>
                   </tr>
                 )}
               </tbody>
@@ -313,8 +486,8 @@ const AdminPortal = () => {
     <div className="dashboard-layout">
       <aside className="sidebar">
         <div className="sidebar-header">
-           <ShieldCheck size={32} color="#10b981"/>
-           <h2>Centro Administrativo</h2>
+           <ShieldCheck size={32} color={branding?.primaryColor || "#10b981"}/>
+           <h2>{branding?.companyName || "Centro Administrativo"}</h2>
         </div>
         <nav>
            <ul>
@@ -369,6 +542,111 @@ const AdminPortal = () => {
       <main className="main-content">
         {renderContent()}
       </main>
+
+      {isModalOpen && (
+        <div className="modal-overlay" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000 }}>
+          <div className="modal-content" style={{ background: '#1e293b', padding: '2rem', borderRadius: '12px', width: '400px', border: '1px solid #334155' }}>
+            <h2 style={{ marginBottom: '1.5rem', color: '#fff' }}>Cadastrar Novo Dispositivo</h2>
+            <form onSubmit={handleCreateDevice} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.8rem', color: '#94a3b8', marginBottom: '0.3rem' }}>ID do Dispositivo *</label>
+                <input required style={{ width: '100%', padding: '0.6rem', background: '#0f172a', border: '1px solid #334155', color: '#fff', borderRadius: '6px' }} value={newDevice.rustdesk_id} onChange={e => setNewDevice({...newDevice, rustdesk_id: e.target.value})} placeholder="Ex: 123456789" />
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.8rem', color: '#94a3b8', marginBottom: '0.3rem' }}>Apelido (Alias)</label>
+                <input style={{ width: '100%', padding: '0.6rem', background: '#0f172a', border: '1px solid #334155', color: '#fff', borderRadius: '6px' }} value={newDevice.alias} onChange={e => setNewDevice({...newDevice, alias: e.target.value})} placeholder="Ex: PC Financeiro" />
+              </div>
+              <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <div style={{ flex: 1 }}>
+                  <label style={{ display: 'block', fontSize: '0.8rem', color: '#94a3b8', marginBottom: '0.3rem' }}>Hostname</label>
+                  <input style={{ width: '100%', padding: '0.6rem', background: '#0f172a', border: '1px solid #334155', color: '#fff', borderRadius: '6px' }} value={newDevice.hostname} onChange={e => setNewDevice({...newDevice, hostname: e.target.value})} placeholder="DESKTOP-XYZ" />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <label style={{ display: 'block', fontSize: '0.8rem', color: '#94a3b8', marginBottom: '0.3rem' }}>Plataforma</label>
+                  <input style={{ width: '100%', padding: '0.6rem', background: '#0f172a', border: '1px solid #334155', color: '#fff', borderRadius: '6px' }} value={newDevice.os} onChange={e => setNewDevice({...newDevice, os: e.target.value})} placeholder="windows" />
+                </div>
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.8rem', color: '#94a3b8', marginBottom: '0.3rem' }}>Tags (separadas por vírgula)</label>
+                <input style={{ width: '100%', padding: '0.6rem', background: '#0f172a', border: '1px solid #334155', color: '#fff', borderRadius: '6px' }} value={newDevice.tags} onChange={e => setNewDevice({...newDevice, tags: e.target.value})} placeholder="finanças, suporte" />
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.8rem', color: '#94a3b8', marginBottom: '0.3rem' }}>Grupo</label>
+                <select style={{ width: '100%', padding: '0.6rem', background: '#0f172a', border: '1px solid #334155', color: '#fff', borderRadius: '6px' }} value={newDevice.group_id} onChange={e => setNewDevice({...newDevice, group_id: e.target.value})}>
+                  <option value="">Nenhum</option>
+                  {/* Flattened tree for select */}
+                  {stats.groups > 0 && (function flatten(items: any[]): any[] {
+                    return items.reduce((acc, curr) => [...acc, curr, ...flatten(curr.children || [])], []);
+                  })(groupTree).map((g: any) => (
+                    <option key={g.id} value={g.id}>{g.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+                <button type="button" onClick={() => setIsModalOpen(false)} style={{ flex: 1, padding: '0.7rem', background: 'transparent', border: '1px solid #334155', color: '#fff', borderRadius: '6px', cursor: 'pointer' }}>Cancelar</button>
+                <button type="submit" style={{ flex: 1, padding: '0.7rem', background: 'var(--accent-color)', border: 'none', color: '#fff', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}>Salvar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {isGroupModalOpen && (
+        <div className="modal-overlay" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000 }}>
+          <div className="modal-content" style={{ background: '#1e293b', padding: '2rem', borderRadius: '12px', width: '400px', border: '1px solid #334155' }}>
+            <h2 style={{ marginBottom: '1.5rem', color: '#fff' }}>Criar Novo Grupo</h2>
+            <form onSubmit={handleCreateGroup} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.8rem', color: '#94a3b8', marginBottom: '0.3rem' }}>Nome do Grupo *</label>
+                <input required style={{ width: '100%', padding: '0.6rem', background: '#0f172a', border: '1px solid #334155', color: '#fff', borderRadius: '6px' }} value={newGroup.name} onChange={e => setNewGroup({...newGroup, name: e.target.value})} placeholder="Ex: Escritório São Paulo" />
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.8rem', color: '#94a3b8', marginBottom: '0.3rem' }}>Descrição</label>
+                <textarea style={{ width: '100%', padding: '0.6rem', background: '#0f172a', border: '1px solid #334155', color: '#fff', borderRadius: '6px', minHeight: '80px' }} value={newGroup.description} onChange={e => setNewGroup({...newGroup, description: e.target.value})} placeholder="Opcional..." />
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.8rem', color: '#94a3b8', marginBottom: '0.3rem' }}>Grupo Pai (Superior)</label>
+                <select style={{ width: '100%', padding: '0.6rem', background: '#0f172a', border: '1px solid #334155', color: '#fff', borderRadius: '6px' }} value={newGroup.parent_id} onChange={e => setNewGroup({...newGroup, parent_id: e.target.value})}>
+                  <option value="">Nenhum (Raiz)</option>
+                  {/* Simplificando para mostrar todos os grupos no select */}
+                  {groupTree.map(g => (
+                    <option key={g.id} value={g.id}>{g.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+                <button type="button" onClick={() => setIsGroupModalOpen(false)} style={{ flex: 1, padding: '0.7rem', background: 'transparent', border: '1px solid #334155', color: '#fff', borderRadius: '6px', cursor: 'pointer' }}>Cancelar</button>
+                <button type="submit" style={{ flex: 1, padding: '0.7rem', background: '#6366f1', border: 'none', color: '#fff', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}>Criar Grupo</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+      {selectedDeviceForGroup && (
+        <div className="modal-overlay" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000 }}>
+          <div className="modal-content" style={{ background: '#1e293b', padding: '2rem', borderRadius: '12px', width: '400px', border: '1px solid #334155' }}>
+            <h2 style={{ marginBottom: '1.5rem', color: '#fff' }}>Vincular ao Grupo</h2>
+            <p style={{ color: '#94a3b8', fontSize: '0.9rem', marginBottom: '1rem' }}>Mudar o grupo de: <strong>{selectedDeviceForGroup.alias || selectedDeviceForGroup.rustdesk_id}</strong></p>
+            <div style={{ marginBottom: '1.5rem' }}>
+              <label style={{ display: 'block', fontSize: '0.8rem', color: '#94a3b8', marginBottom: '0.3rem' }}>Selecionar Grupo</label>
+              <select 
+                style={{ width: '100%', padding: '0.6rem', background: '#0f172a', border: '1px solid #334155', color: '#fff', borderRadius: '6px' }} 
+                value={selectedDeviceForGroup.group?.id || ''}
+                onChange={e => handleLinkToGroup(selectedDeviceForGroup.id, e.target.value)}
+              >
+                <option value="">Sem Grupo</option>
+                {/* Flattened tree for select */}
+                {(function flatten(items: any[]): any[] {
+                  return items.reduce((acc, curr) => [...acc, curr, ...flatten(curr.children || [])], []);
+                })(groupTree).map((g: any) => (
+                  <option key={g.id} value={g.id}>{g.name}</option>
+                ))}
+              </select>
+            </div>
+            <button onClick={() => setSelectedDeviceForGroup(null)} style={{ width: '100%', padding: '0.7rem', background: 'transparent', border: '1px solid #334155', color: '#fff', borderRadius: '6px', cursor: 'pointer' }}>Fechar</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

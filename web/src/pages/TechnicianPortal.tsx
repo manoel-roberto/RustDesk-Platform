@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from 'react-oidc-context';
 import { api } from '../api/axios';
-import { MonitorPlay, Settings, LogOut, Loader2, ShieldCheck, Sun, Moon, Download } from 'lucide-react';
+import { MonitorPlay, Settings, LogOut, Loader2, ShieldCheck, Sun, Moon, Download, Copy, ExternalLink, Info } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import '../index.css';
 
@@ -53,8 +53,9 @@ const TechnicianPortal = () => {
   const connectToDevice = async (id: string) => {
     try {
       const res = await api.post(`/devices/${id}/connect`);
-      if (res.data.url) {
-        window.location.href = res.data.url;
+      const link = res.data.deep_link || res.data.url;
+      if (link) {
+        window.location.href = link;
       } else {
         window.location.href = `rustdesk://${id}`;
       }
@@ -62,6 +63,11 @@ const TechnicianPortal = () => {
        console.error('Erro ao gerar link de conexão:', error);
        window.location.href = `rustdesk://${id}`; // Fallback
     }
+  };
+
+  const handleCopyId = (id: string) => {
+    navigator.clipboard.writeText(id);
+    alert('ID copiado!');
   };
 
   const renderContent = () => {
@@ -72,6 +78,14 @@ const TechnicianPortal = () => {
             <h1>Catálogo de Dispositivos (Address Book)</h1>
             <p>Um clique para abrir o cliente customizado do RustDesk.</p>
           </header>
+
+          <div style={{ background: 'rgba(59, 130, 246, 0.1)', borderLeft: '4px solid #3b82f6', padding: '1rem', borderRadius: '8px', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <Info color="#3b82f6" size={24}/>
+            <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
+              <strong>Importante:</strong> Para o botão "Acessar" funcionar, você precisa ter o <strong>RustDesk instalado</strong>. 
+              Se não tiver, baixe na aba "Downloads" ou use o ícone de cópia ao lado para obter o ID.
+            </p>
+          </div>
 
           {loading ? (
              <div className="loading-area"><Loader2 className="spinner"/> Carregando máquinas...</div>
@@ -93,13 +107,22 @@ const TechnicianPortal = () => {
                       {device.tags.map((t: string) => <span key={t} className="badge">{t}</span>)}
                     </div>
                   </div>
-                  <div className="device-actions">
+                  <div className="device-actions" style={{ display: 'flex', gap: '0.5rem' }}>
                      <button 
                        className="btn-connect" 
+                       style={{ flex: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
                        disabled={device.status === 0}
                        onClick={() => connectToDevice(device.id)}
                      >
-                       Conectar (DeepLink)
+                       <ExternalLink size={16}/> Acessar
+                     </button>
+                     <button 
+                       className="btn-secondary"
+                       style={{ flex: 1, padding: '0.5rem', borderRadius: '6px', background: '#334155', border: 'none', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                       onClick={() => handleCopyId(device.id)}
+                       title="Copiar ID"
+                     >
+                       <Copy size={16}/>
                      </button>
                   </div>
                 </div>

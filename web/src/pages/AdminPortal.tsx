@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from 'react-oidc-context';
-import { ShieldCheck, LogOut, Users, Server, Activity, Loader2, ShieldAlert, Download, Upload, History, Moon, Sun } from 'lucide-react';
+import { ShieldCheck, LogOut, Users, Server, Activity, Loader2, ShieldAlert, Download, Upload, History, Moon, Sun, Copy, ExternalLink, Info } from 'lucide-react';
 import { api } from '../api/axios';
 import { useTheme } from '../context/ThemeContext';
 
@@ -141,6 +141,11 @@ const AdminPortal = () => {
     }
   };
 
+  const handleCopyId = (id: string) => {
+    navigator.clipboard.writeText(id);
+    alert('ID copiado para a área de transferência!');
+  };
+
   const handleDeleteGroup = async (id: string) => {
     if (!confirm('Tem certeza que deseja excluir este grupo? Dispositivos vinculados ficarão sem grupo.')) return;
     try {
@@ -164,6 +169,21 @@ const AdminPortal = () => {
     } catch (error) {
       console.error('Erro ao vincular grupo:', error);
       alert('Falha ao vincular dispositivo ao grupo');
+    }
+  };
+
+  const handleConnect = async (deviceId: string) => {
+    try {
+      const res = await api.post(`/devices/${deviceId}/connect`);
+      const { deep_link } = res.data;
+      if (deep_link) {
+        window.location.href = deep_link;
+      } else {
+        alert('Falha ao gerar link de conexão.');
+      }
+    } catch (error) {
+      console.error('Erro ao conectar:', error);
+      alert('Erro ao tentar conectar ao dispositivo.');
     }
   };
 
@@ -301,6 +321,16 @@ const AdminPortal = () => {
             <h1>Máquinas</h1>
             <p>Gerencie seus dispositivos e conexões.</p>
           </header>
+          
+          <div style={{ background: '#0f172a', borderLeft: '4px solid #3b82f6', padding: '1rem', borderRadius: '8px', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <Info color="#3b82f6" size={24}/>
+            <p style={{ margin: 0, fontSize: '0.9rem', color: '#94a3b8' }}>
+              <strong>Dica:</strong> O botão "Acessar" utiliza o protocolo <code>rustdesk://</code>. 
+              Para funcionar, você deve ter o <strong>RustDesk instalado</strong> no seu computador. 
+              Caso contrário, use o botão de cópia de ID para conexão manual.
+            </p>
+          </div>
+
           <div className="devices-grid">
              {devices.length > 0 ? devices.map(device => (
                <div key={device.id} className="device-card">
@@ -318,6 +348,12 @@ const AdminPortal = () => {
                   <p style={{ fontSize: '0.85rem', color: '#94a3b8' }}><strong>Grupo:</strong> {device.group?.name || 'Sem Grupo'}</p>
                   {!isReadOnly && (
                     <div style={{ marginTop: '1rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                      <button onClick={() => handleConnect(device.rustdesk_id || device.id)} className="btn-access" style={{ background: '#10b981', border: 'none', color: '#fff', padding: '0.3rem 0.6rem', borderRadius: '4px', cursor: 'pointer', fontSize: '0.75rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                        <ExternalLink size={14}/> Acessar
+                      </button>
+                      <button onClick={() => handleCopyId(device.rustdesk_id || device.id)} style={{ background: '#475569', border: 'none', color: '#fff', padding: '0.3rem 0.6rem', borderRadius: '4px', cursor: 'pointer', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                        <Copy size={14}/> ID
+                      </button>
                       <button onClick={() => setSelectedDeviceForGroup(device)} style={{ background: '#6366f1', border: 'none', color: '#fff', padding: '0.3rem 0.6rem', borderRadius: '4px', cursor: 'pointer', fontSize: '0.75rem' }}>Mudar Grupo</button>
                       <button onClick={() => handleDeleteDevice(device.id)} style={{ background: 'transparent', border: '1px solid #ef4444', color: '#ef4444', padding: '0.3rem 0.6rem', borderRadius: '4px', cursor: 'pointer', fontSize: '0.75rem' }}>Excluir</button>
                     </div>

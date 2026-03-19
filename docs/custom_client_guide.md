@@ -98,3 +98,15 @@ Set-ItemProperty -Path "HKCR:\rustdesk" -Name "URL Protocol" -Value ""
 New-Item -Path "HKCR:\rustdesk\shell\open\command" -Force
 Set-ItemProperty -Path "HKCR:\rustdesk\shell\open\command" -Name "(Default)" -Value "`"$RustDeskPath`" `"%1`""
 ```
+
+### Linux (Desacoplado)
+
+Para manter o suporte oficial do RustDesk intacto, utilizamos um **Handler Externo** para processar links `rustdesk://`. 
+
+1. **O que é**: Um script wrapper (`scripts/rustdesk-uri-handler.sh`) que limpa a URL e chama o binário oficial instalado via linha de comando (`rustdesk --connect ID`).
+2. **Vantagem**: Você pode atualizar a pasta `rustdesk/` para qualquer versão oficial sem perder a funcionalidade de "Acessar" do portal.
+3. **Instalação**: Rode `bash scripts/setup-uri.sh` para registrar o protocolo no seu sistema Linux local.
+
+## 7. Integridade do Código Oficial
+
+Nossa filosofia é manter a pasta `rustdesk/` **100% limpa** (sem modificações locais). Todas as customizações de branding e patches de build são aplicados dinamicamente por scripts na raiz do projeto principal durante o processo de empacotamento.

@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=RustDesk (Custom URI Handler)
+Comment=Acesso Remoto via Protocolo RustDesk
+Exec=/home/manoel/Projects/Rustdesk/scripts/rustdesk-uri-handler.sh %u
+Icon=rustdesk
+Terminal=false
+Type=Application
+Categories=Network;RemoteAccess;
+MimeType=x-scheme-handler/rustdesk;
+NoDisplay=true
+StartupWMClass=rustdesk

@@ -1,162 +1,57 @@
-# 🤖 Remote Support Platform (Self-Hosted RustDesk)
+# RustDesk Platform: O Controle Remoto da Sua Empresa 🚀
 
-Bem-vindo ao repositório oficial da nossa plataforma privada de suporte remoto! Este projeto permite que empresas gerenciem sua própria frota de dispositivos com segurança, privacidade e controle total.
+Olá! Que bom ter você aqui. Se você está procurando uma forma de acessar computadores remotamente com total segurança, privacidade e sem pagar licenças caras por usuário, você encontrou o projeto certo.
 
----
+## 1. O que é este projeto? 🏠
 
-## 🚀 Para Começar (Em 5 Minutos)
+Imagine que você precisa de um **controle remoto** para os computadores da sua empresa ou dos seus clientes, mas não quer que esse controle passe pelas mãos de terceiros. A **RustDesk Platform** é exatamente isso: uma ferramenta que permite que você se conecte, veja a tela e controle o mouse e teclado de outro computador pela internet, mas com um diferencial gigante — **o sistema pertence totalmente a você**.
 
-Se você é novo aqui e quer ver o projeto funcionando, siga estes passos:
+Diferente de ferramentas famosas (como TeamViewer ou AnyDesk), aqui os dados não passam por servidores de outras empresas. Tudo fica dentro da "casa" da sua empresa, garantindo que ninguém mais tenha acesso ao que você está fazendo.
 
-1.  **Clone o projeto**: `git clone https://github.com/manoel-roberto/RustDesk-Platform.git`
-2.  **Suba a infraestrutura**: Certifique-se de ter o Docker instalado e rode `docker-compose up -d` na raiz.
-3.  **Acesse o Portal**: O frontend estará disponível em `http://localhost:5173`.
-4.  **Consulte o Onboarding**: Para um guia detalhado, leia o nosso **[Guia de Onboarding (Iniciantes)](docs/onboarding.md)**.
+## 2. Quem pode usar? 👥
 
----
+Este guia foi escrito para **qualquer pessoa**, mesmo que você nunca tenha digitado uma linha de código. Ele é ideal para:
+- **Empresas de Suporte Técnico**: Atenda seus clientes com rapidez e profissionalismo.
+- **Equipes de TI Internas**: Gerencie os computadores dos funcionários sem custos de licença.
+- **Donos de Negócio**: Economize dinheiro parando de pagar assinaturas mensais caras.
 
-## 🤝 Como Contribuir
+## 3. O que você vai conseguir fazer? ✅
 
-Quer ajudar a melhorar a plataforma? Adoramos contribuições de todos os níveis! 
-Leia nosso guia completo em **[CONTRIBUTING.md](CONTRIBUTING.md)** para saber como abrir Issues, sugerir melhorias ou enviar código.
+Ao terminar de seguir este guia, você terá:
+- **Acesso Total**: Entre em computadores de clientes ou funcionários pela internet de qualquer lugar.
+- **Painel de Controle**: Uma lista organizada de quem está online ou offline.
+- **Histórico de Atendimento**: Saiba exatamente quem prestou suporte, quanto tempo durou e o que foi feito.
+- **Marca Própria**: Crie um instalador com o **nome e o logo da sua empresa**, passando muito mais confiança para o seu cliente.
 
----
+## 4. Quanto custa? 💰
 
-## 📖 Visão do Projeto
+A excelente notícia é que o **software é gratuito** e de código aberto. Você não paga licença por técnico ou por conexão.
 
-Este repositório utiliza a metodologia **Spec-Driven Development (SDD)**. Isso significa que toda a inteligência e as regras de negócio estão documentadas nas [Especificações](specs/README.md) antes de serem codificadas.
+O único custo que você terá é o aluguel de uma "sala digital" (chamada **servidor VPS**) para guardar o sistema. 
+- **Custo Aproximado**: Entre R$ 150 e R$ 300 por mês (dependendo da quantidade de computadores que você gerenciar).
+- **Comparação**: No TeamViewer, uma equipe de 10 técnicos pode custar mais de R$ 3.000 por mês. Aqui, o custo é fixo e muito menor.
 
----
+## 5. O que você precisa antes de começar? 📋
 
-
----
-
-## Objetivo do Projeto
-
-Desenvolver uma plataforma corporativa de suporte remoto **100% open source e self-hosted**, capaz de substituir soluções comerciais como TeamViewer, AnyDesk e Splashtop para empresas de suporte técnico a sistemas ERP.
-
-A plataforma deve permitir que técnicos acessem, suportem e gerenciem dispositivos de clientes de forma segura, rastreável e eficiente, sem dependência de fornecedores externos e sem custo de licenciamento.
-
----
-
-## Escopo do Produto
-
-### Dentro do Escopo
-
-- Servidor de ID e Relay RustDesk (hbbs + hbbr) self-hosted
-- API de gestão de dispositivos e address book
-- Portal web de administração e portal de técnicos
-- Sistema de autenticação com SSO, MFA e RBAC
-- Build automatizado do cliente white-label (Windows)
-- Observabilidade completa (métricas, logs, alertas)
-- Pipeline CI/CD para build e deploy
-- Backup e disaster recovery automatizados
-
-### Fora do Escopo (v1.0)
-
-- Aplicativo mobile para técnicos
-- Gravação de sessões remotas
-- Multi-tenancy (múltiplos clientes isolados)
-- Suporte a macOS como cliente controlado
-- Integração nativa com sistemas ERP
+Reserve cerca de **2 a 3 horas** e garanta que você tem:
+1. Um computador com internet.
+2. Uma conta no GitHub (é gratuita e vamos te ensinar a criar).
+3. Vontade de aprender! Não se preocupe com termos difíceis, explicaremos cada um deles no caminho.
 
 ---
 
-## Visão do Produto
+## 6. Como navegar pela documentação? 🗺️
 
-Uma plataforma de suporte remoto que devolve à empresa o controle total sobre seus dados, suas ferramentas e sua infraestrutura — eliminando custos de licenciamento, dependências de vendors e riscos de conformidade.
+Siga os documentos abaixo na ordem sugerida para não se perder:
 
----
-
-## Público-Alvo
-
-| Perfil | Descrição |
-|--------|-----------|
-| Empresa de suporte a ERP | Organização que utiliza a plataforma internamente |
-| Técnicos de suporte | Usuários operacionais que realizam sessões remotas |
-| Administradores de TI | Responsáveis pela gestão da plataforma |
-| Clientes do ERP | Empresas cujos dispositivos são acessados remotamente |
+1.  **[Conceitos Básicos](docs/01-conceitos-basicos.md)** — Entenda o que são os "peças" desse quebra-cabeça (Servidor, Docker, Domínio).
+2.  **[Preparando o Servidor](docs/02-preparando-o-servidor.md)** — Como alugar e configurar seu primeiro servidor Linux.
+3.  **[Instalando a Plataforma](docs/03-instalando-a-plataforma.md)** — Colocando o sistema para rodar de verdade.
+4.  **[Configurando o Login](docs/04-configurando-o-keycloak.md)** — Como criar senhas e ativar a segurança no celular (MFA).
+5.  **[Criando seu Instalador](docs/05-criando-o-instalador-do-cliente.md)** — Como gerar o programa com a marca da sua empresa.
+6.  **[Guia de Uso Diário](docs/06-uso-diario.md)** — Como o técnico e o cliente devem usar o programa no dia a dia.
+7.  **[Manutenção e Backups](docs/07-manutencao-e-backups.md)** — Como garantir que você nunca perca seus dados.
+8.  **[Dicionário de Termos (Glossário)](docs/10-glossario.md)** — Ficou na dúvida sobre algum nome? O significado está aqui.
 
 ---
-
-## Estrutura da Especificação
-
-```
-specs/
-├── README.md                        ← Este arquivo
-├── vision.md                        ← Visão de produto e problema
-├── requirements.md                  ← Requisitos funcionais e não funcionais
-│
-├── product/
-│   ├── user-personas.md             ← Perfis de usuários
-│   ├── user-stories.md              ← Histórias de usuário
-│   └── use-cases.md                 ← Casos de uso detalhados
-│
-├── system/
-│   ├── system-overview.md           ← Visão geral da arquitetura
-│   ├── system-components.md         ← Componentes do sistema
-│   ├── data-model.md                ← Modelo de dados
-│   └── api-spec.md                  ← Especificação da API REST
-│
-├── security/
-│   ├── security-model.md            ← Modelo de segurança
-│   └── auth-model.md                ← Autenticação e autorização
-│
-├── infra/
-│   ├── deployment-architecture.md   ← Arquitetura de infraestrutura
-│   └── devops-pipeline.md           ← Pipeline CI/CD
-│
-├── quality/
-│   ├── testing-strategy.md          ← Estratégia de testes
-│   └── observability.md             ← Logs, métricas e rastreamento
-│
-└── roadmap/
-    ├── milestones.md                ← Marcos do projeto
-    └── technical-roadmap.md         ← Evolução técnica
-```
-
----
-
-## Guias de Implementação
-
-Para detalhes práticos de como desenvolver e operar cada parte do sistema, consulte os guias no diretório `docs/`:
-
-1.  **[Novos engenheiros (Onboarding)](docs/onboarding.md):** Guia de boas-vindas e setup do ambiente.
-2.  **[Backend Guide](docs/backend.md):** Arquitetura NestJS, Database (TypeORM) e Keycloak.
-3.  **[Frontend Guide](docs/frontend.md):** UI React, Design System (Glassmorphism) e Consumo de API.
-4.  **[DevOps Guide](docs/devops.md):** Docker Compose, Scripts de Build e Segurança.
-5.  **[QA Guide](docs/qa.md):** Plano de testes e critérios de aceitação.
-6.  **[VPS Deployment Guide](docs/vps-deployment.md):** Manual Passo a Passo para Hospedagem Privada.
-7.  **[Client Compilation Guide](docs/client-compilation.md):** Como criar seus próprios instaladores customizados.
-8.  **[Guia de Testes (TESTING.md)](TESTING.md):** Como executar a suíte de testes automatizados.
-
----
-
-## Convenções
-
-- Todo requisito possui um identificador único (ex: `REQ-F-001`)
-- Toda história de usuário possui identificador (ex: `US-001`)
-- Todo caso de uso possui identificador (ex: `UC-001`)
-- Todo endpoint de API possui identificador (ex: `API-DEV-001`)
-- Mudanças são rastreadas via Git com mensagens semânticas
-
----
-
-## Glossário
-
-| Termo | Definição |
-|-------|-----------|
-| hbbs | RustDesk ID Server — servidor de registro e rendezvous |
-| hbbr | RustDesk Relay Server — servidor de relay de sessões |
-| Dispositivo | Computador do cliente registrado na plataforma |
-| Sessão | Conexão remota ativa entre técnico e dispositivo |
-| Address Book | Catálogo centralizado de dispositivos gerenciados |
-| White-label | Cliente RustDesk com branding da empresa |
-| NAT Traversal | Técnica para conexão direta entre redes com NAT |
-| E2E | End-to-End (criptografia de ponta a ponta) |
-
----
-
-## 📄 Licença
-
-Este projeto está sob a licença **MIT**. Sinta-se à vontade para usar, modificar e distribuir, desde que os créditos sejam atribuídos ao autor original. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+*Pronto para começar? Vamos para o **[Documento 1: Conceitos Básicos](docs/01-conceitos-basicos.md)**!*

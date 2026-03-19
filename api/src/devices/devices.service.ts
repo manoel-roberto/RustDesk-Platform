@@ -55,7 +55,14 @@ export class DevicesService {
   }
 
   async findOne(id: string): Promise<Device> {
-    const device = await this.deviceRepository.findOne({ where: { id }, relations: ['group'] });
+    // Tenta por UUID primeiro (catch para evitar erro se não for formato UUID)
+    let device = await this.deviceRepository.findOne({ where: { id }, relations: ['group'] }).catch(() => null);
+    
+    // Se não encontrar, tenta pelo rustdesk_id (que é o que o TechnicianPortal envia)
+    if (!device) {
+      device = await this.deviceRepository.findOne({ where: { rustdesk_id: id }, relations: ['group'] });
+    }
+
     if (!device) throw new Error('Device not found');
     return device;
   }

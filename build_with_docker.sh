@@ -30,16 +30,25 @@ RS_PUB_KEY=$PUB_KEY
 API_SERVER=$API_SERVER
 EOF
 
-# 3. Rodar o Builder via Docker
-echo "-> Executando compilação dentro do container (rustdesk/rustdesk-builder)..."
+# 3. Construir a imagem do Builder (necessário pois não está no Docker Hub)
+if [[ "$(docker images -q rustdesk-builder 2> /dev/null)" == "" ]]; then
+    echo "-> Imagem 'rustdesk-builder' não encontrada. Construindo localmente (isso leva uns 5-10 min na primeira vez)..."
+    cd $RUSTDESK_SRC
+    docker build -t rustdesk-builder .
+    cd ..
+fi
+
+# 4. Rodar o Builder via Docker
+echo "-> Executando compilação dentro do container (rustdesk-builder)..."
 echo "Aguarde, isso pode demorar bastante (vcpkg e cargo build)..."
 
-# Usamos o comando oficial do rustdesk builder
+# Usamos o comando oficial do rustdesk builder adaptado para o script python
 docker run --privileged --rm -it \
+    --entrypoint bash \
     -v "$(pwd)/$RUSTDESK_SRC":/home/user/rustdesk \
     -w /home/user/rustdesk \
-    rustdesk/rustdesk-builder \
-    python3 build.py --hwcodec --nightly
+    rustdesk-builder \
+    -c "source \$HOME/.cargo/env && export VCPKG_ROOT=/vcpkg && cargo install cargo-bundle && python3 build.py"
 
 echo "=============================================================================="
 echo "Build concluído via Docker!"

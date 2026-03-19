@@ -348,7 +348,7 @@ const AdminPortal = () => {
                   <p style={{ fontSize: '0.85rem', color: '#94a3b8' }}><strong>Grupo:</strong> {device.group?.name || 'Sem Grupo'}</p>
                   {!isReadOnly && (
                     <div style={{ marginTop: '1rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                      <button onClick={() => handleConnect(device.rustdesk_id || device.id)} className="btn-access" style={{ background: '#10b981', border: 'none', color: '#fff', padding: '0.3rem 0.6rem', borderRadius: '4px', cursor: 'pointer', fontSize: '0.75rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                      <button onClick={() => handleConnect(device.id)} className="btn-access" style={{ background: '#10b981', border: 'none', color: '#fff', padding: '0.3rem 0.6rem', borderRadius: '4px', cursor: 'pointer', fontSize: '0.75rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
                         <ExternalLink size={14}/> Acessar
                       </button>
                       <button onClick={() => handleCopyId(device.rustdesk_id || device.id)} style={{ background: '#475569', border: 'none', color: '#fff', padding: '0.3rem 0.6rem', borderRadius: '4px', cursor: 'pointer', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>

@@ -55,13 +55,13 @@ const TechnicianPortal = () => {
       const res = await api.post(`/devices/${id}/connect`);
       const link = res.data.deep_link || res.data.url;
       if (link) {
-        window.location.href = link;
+        window.location.assign(link);
       } else {
-        window.location.href = `rustdesk://${id}`;
+        window.location.assign(`rustdesk://${id}`);
       }
     } catch (error) {
        console.error('Erro ao gerar link de conexão:', error);
-       window.location.href = `rustdesk://${id}`; // Fallback
+       window.location.assign(`rustdesk://${id}`); // Fallback
     }
   };
 

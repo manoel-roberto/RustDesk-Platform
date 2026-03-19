@@ -177,7 +177,7 @@ const AdminPortal = () => {
       const res = await api.post(`/devices/${deviceId}/connect`);
       const { deep_link } = res.data;
       if (deep_link) {
-        window.location.href = deep_link;
+        window.location.assign(deep_link);
       } else {
         alert('Falha ao gerar link de conexão.');
       }

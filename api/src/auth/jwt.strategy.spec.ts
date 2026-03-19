@@ -1,9 +1,12 @@
 import { JwtStrategy } from './jwt.strategy';
 import { UnauthorizedException } from '@nestjs/common';
 
-// Mock passportJwtSecret
+// Mock jwks-rsa
 jest.mock('jwks-rsa', () => ({
   passportJwtSecret: jest.fn(() => jest.fn()),
+  JwksClient: jest.fn().mockImplementation(() => ({
+    getSigningKey: jest.fn(),
+  })),
 }));
 
 // Mock PassportStrategy to avoid JWKS HTTP calls

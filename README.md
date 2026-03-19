@@ -128,6 +128,7 @@ Para detalhes práticos de como desenvolver e operar cada parte do sistema, cons
 5.  **[QA Guide](docs/qa.md):** Plano de testes e critérios de aceitação.
 6.  **[VPS Deployment Guide](docs/vps-deployment.md):** Manual Passo a Passo para Hospedagem Privada.
 7.  **[Client Compilation Guide](docs/client-compilation.md):** Como criar seus próprios instaladores customizados.
+8.  **[Guia de Testes (TESTING.md)](TESTING.md):** Como executar a suíte de testes automatizados.
 
 ---
 

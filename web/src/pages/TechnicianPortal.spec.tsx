@@ -1,4 +1,6 @@
+import '@testing-library/jest-dom';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import TechnicianPortal from './TechnicianPortal';
 import { useAuth } from 'react-oidc-context';
@@ -13,6 +15,7 @@ vi.mock('react-oidc-context', () => ({
 vi.mock('../api/axios', () => ({
   api: {
     get: vi.fn(),
+    post: vi.fn(),
   },
 }));
 
@@ -100,24 +103,31 @@ describe('TechnicianPortal', () => {
   });
 
   it('triggers deep link when connect clicked', async () => {
-    const originalLocation = window.location;
+    const user = userEvent.setup();
+    const assignMock = vi.fn();
+    
+    // Backup original location
+    const oldLocation = window.location;
     delete (window as any).location;
-    window.location = { ...originalLocation, href: '' } as any;
+    window.location = { ...oldLocation, assign: assignMock } as any;
 
     (useAuth as any).mockReturnValue({ isAuthenticated: true });
     (api.get as any).mockResolvedValue({ 
       data: { data: [{ id: '123', alias: 'Machine 1', status: 1, hostname: 'host1', platform: 'Win', tags: [] }] } 
     });
+    (api.post as any).mockResolvedValue({ data: { deep_link: 'rustdesk://123' } });
 
     render(<TechnicianPortal />);
     
+    // Esperar o carregamento dos dispositivos e clicar no botão
+    const btn = await screen.findByRole('button', { name: /Acessar/i });
+    await user.click(btn);
+
     await waitFor(() => {
-      const btn = screen.getByText(/Conectar/i);
-      fireEvent.click(btn);
+      expect(assignMock).toHaveBeenCalled();
     });
 
-    expect(window.location.href).toBe('rustdesk://123');
-    window.location = originalLocation as any;
+    (window as any).location = oldLocation;
   });
 
   it('handles api error in catch block', async () => {
@@ -179,5 +189,50 @@ describe('TechnicianPortal', () => {
     await waitFor(() => {
       expect(screen.getByText('Catálogo de Dispositivos (Address Book)')).toBeInTheDocument();
     });
+  });
+
+  it('renders branding data from api', async () => {
+    (useAuth as any).mockReturnValue({ isAuthenticated: true });
+    (api.get as any).mockImplementation((url: string) => {
+      if (url === '/downloads/branding') return Promise.resolve({ data: { companyName: 'My Awesome Corp', primaryColor: '#ff0000' } });
+      return Promise.resolve({ data: { data: [] } });
+    });
+
+    render(<TechnicianPortal />);
+    expect(await screen.findByText('My Awesome Corp')).toBeInTheDocument();
+  });
+
+  it('toggles theme when theme button is clicked', () => {
+    const toggleTheme = vi.fn();
+    (useAuth as any).mockReturnValue({ isAuthenticated: true });
+    (useTheme as any).mockReturnValue({ theme: 'dark', toggleTheme });
+    (api.get as any).mockResolvedValue({ data: { data: [] } });
+
+    render(<TechnicianPortal />);
+    const themeBtn = screen.getByTitle('Alternar Tema');
+    fireEvent.click(themeBtn);
+    expect(toggleTheme).toHaveBeenCalled();
+  });
+
+  it('handles copy id to clipboard', async () => {
+    (useAuth as any).mockReturnValue({ isAuthenticated: true });
+    (api.get as any).mockResolvedValue({ 
+      data: { data: [{ id: '999', alias: 'D9', status: 1, tags: [], hostname: 'H', platform: 'P' }] } 
+    });
+    
+    // Mock clipboard and alert
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    vi.stubGlobal('navigator', { clipboard: { writeText } });
+    const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => {});
+
+    render(<TechnicianPortal />);
+    const copyBtn = await screen.findByTitle('Copiar ID');
+    fireEvent.click(copyBtn);
+
+    expect(writeText).toHaveBeenCalledWith('999');
+    expect(alertSpy).toHaveBeenCalledWith('ID copiado!');
+    
+    alertSpy.mockRestore();
+    vi.unstubAllGlobals();
   });
 });

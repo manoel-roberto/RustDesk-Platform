@@ -1,3 +1,4 @@
+import '@testing-library/jest-dom';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import AdminPortal from './AdminPortal';
@@ -15,6 +16,7 @@ vi.mock('../api/axios', () => ({
     get: vi.fn(),
     post: vi.fn(),
     patch: vi.fn(),
+    delete: vi.fn(),
   },
 }));
 
@@ -257,5 +259,72 @@ describe('AdminPortal', () => {
     
     // Botão de editar notas não deve existir na tabela de sessões
     expect(screen.queryByText('Editar')).not.toBeInTheDocument();
+  });
+  
+  it('handles device deletion with confirmation', async () => {
+    (useAuth as any).mockReturnValue({ isAuthenticated: true });
+    (api.get as any).mockResolvedValue({ data: { data: [{ id: '1', alias: 'D1' }] } });
+    (api.delete as any).mockResolvedValue({});
+    const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true);
+
+    render(<AdminPortal />);
+    const machinesBtn = screen.getByText('Máquinas');
+    fireEvent.click(machinesBtn);
+
+    const deleteBtn = await screen.findByText('Excluir');
+    fireEvent.click(deleteBtn);
+
+    expect(confirmSpy).toHaveBeenCalled();
+    expect(api.delete).toHaveBeenCalledWith('/devices/1');
+    confirmSpy.mockRestore();
+  });
+
+  it('handles device creation through modal', async () => {
+    (useAuth as any).mockReturnValue({ isAuthenticated: true });
+    (api.get as any).mockResolvedValue({ data: { data: [] } });
+    (api.post as any).mockResolvedValue({});
+
+    render(<AdminPortal />);
+    const newDeviceBtn = screen.getByText(/Novo Dispositivo/i);
+    fireEvent.click(newDeviceBtn);
+
+    // Ver o modal
+    expect(screen.getByText('Cadastrar Novo Dispositivo')).toBeInTheDocument();
+
+    const idInput = screen.getByPlaceholderText('Ex: 123456789');
+    fireEvent.change(idInput, { target: { value: '987654' } });
+
+    const saveBtn = screen.getByText('Salvar');
+    fireEvent.click(saveBtn);
+
+    await waitFor(() => {
+      expect(api.post).toHaveBeenCalledWith('/devices', expect.objectContaining({ rustdesk_id: '987654' }));
+    });
+  });
+
+  it('handles linking a device to a group', async () => {
+    (useAuth as any).mockReturnValue({ isAuthenticated: true });
+    (api.get as any).mockImplementation((url: string) => {
+      if (url === '/devices') return Promise.resolve({ data: { data: [{ id: 'd1', alias: 'D1', group: null }] } });
+      if (url === '/groups') return Promise.resolve({ data: { data: [{ id: 'g1', name: 'G1' }] } });
+      if (url === '/groups/tree') return Promise.resolve({ data: { data: [{ id: 'g1', name: 'G1' }] } });
+      return Promise.resolve({ data: {} });
+    });
+    (api.patch as any).mockResolvedValue({});
+
+    render(<AdminPortal />);
+    fireEvent.click(screen.getByText('Máquinas'));
+
+    const changeGroupBtn = await screen.findByText('Mudar Grupo');
+    fireEvent.click(changeGroupBtn);
+
+    expect(screen.getByText('Vincular ao Grupo')).toBeInTheDocument();
+
+    const select = screen.getByRole('combobox');
+    fireEvent.change(select, { target: { value: 'g1' } });
+
+    await waitFor(() => {
+      expect(api.patch).toHaveBeenCalledWith('/devices/d1', { group_id: 'g1' });
+    });
   });
 });

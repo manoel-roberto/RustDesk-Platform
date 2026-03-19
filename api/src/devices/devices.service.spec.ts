@@ -226,5 +226,18 @@ describe('DevicesService', () => {
         tags: []
       }));
     });
+
+    it('should handle empty csv or only header', async () => {
+      const csv = 'rustdesk_id,alias,hostname,os,online,tags\n';
+      await service.importFromCsv(csv);
+      expect(deviceRepository.save).toHaveBeenCalledWith([]);
+    });
+
+    it('should skip malformed lines (empty or wrong format)', async () => {
+      // Uma linha vazia deve ser ignorada pelo regex/filter
+      const csv = 'rustdesk_id,alias,hostname,os,online,tags\n\nID5,A5,H5,Linux,true,"T5"';
+      await service.importFromCsv(csv);
+      expect(deviceRepository.create).toHaveBeenCalledTimes(1);
+    });
   });
 });

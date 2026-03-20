@@ -1,102 +1,96 @@
-# 12 — Como contribuir? (O Guia Amigo do Iniciante) 🤝🌍✨
+# 12 — Como contribuir? (O Guia Mestre do Desenvolvedor Moderno) 🤝🌍🚀
 
-Olá! Se este é o seu primeiro contato com um projeto de código aberto, **seja muito bem-vindo!** 
+Olá! Este não é apenas um guia de contribuição comum. Este projeto foi concebido sob uma nova filosofia de desenvolvimento: a **Parceria entre Humanos e Agentes de IA**. 
 
-Sabemos que dar o primeiro passo pode dar um frio na barriga. "E se eu quebrar algo?", "E se meu código for ruim?", "E se eu não entender nada?". Tire essas dúvidas da cabeça: **este projeto foi feito para você aprender.** Aqui, pegamos na sua mão e vamos juntos!
+Se você sempre quis criar algo grande, mas achava que "não levava jeito para código", este guia vai mudar sua perspectiva. Aqui, o foco é **como usar as ferramentas para tirar suas ideias do papel.**
 
 ---
 
 ## 🏗️ 1. Preparando sua Bancada de Trabalho
 
-Antes de mexer no motor do carro, precisamos das ferramentas certas. Não se apresse, faça um de cada vez:
+Diferente de outros projetos, aqui recomendamos ferramentas que aumentam o seu poder de criação:
 
-### Passo A: O "Quadro Negro" (VS Code)
-Instale o **Visual Studio Code**. Ele é onde você vai ler e escrever o código. É gratuito e o favorito de 99% dos programadores.
-- [Baixar VS Code aqui](https://code.visualstudio.com/)
+### Passo A: O seu novo Assistente (Antigravity)
+Em vez de usar um editor simples, recomendamos o **Antigravity**. Ele é a ferramenta que estamos usando para construir este projeto. O Antigravity permite que você converse com o código e peça ajuda a Agentes de IA que entendem todo o sistema.
+- **Como usar**: Siga as instruções de instalação do Antigravity para integrá-lo ao seu ambiente de desenvolvimento. Ele será o seu "parceiro de programação".
 
-### Passo B: O "Garagem Mágica" (Docker)
-O Docker permite que o projeto rode no seu computador sem que você precise instalar mil coisas "soltas". Ele cria um ambiente limpo e seguro.
-- [Baixar Docker Desktop aqui](https://www.docker.com/products/docker-desktop/)
+### Passo B: A "Garagem Mágica" (Docker)
+O Docker rodará o sistema para você. Onde você estiver:
+- **No Windows**: Baixe o [Docker Desktop](https://www.docker.com/products/docker-desktop/). Ative o uso do **WSL2** nas configurações para melhor performance.
+- **No Linux**: Instale o `docker` e o `docker-compose` via terminal (ex: `sudo apt install docker-compose`).
 
 ### Passo C: O "Passaporte" (Git)
-O Git é o que permite você baixar o código e enviar suas melhorias de volta.
-- [Instalar Git aqui](https://git-scm.com/)
+- **Windows**: Instale o [Git for Windows](https://gitforwindows.org/).
+- **Linux**: Já costuma vir instalado (ou `sudo apt install git`).
 
 ---
 
-## 📥 2. Pegando o Código (O seu "Fork")
+## 📥 2. O Passo a Passo do Fork (Sua Cópia Pessoal)
 
-Imagine que este projeto é um livro em uma biblioteca. Você não pode riscar o original, mas pode tirar uma **xerox** e fazer suas anotações nela. Essa xerox se chama **Fork**.
+O **Fork** é fundamental. Sem ele, você não consegue propor mudanças. Veja como fazer:
 
-1. Vá no topo desta página no GitHub e clique no botão **Fork**.
-2. Agora você tem uma cópia sua! Baixe-a para o seu computador:
-   ```bash
-   git clone https://github.com/SEU_USUARIO/RustDesk-Platform.git
-   cd RustDesk-Platform
-   ```
-
----
-
-## 🔥 3. Ligando os Motores (Pela primeira vez)
-
-Com o Docker aberto, rode este comando na pasta do projeto:
-```bash
-docker compose up -d
-```
-Espere uns minutos. Quando terminar, abra seu navegador e digite `http://localhost:3000`. Se você vir a tela da plataforma, **PARABÉNS!** Você acaba de rodar um sistema complexo no seu próprio computador.
+1.  **No site do GitHub**: Vá até a página principal deste repositório: [manoel-roberto/RustDesk-Platform](https://github.com/manoel-roberto/RustDesk-Platform).
+2.  **O Botão Mágico**: No canto superior direito, clique em **"Fork"**.
+3.  **Escolha o Destino**: Selecione sua conta pessoal. 
+4.  **Pronto!**: Agora o endereço será `https://github.com/SEU_USUARIO/RustDesk-Platform`.
+5.  **Baixe para sua máquina**:
+    ```bash
+    git clone https://github.com/SEU_USUARIO/RustDesk-Platform.git
+    cd RustDesk-Platform
+    ```
 
 ---
 
-## 🛠️ 4. Sua Primeira Contribuição (Prática!)
+## 🤖 3. O Segredo dos Agentes (Antigravity na Prática)
 
-Vamos "pegar na mão" mesmo. Escolha um desses desafios para começar:
+Este projeto foi construído "conversando" com a máquina. O Antigravity não apenas completa seu código; ele **resolve problemas**.
 
-### 🏆 Nível 1: O "Corretor" (Mudar um Texto)
-Acha que um botão poderia ter um nome melhor?
-1. Procure o arquivo onde o texto está (geralmente em `web/src/...`).
-2. Mude o texto de "Login" para "Entrar na Plataforma".
-3. Salve e veja a mudança no navegador na hora!
+### Como configurar para contribuir:
+1. Abra o projeto no Antigravity.
+2. Peça para o Agente analisar a pasta `/specs`. 
+3. **Exemplo Prático**: Digite para o Agente: *"Analise a spec de documentação e crie um novo arquivo de guia para usuários de Mac"*.
+4. O Agente vai ler as regras, entender o estilo e escrever o arquivo para você revisar.
 
-### 🎨 Nível 2: O "Designer" (Mudar uma Cor)
-Quer deixar o sistema com a cara da sua empresa?
-1. Vá na pasta `web/` e procure pelos arquivos `.css`.
-2. Mude uma cor de fundo (ex: `#007bff` para o seu azul favorito).
-3. Sinta o orgulho de ver o sistema mudando de cor por causa de você!
-
-### 🔍 Nível 3: O "Investigador" (Adicionar um Log)
-Quer saber o que o servidor está pensando?
-1. Vá na pasta `api/src/` e encontre um arquivo de serviço.
-2. Adicione esta linha: `console.log("Olá, eu sou um novo colaborador!");`
-3. Olhe os logs do Docker e veja sua mensagem aparecendo lá!
+> 💡 **DESBLOQUEIO MENTAL**: A barreira não é mais saber programar cada caractere, mas sim **saber o que pedir e como estruturar a ideia**. O Antigravity é o seu braço direito nessa jornada.
 
 ---
 
-## 🚀 5. Enviando sua Obra para o Mundo
+## 📝 4. Desenvolvimento Baseado em Specs (Especificações)
 
-Terminou sua mudança? Vamos devolver para a biblioteca (Pull Request):
+Nós não programamos "de cabeça". Usamos **Especificações**. Veja a pasta `specs/`.
 
-1. **Salve seu trabalho localmente**:
-   ```bash
-   git add .
-   git commit -m "Explique aqui o que você fez"
-   git push origin master
-   ```
-2. Vá no seu GitHub e você verá um botão verde escrito **"Compare & pull request"**.
-3. Clique nele, escreva uma mensagem simpática contando o que você aprendeu e pronto! **Nós vamos analisar e aceitar com o maior prazer.**
+### O Fluxo "Mestre":
+1.  **Defina a Ideia**: Escreva o que você quer fazer em um arquivo `.md` (ex: `specs/nova-funcao.md`).
+2.  **Peça a Implementação**: Peça para o Agente da IA ler essa spec e implementar o código.
+3.  **Valide**: Use o Agente para testar se o que foi escrito bate com o que foi planejado.
+
+**Você pode usar esse mesmo padrão para criar SEUS próprios projetos do zero!** Basta criar uma pasta `specs/`, definir o que quer e deixar a IA te ajudar na construção.
 
 ---
 
-## 🤖 6. O Segredo dos Agentes (Antigravity)
+## 🛠️ 5. Desafios para Começar (Mão na Massa!)
 
-Lembra que falamos que este projeto foi feito com IA? Se você travar em alguma parte, **não tenha vergonha de pedir ajuda para uma IA** (como ChatGPT ou Claude). 
+Escolha um caminho e sinta o poder de contribuir:
 
-Mostre o erro para ela e diga: *"Estou contribuindo para o projeto RustDesk Platform e meu Docker deu esse erro, pode me ajudar?"*. A IA já conhece este projeto e vai saber te guiar!
+- **Windows + PowerShell**: Rode `docker-compose up -d` e veja os containers subindo. Se der erro de porta, peça ajuda ao seu Agente de IA para resolver.
+- **Linux + Terminal**: Rode `sudo docker-compose up -d`. Tente mudar o nome de um serviço no arquivo `docker-compose.yml` e veja o que acontece.
 
 ---
 
-## ❤️ 7. Por que você deve continuar?
+## 🚀 6. Enviando suas Melhorias
 
-Cada pequena vírgula que você corrige ajuda centenas de outras pessoas a terem uma ferramenta de suporte remoto melhor e mais barata. **Você agora é um Desenvolvedor de Software.** O caminho é longo, mas o primeiro passo já foi dado.
+Uma vez que você testou e funcionou:
 
-> 🌟 **"A jornada de mil milhas começa com um único passo."** 
-> Estamos te esperando nos Pull Requests! Vamos construir o futuro juntos. 🚀
+1.  `git add .`
+2.  `git commit -m "Minha primeira contribuição guiada por IA"`
+3.  `git push origin master`
+4.  Vá no GitHub original e clique em **"Open Pull Request"**.
+
+---
+
+## ❤️ 7. Conclusão: Você é o Arquiteto
+
+Este projeto prova que a tecnologia agora está nas mãos de quem tem **vontade**. Não importa se você é um iniciante total. Com o **Antigravity**, as **Specs** e este guia, você tem o mapa da mina.
+
+> 🌟 **"A ideia é o tijolo, a IA é o pedreiro, e você é o Arquiteto."** 
+> Te esperamos no próximo Pull Request! 🏁🚀

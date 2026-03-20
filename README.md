@@ -40,19 +40,52 @@ Reserve cerca de **2 a 3 horas** e garanta que você tem:
 
 ---
 
-## 6. Como navegar pela documentação? 🗺️
+## 6. Como o projeto funciona? (Fluxo do Sistema) 🔄
+
+Antes de começar, entenda como as informações viajam entre você, o GitHub e o seu servidor. Este é o caminho que garante que tudo esteja sempre atualizado e seguro:
+
+```mermaid
+graph TD
+    subgraph "1. Fábrica (Desenvolvimento & Deploy)"
+        A[Você / Administrador] -->|Faz mudanças| B(Seu Fork no GitHub)
+        B -->|GitHub Actions| C{Seu Servidor VPS}
+    end
+
+    subgraph "2. Operação (Suporte em Tempo Real)"
+        T[Seu Técnico] -->|Acessa com Senha + Celular| D(Portal do Técnico)
+        D -->|Clica em Conectar| E(Cérebro da Plataforma - API)
+        E -->|Autoriza a Ponte| F(Servidor RustDesk - HBBS/HBBR)
+        F -->|Conexão Segura| G[Computador do Cliente]
+    end
+
+    C -->|Atualiza os Programas| D
+    C -->|Atualiza os Programas| E
+    C -->|Atualiza os Programas| F
+```
+
+### Entendendo as Etapas:
+1.  **Desenvolvimento**: Quando você quer mudar uma cor no site ou atualizar o sistema, você faz isso no seu "Fork" (sua cópia do código no GitHub).
+2.  **Esteira de Deploy**: O GitHub percebe a mudança e envia automaticamente para o seu servidor VPS. Você não precisa fazer nada manual no servidor!
+3.  **Acesso Seguro**: Seus técnicos entram no portal usando **MFA** (segurança no celular).
+4.  **Conexão Direta**: O sistema cria uma ponte segura entre o técnico e o cliente, garantindo privacidade total.
+
+---
+
+## 7. Guia de Instalação e Uso 🗺️
 
 Siga os documentos abaixo na ordem sugerida para não se perder:
 
-1.  **[Conceitos Básicos](docs/01-conceitos-basicos.md)** — Entenda o que são os "peças" desse quebra-cabeça (Servidor, Docker, Domínio).
+1.  **[Conceitos Básicos](docs/01-conceitos-basicos.md)** — Entenda o que são as "peças" desse quebra-cabeça.
 2.  **[Preparando o Servidor](docs/02-preparando-o-servidor.md)** — Como alugar e configurar seu primeiro servidor Linux.
 3.  **[Instalando a Plataforma](docs/03-instalando-a-plataforma.md)** — Colocando o sistema para rodar de verdade.
 4.  **[Configurando o Login](docs/04-configurando-o-keycloak.md)** — Como criar senhas e ativar a segurança no celular (MFA).
 5.  **[Criando seu Instalador](docs/05-criando-o-instalador-do-cliente.md)** — Como gerar o programa com a marca da sua empresa.
 6.  **[Guia de Uso Diário](docs/06-uso-diario.md)** — Como o técnico e o cliente devem usar o programa no dia a dia.
-7.  **[Manutenção e Backups](docs/07-manutencao-e-backups.md)** — Como garantir que você nunca perca seus dados, restauração e rollback.
+7.  **[Manutenção e Backups](docs/07-manutencao-e-backups.md)** — Como garantir dados salvos, restauração e rollback.
 8.  **[Esteira de Deploy](docs/11-esteira-de-deploy.md)** — Como automatizar as atualizações entre GitHub e Servidor.
-9.  **[Dicionário de Termos (Glossário)](docs/10-glossario.md)** — Ficou na dúvida sobre algum nome? O significado está aqui.
+9.  **[Segurança](docs/08-seguranca.md)** — Checklist para dormir tranquilo.
+10. **[Perguntas Frequentes](docs/09-perguntas-frequentes.md)** — FAQ consolidado.
+11. **[Dicionário de Termos](docs/10-glossario.md)** — O significado dos nomes difíceis.
 
 ---
 *Pronto para começar? Vamos para o **[Documento 1: Conceitos Básicos](docs/01-conceitos-basicos.md)**!*

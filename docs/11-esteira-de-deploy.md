@@ -66,4 +66,4 @@ Lembra do **Rollback** que ensinei no documento de manutenção? Se a esteira en
 
 > ✅ **CHECKPOINT**: Sua fábrica agora é automática! Toda melhoria que você fizer no seu fork será entregue sozinha para o seu servidor.
 > 
-> **Próximo passo: [Documento 8: Segurança](08-seguranca.md)**
+> **Próximo passo: [Documento 13: Comparativo (Vantagens)](13-comparativo.md)**

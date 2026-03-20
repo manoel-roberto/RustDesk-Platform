@@ -83,10 +83,11 @@ Siga os documentos abaixo na ordem sugerida para não se perder:
 6.  **[Guia de Uso Diário](docs/06-uso-diario.md)** — Como o técnico e o cliente devem usar o programa no dia a dia.
 7.  **[Manutenção e Backups](docs/07-manutencao-e-backups.md)** — Como garantir dados salvos, restauração e rollback.
 8.  **[Esteira de Deploy](docs/11-esteira-de-deploy.md)** — Como automatizar as atualizações entre GitHub e Servidor.
-9.  **[Segurança](docs/08-seguranca.md)** — Checklist para dormir tranquilo.
-10. **[Perguntas Frequentes](docs/09-perguntas-frequentes.md)** — FAQ consolidado.
-11. **[Dicionário de Termos](docs/10-glossario.md)** — O significado dos nomes difíceis.
-12. **[Como Contribuir](docs/12-contribuindo.md)** — Como ajudar a melhorar este projeto (Agentes & IA).
+9.  **[Comparativo (Vantagens)](docs/13-comparativo.md)** — Por que esta plataforma é melhor que as outras.
+10. **[Segurança](docs/08-seguranca.md)** — Checklist para dormir tranquilo.
+11. **[Perguntas Frequentes](docs/09-perguntas-frequentes.md)** — FAQ consolidado.
+12. **[Dicionário de Termos](docs/10-glossario.md)** — O significado dos nomes difíceis.
+13. **[Como Contribuir](docs/12-contribuindo.md)** — Como ajudar a melhorar este projeto (Agentes & IA).
 
 ---
 *Pronto para começar? Vamos para o **[Documento 1: Conceitos Básicos](docs/01-conceitos-basicos.md)**!*

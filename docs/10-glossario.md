@@ -41,6 +41,7 @@ Ficou na dúvida sobre algum nome esquisito? Este dicionário traduz o "tecniqu�
 ### **R**
 - **RAM (Memória)**: A "mesa de trabalho" do computador. Quanto maior for a mesa, mais tarefas o servidor pode fazer ao mesmo tempo sem ficar lento.
 - **Relay (hbbr)**: O "intermediário". Se o seu computador e o do cliente não conseguem se enxergar diretamente, o Relay entra no meio para passar a imagem de um para o outro.
+- **Rollback**: O ato de "voltar no tempo" para uma versão anterior do sistema caso a atual apresente defeitos.
 
 ### **S**
 - **SSH**: O "controle remoto" que você usa para digitar comandos no servidor.

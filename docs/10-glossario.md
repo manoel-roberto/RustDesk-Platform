@@ -6,6 +6,8 @@ Ficou na dúvida sobre algum nome esquisito? Este dicionário traduz o "tecniqu�
 
 ### **A**
 - **API (Interface de Programação)**: É o "garçom" do sistema. Ela leva os pedidos da tela do seu computador para o servidor e traz a resposta de volta.
+- **Agentes de IA**: São "robôs inteligentes" que ajudam a programar, testar e documentar o projeto.
+- **Antigravity**: A ferramenta mágica que dá comandos para os Agentes de IA, permitindo que eles ajudem os humanos de forma eficiente.
 - **Autenticação**: O ato de provar quem você é (usando login e senha).
 
 ### **B**

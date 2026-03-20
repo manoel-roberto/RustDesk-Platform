@@ -86,6 +86,7 @@ Siga os documentos abaixo na ordem sugerida para não se perder:
 9.  **[Segurança](docs/08-seguranca.md)** — Checklist para dormir tranquilo.
 10. **[Perguntas Frequentes](docs/09-perguntas-frequentes.md)** — FAQ consolidado.
 11. **[Dicionário de Termos](docs/10-glossario.md)** — O significado dos nomes difíceis.
+12. **[Como Contribuir](docs/12-contribuindo.md)** — Como ajudar a melhorar este projeto (Agentes & IA).
 
 ---
 *Pronto para começar? Vamos para o **[Documento 1: Conceitos Básicos](docs/01-conceitos-basicos.md)**!*

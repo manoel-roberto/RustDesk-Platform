@@ -65,6 +65,45 @@ Imagine o Grafana como o **painel de instrumentos de um avião**: ele mostra gr�
 
 ---
 
-> ✅ **CHECKPOINT**: Você agora sabe como cuidar do seu sistema e garantir que ele nunca pare. Vamos para o toque final de segurança!
+## 8.5 Como Restaurar um Backup (Recuperação) 🚑
+
+Se você perdeu o servidor ou os dados sumiram, é hora de usar o seu backup. Imagine que você está **desfazendo uma mudança** ou reformando a casa com as fotos de como ela era antes.
+
+### Passo 1: Restaurar o Banco de Dados
+Com o arquivo `backup_banco.sql` no servidor, rode:
+```bash
+cat backup_banco.sql | docker compose exec -T postgres psql -U empresa_admin -d rustdesk_platform
+```
+
+### Passo 2: Restaurar as Chaves de Segurança
+Coloque o arquivo `id_ed25519_bkp` na pasta `./data/rustdesk-data/` e rode:
+```bash
+docker compose restart hbbs
+```
+> ✅ **IMPORTANTE**: Após restaurar as chaves, os seus clientes voltarão a confiar no servidor automaticamente.
+
+---
+
+## 8.6 Como Voltar para a Versão Anterior (Rollback) ⏪
+
+Atualizou o sistema e algo parou de funcionar? Não entre em pânico. Podemos "voltar no tempo" usando o Git.
+
+1. Identifique a versão anterior de sucesso:
+   ```bash
+   git log --oneline
+   ```
+2. Volte para ela (troque `ABC1234` pelo código que aparecer no log):
+   ```bash
+   git checkout ABC1234
+   ```
+3. Reinicie os sistemas na versão antiga:
+   ```bash
+   docker compose up -d
+   ```
+
+---
+
+> ✅ **CHECKPOINT**: Agora você sabe como salvar e como recuperar o seu sistema! Você é um administrador completo.
 > 
-> **Próximo passo: [Documento 8: Segurança](08-seguranca.md)**
+> **Próximo passo: [Documento 11: Esteira de Deploy](11-esteira-de-deploy.md)**
+

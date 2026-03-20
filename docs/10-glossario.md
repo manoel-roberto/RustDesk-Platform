@@ -12,6 +12,7 @@ Ficou na dúvida sobre algum nome esquisito? Este dicionário traduz o "tecniqu�
 - **Banco de Dados**: Imagine uma planilha Excel gigante e super organizada que nunca fecha. É onde guardamos todas as informações da plataforma.
 
 ### **C**
+- **CI/CD (Integração e Entrega Contínua)**: É a "Esteira de Deploy". Um conjunto de robôs que automatiza a entrega do código do GitHub para o seu servidor.
 - **Certificado SSL / TLS**: O "certificado de segurança" que garante o cadeado verde no seu navegador. Ele prova que o site é confiável.
 - **Container (Docker)**: Uma "caixa de papelão" digital que contém um programa e tudo o que ele precisa para funcionar, sem interferir nos outros.
 

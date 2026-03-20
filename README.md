@@ -50,8 +50,9 @@ Siga os documentos abaixo na ordem sugerida para não se perder:
 4.  **[Configurando o Login](docs/04-configurando-o-keycloak.md)** — Como criar senhas e ativar a segurança no celular (MFA).
 5.  **[Criando seu Instalador](docs/05-criando-o-instalador-do-cliente.md)** — Como gerar o programa com a marca da sua empresa.
 6.  **[Guia de Uso Diário](docs/06-uso-diario.md)** — Como o técnico e o cliente devem usar o programa no dia a dia.
-7.  **[Manutenção e Backups](docs/07-manutencao-e-backups.md)** — Como garantir que você nunca perca seus dados.
-8.  **[Dicionário de Termos (Glossário)](docs/10-glossario.md)** — Ficou na dúvida sobre algum nome? O significado está aqui.
+7.  **[Manutenção e Backups](docs/07-manutencao-e-backups.md)** — Como garantir que você nunca perca seus dados, restauração e rollback.
+8.  **[Esteira de Deploy](docs/11-esteira-de-deploy.md)** — Como automatizar as atualizações entre GitHub e Servidor.
+9.  **[Dicionário de Termos (Glossário)](docs/10-glossario.md)** — Ficou na dúvida sobre algum nome? O significado está aqui.
 
 ---
 *Pronto para começar? Vamos para o **[Documento 1: Conceitos Básicos](docs/01-conceitos-basicos.md)**!*
